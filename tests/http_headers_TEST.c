@@ -79,7 +79,7 @@ Test(http_headers, last_line)
 	http_header_max_len = strlen(http_header_buff);
 	char* str = get_next_line();
 	str = get_next_line();
-	cr_assert(str == NULL, "next line after line should be NULL");
+	cr_assert(strlen(str) == 0, "next line after line should be NULL");
 
 }
 
@@ -90,13 +90,68 @@ Test(http_headers, 3_lines)
 	http_header_max_len = strlen(http_header_buff);
 	char* str1 = get_next_line();
 	cr_assert(strcmp("first line", str1) == 0, "first line not as expected:%s", str1);
+	free(str1);
 	char* str2 = get_next_line();
 	cr_assert(strcmp("second line", str2) == 0, "second line not as expected: %s", str2);
+	free(str2);
 	char* str3 = get_next_line();
 	cr_assert(strcmp("third line", str3) == 0, "third line not as expected: %s", str3);
-	free(str1);
-	free(str2);
 	free(str3);
+}
+
+Test(http_headers, get_empty)
+{
+        http_header_t* header = (http_header_t*)malloc(sizeof(http_header_t));
+	http_headers_init(header);
+        stack_head_t* empty = http_headers_get(header, 3);
+        cr_assert(is_stack_empty(empty), "expected to return NULL on prop not found");
+        http_headers_free(header);
+}
+
+Test(http_header, get_1)
+{
+        http_header_t* header = (http_header_t*)malloc(sizeof(http_header_t));
+	http_headers_init(header);
+        http_headers_add(header, HTTP_HEADER_STRINGS[3], "value1");
+        stack_head_t* st = http_headers_get(header, 3);
+        cr_assert(1 == stack_depth(st), "expected stack depth to be 1, not: %d", stack_depth(st));
+        char* s = str_stack_pop(st);
+        cr_assert(strcmp("value1", s) == 0, "expected 'value1', not:%s", s);
+        cr_assert(is_stack_empty(st), "expected stack to be empty after poping value");
+        free(s);
+        str_stack_free(st);
+        http_headers_free(header);
+}
+
+Test(http_header, get_2)
+{
+        http_header_t* header = (http_header_t*)malloc(sizeof(http_header_t));
+	http_headers_init(header);
+        http_headers_add(header, HTTP_HEADER_STRINGS[3], "value1");
+        http_headers_add(header, HTTP_HEADER_STRINGS[3], "value2");
+        stack_head_t* st = http_headers_get(header, 3);
+        cr_assert(2 == stack_depth(st), "expected stack depth to be 2, not: %d", stack_depth(st));
+        str_stack_free(st);
+        http_headers_free(header);
+}
+
+Test(http_header, parse_retrieve)
+{
+	http_header_t* header = (http_header_t*) malloc (sizeof(http_header_t));
+	http_headers_init(header);
+	request_t* request = (request_t*) malloc (sizeof(request_t));
+	char msg[] = "HTTP/1.1 200 OK\nDate: Mon, 23 May 2005 22:38:34 GMT\nContent-Type: text/html; charset=UTF-8\nContent-Length: 14\nLast-Modified: Wed, 08 Jan 2003 23:11:55 GMT\nServer: Apache/1.3.3.7 (Unix) (Red-Hat/Linux)\nETag: \"3f80f-1b6-3e1cb03b\"\nAccept-Ranges: bytes\n\n<html>\n</html>";
+
+	request->buffer = msg;
+	request->data_len = strlen(msg);
+
+	decode_http_headers(header, request);
+	stack_head_t* vals = http_headers_get(header, HTTP_CONTENT_TYPE);
+	cr_assert(vals->num_elems == 1, "expected to have 1 element for Content-Type, not: %d", vals->num_elems);
+	char* value = str_stack_pop(vals);
+	cr_assert(strcmp("text/html; charset=UTF-8", value) == 0, "expected value 'text/html', not %s", value);
+	free(value);
+	http_headers_free(header);
 }
 
 Test(http_headers, constants_sorted)

@@ -17,6 +17,14 @@ typedef struct {
 	stack_head_t* headers[NUM_HTTP_HEADERS];
 } http_header_t;
 
+void http_headers_init(http_header_t* headers);
+
+void http_headers_free(http_header_t* header);
+
+stack_head_t* http_headers_get(http_header_t* header, const int prop_key);
+
+void http_headers_add(http_header_t* header, char* key, char* value);
+
 void decode_http_headers_init(request_t* request);
 
 char* get_next_line();
