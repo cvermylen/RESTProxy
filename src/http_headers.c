@@ -15,11 +15,11 @@ void http_headers_init(http_header_t* header)
 	}
 }
 
-void decode_http_headers_init(request_t* request)
+void decode_http_headers_init(char* buffer, int data_len)
 {
-	http_header_buff = request->buffer;
+	http_header_buff = buffer;
 	http_header_cur_loc = 0;
-	http_header_max_len = request->data_len;
+	http_header_max_len = data_len;
 }
 
 char* get_next_line()
@@ -94,9 +94,8 @@ stack_head_t* http_headers_get(http_header_t* header, const int prop_key)
         return result;
 }
 
-void decode_http_headers(http_header_t* header, request_t* request)
+void decode_http_headers(http_header_t* header)
 {
-	decode_http_headers_init(request);
 	char* line;
 	while (strlen(line = get_next_line()) > 0){
 printf("line: %s\n", line);
@@ -113,7 +112,7 @@ printf("In between:'%s'\n", prop[1]);
 printf("Done decode\n");
 }
 
-void calculate_http_transition(request_t* request)
+void calculate_http_transition()
 {
 
 }

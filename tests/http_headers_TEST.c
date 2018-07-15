@@ -137,15 +137,12 @@ Test(http_header, get_2)
 
 Test(http_header, parse_retrieve)
 {
-	http_header_t* header = (http_header_t*) malloc (sizeof(http_header_t));
+	http_header_t* header = (http_header_t*)malloc(sizeof(http_header_t));
 	http_headers_init(header);
-	request_t* request = (request_t*) malloc (sizeof(request_t));
 	char msg[] = "HTTP/1.1 200 OK\nDate: Mon, 23 May 2005 22:38:34 GMT\nContent-Type: text/html; charset=UTF-8\nContent-Length: 14\nLast-Modified: Wed, 08 Jan 2003 23:11:55 GMT\nServer: Apache/1.3.3.7 (Unix) (Red-Hat/Linux)\nETag: \"3f80f-1b6-3e1cb03b\"\nAccept-Ranges: bytes\n\n<html>\n</html>";
 
-	request->buffer = msg;
-	request->data_len = strlen(msg);
-
-	decode_http_headers(header, request);
+	decode_http_headers_init(msg, strlen(msg));
+	decode_http_headers(header);
 	stack_head_t* vals = http_headers_get(header, HTTP_CONTENT_TYPE);
 	cr_assert(vals->num_elems == 1, "expected to have 1 element for Content-Type, not: %d", vals->num_elems);
 	char* value = str_stack_pop(vals);

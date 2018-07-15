@@ -14,10 +14,10 @@ add_executable(http_message_TEST_test http_message_TEST.c)
 
 target_link_libraries(accept_connections_TEST gateway mock_gateway ${CRITERION_LIBRARIES})
 target_link_libraries(shared_buffers_TEST_test gateway ${CRITERION_LIBRARIES})
-target_link_libraries(socket_connector_TEST_test gateway mock_gateway ${CRITERION_LIBRARIES})
+target_link_libraries(socket_connector_TEST_test gateway stack mock_gateway ${CRITERION_LIBRARIES})
 target_link_libraries(route_instance_TEST_test gateway stack ${CRITERION_LIBRARIES})
 target_link_libraries(http_headers_TEST_test gateway stack ${CRITERION_LIBRARIES})
-target_link_libraries(http_message_TEST_test gateway stack ${CRITERION_LIBRARIES})
+target_link_libraries(http_message_TEST_test mock_buffers gateway stack ${CRITERION_LIBRARIES})
 
 set_property (TARGET accept_connections_TEST PROPERTY C_STANDARD 99)
 set_property (TARGET shared_buffers_TEST_test PROPERTY C_STANDARD 99)

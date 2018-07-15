@@ -5,11 +5,12 @@
 #include "connection.h"
 #include "request_reply.h"
 #include "socket_connector.h"
+#include "http_message.h"
 
 void *push_data_2_destination(void *params)
 {
         reply_t *reply = (reply_t*)params;
-printf("BUFFER:%s\n", reply->request->buffer);
+printf("BUFFER:%s\n", reply->request->http_message->buffer);
         switch(reply->type){
         case TYPE_SOCKET:
 printf("TYPE SOCKET\n");
@@ -42,13 +43,12 @@ reply_t* create_reply(const ri_connection_t* conn, ri_out_connector_t* out_conn)
 	return reply;
 }
 
-request_t* create_request(const ri_connection_t* conn, int buffer_no, char* buffer)
+request_t* create_request(const ri_connection_t* conn)
 {
         request_t* request= (request_t*)malloc(sizeof(request_t));
 	request->forward_mode = conn->route->forward_mode;
         request->buffer_size = TX_BUFFER_SIZE;
-        request->buffer = buffer;
-	request->buffer_no = buffer_no;
+	request->http_message = http_message_init();
 	request->out_connections = conn->route->out_connections;
 	request->in_response.sock_fd = conn->fd;
 	request->replies = (reply_t**)malloc(sizeof(reply_t*) * conn->route->out_connections);
@@ -62,28 +62,39 @@ request_t* create_request(const ri_connection_t* conn, int buffer_no, char* buff
 void reply_to_client(void* thread_data)
 {
         reply_t* reply = (reply_t*)thread_data;
-        sock_write(reply->request->in_response.sock_fd, reply->response, reply->response_length);
+        sock_write(reply->request->in_response.sock_fd, reply->response_message->buffer, reply->response_message->raw_message_length);
+}
+
+void release_reply(reply_t* reply)
+{
+	http_message_free(reply->response_message);
+	free(reply);
 }
 
 void release_request(request_t* d)
 {
-        //free(d);
+	http_message_free(d->http_message);
+	for(int i = 0; i < d->out_connections; i++){
+		release_reply(d->replies[i]);
+	}
+        free(d);
 }
 
 void* async_join_threads(void* params)
 {
 	request_t* request = (request_t*)params;
  printf("Joining results...\n");
-         int i = 0;   
-         for(int i=0; i < request->out_connections; i++){
+        int i = 0;   
+        for(int i=0; i < request->out_connections; i++){
  printf("Join thread at:%d\n", request->replies[i]->pthread);
                  pthread_join(request->replies[i]->pthread, NULL);
                  //release_conn_runtime_thread_data(at->route->out_connectors[i]->data[at->dest_threads[i]    ]);
-         }
+        }
  printf("...joined\n");
-         free_buffer(request->buffer_no);
-         //close(at->route->in_connector->content.sock->fd);
-         return NULL;
+	release_request(request);
+        free_buffer(request->http_message->buffer_no);
+        //close(at->route->in_connector->content.sock->fd);
+        return NULL;
 }
 
 void wait_4_all_sender_to_complete(request_t* request)
@@ -100,10 +111,14 @@ void forward_data(reply_t* reply)
 	}
 }
 
-void forward_message_to_all_servers(const int data_len, request_t* request)
+void forward_message_to_all_servers(request_t* request)
 {
-	request->data_len = data_len;
 	for(int i=0; i < request->out_connections; i++){
 		forward_data(request->replies[i]);
 	}
+}
+
+void decode_request_message(request_t* request)
+{
+	decode_http_message(request->http_message);
 }

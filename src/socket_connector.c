@@ -9,13 +9,16 @@
 
 request_t* sock_read(const ri_connection_t* connection)
 {
-	int buffer_no = alloc_buffer();
-	char* buffer = get_buffer(buffer_no);
-	request_t* request = create_request(connection, buffer_no, buffer);
+	request_t* request = create_request(connection);
 printf("SOCKET read:%d\n", request->in_response.sock_fd);
-	int n = recv(request->in_response.sock_fd, request->buffer, TX_BUFFER_SIZE, 0);
-	request->data_len = n;
+	int n = recv(request->in_response.sock_fd, http_message_get_request_buffer(request->http_message), TX_BUFFER_SIZE, 0);
+	if ( n > 0) {
 printf("Read:%d\n", n);
+		request->http_message->raw_message_length = n;
+	} else {
+		release_request(request);
+		request = NULL;
+	}
 	return request;
 }
 

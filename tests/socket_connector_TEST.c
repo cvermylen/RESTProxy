@@ -21,10 +21,11 @@ Test(file, push_2_file)
 	con->content.file = (ri_file_connector_t*)malloc(sizeof(ri_file_connector_t));
 	con->type = TYPE_FILE;
 	con->request = (request_t*)malloc(sizeof(request_t));
-	con->request->buffer = (char *)malloc(sizeof(char));
-	con->request->buffer[0] = '\n';
 	con->content.file->file = (FILE*)&fake_fd;
 	con->content.file->output_callback = mock_file_callback;
+	con->request->http_message = (http_message_t*)malloc(sizeof(http_message_t));
+	con->request->http_message->buffer = (char*)malloc(sizeof(char));
+	con->request->http_message->buffer[0] = '\0';
 	has_been_called = 0;
 	push_data_2_destination(con);
 

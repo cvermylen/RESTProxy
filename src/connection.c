@@ -23,7 +23,7 @@ printf("Release_buffer_after_processing\n");
                 }
                 //No break here
         case FORWARD_MODE_SEQ:
-                free_buffer(request->buffer_no);
+                free_buffer(request->http_message->buffer_no);
                 //close_in_connector(re);
                 break;
         case FORWARD_MODE_ASYNC:
@@ -42,20 +42,19 @@ void *receive_and_process_data_from_client(void *params)
         request_t* request = NULL;
         do {
                 request = sock_read(conn);
-printf("Data len:%d\n", request->data_len);
-                if(request->data_len > 0) {
-printf("Received:%d\n", request->data_len);
+printf("Data len:%d\n", request->http_message->raw_message_length);
+                if(request != NULL) {
+printf("Received:%d\n", request->http_message->raw_message_length);
                         conn->total_messages += 1;
-                        conn->total_bytes += request->data_len;
-			decode_http_headers(request);
+                        conn->total_bytes += request->http_message->raw_message_length;
+			decode_request_message(request);
 			calculate_http_transition(request);
-			forward_message_to_all_servers(request->data_len, request);
+			forward_message_to_all_servers(request);
                         release_buffer_after_processing(request);
                 }else{
                         conn->error = errno;
-                        release_request(request);
                 }
-        } while(request->data_len > 0);
+        } while(request->http_message->raw_message_length > 0);
         close_connection(request);
 	release_request(request);
         pthread_exit(conn);

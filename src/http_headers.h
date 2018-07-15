@@ -1,7 +1,6 @@
 #ifndef HTTP_HEADERS_H
 #define HTTP_HEADERS_H
 
-#include "request_reply.h"
 #include <str_stack.h>
 
 #define UNIT_TEST
@@ -25,7 +24,7 @@ stack_head_t* http_headers_get(http_header_t* header, const int prop_key);
 
 void http_headers_add(http_header_t* header, char* key, char* value);
 
-void decode_http_headers_init(request_t* request);
+void decode_http_headers_init(char* buffer, int sata_len);
 
 char* get_next_line();
 
@@ -35,9 +34,9 @@ char** get_key_value_pair(char* raw_string);
 
 void put_http_header(http_header_t*, char* key, char* value);
 
-void decode_http_headers(http_header_t* header, request_t* request);
+void decode_http_headers(http_header_t* header);
 
-void calculate_http_transition(request_t* request);
+void calculate_http_transition();
 
 int find_header_index(const char* header);
 
