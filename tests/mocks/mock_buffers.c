@@ -10,3 +10,7 @@ char* get_buffer(int buff_no)
 {
 	return NULL;
 }
+
+void free_buffer(const int key)
+{
+}

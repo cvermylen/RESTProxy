@@ -41,7 +41,7 @@ void *receive_and_process_data_from_client(void *params)
         conn->total_bytes = 0;
         request_t* request = NULL;
         do {
-                request = sock_read(conn);
+                request = accept_opening_request_from_client(conn);
 printf("Data len:%d\n", request->http_message->raw_message_length);
                 if(request != NULL) {
 printf("Received:%d\n", request->http_message->raw_message_length);

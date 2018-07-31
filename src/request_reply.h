@@ -1,7 +1,7 @@
 #ifndef REQUEST_REPLY_H
 #define REQUEST_REPLY_H
 
-#include "hashmap.h"
+//#include "hashmap.h"
 #include "connection.h"
 #include "route_instance.h"
 #include "http_message.h"
@@ -35,7 +35,9 @@ struct request{
 	pthread_t async_replies_thread;
 };
 
-request_t* create_request(const ri_connection_t* conn);
+request_t* accept_opening_request_from_client(const ri_connection_t* conn);
+
+request_t* create_request(const ri_connection_t* conn, int buff_no, char* buffer);
 
 /*!
   \brief Data that an instance of an out connector needs to send out. The connector instance may be hold in a separate thread.
@@ -53,4 +55,7 @@ void forward_message_to_all_servers(request_t* request);
 void* push_data_2_destination(void* params);
 void wait_4_all_sender_to_complete(request_t* request);
 void release_request(request_t* request);
+
+void* sync_request_reply_to_server(reply_t* reply);
+
 #endif

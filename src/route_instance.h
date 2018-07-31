@@ -67,6 +67,7 @@ ri_sock_connector_t *create_runtime_sock_connector(const int port);
 
 void add_out_file_connector(ri_route_t* route, const int index, const char* filename, const int flow);
 
+void add_out_sock_connector(ri_route_t* route, const int index, const char* hostname, const int port, const int flow);
 ri_out_connector_t *create_runtime_out_file_connector(const int flow, const char* filename);
 /*!
   \brief free all memory allocated to the route instance, except the thread data (threads may still be running)

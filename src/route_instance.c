@@ -33,6 +33,24 @@ void release_runtime_sock_connector(ri_sock_connector_t *conn)
 	free(conn);
 }
 
+ri_out_connector_t* create_runtime_out_sock_connector(const int flow, const char* hostname, const int port)
+{
+	ri_sock_connector_t* res = (ri_sock_connector_t*)malloc(sizeof(ri_sock_connector_t));
+	res->port = port;
+	res->server_name = (char*)malloc(sizeof(char) * strlen(hostname));
+	strcpy(res->server_name, hostname);
+	res->consumer_callback = sync_request_reply_to_server;
+
+	ri_out_connector_t* conn = (ri_out_connector_t*)malloc(sizeof(ri_out_connector_t));
+	conn->type = TYPE_SOCKET;
+	conn->flow = flow;
+	conn->content.sock = res;
+	if(flow == FLOW_BIDIRECTIONAL) {
+		conn->response_callback = reply_to_client;
+	}
+	return conn;
+}
+
 ri_out_connector_t *create_runtime_out_file_connector(const int flow, const char* filename)
 {
 printf("create_runtime_file_connector\n");
@@ -113,6 +131,11 @@ printf("create_runtime_route\n");
 void add_out_file_connector(ri_route_t* route, const int index, const char* filename, const int flow)
 {
 	route->out_connectors[index] = create_runtime_out_file_connector(flow, filename);
+}
+
+void add_out_sock_connector(ri_route_t* route, const int index, const char* hostname, const int port, const int flow)
+{
+	route->out_connectors[index] = create_runtime_out_sock_connector(flow, hostname, port);
 }
 
 void release_runtime_route(ri_route_t *route)

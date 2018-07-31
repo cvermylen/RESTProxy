@@ -15,7 +15,8 @@ void* workflow_config()
 ri_route_t* create_default_route(const int port, const char* file_name1, const char* file_name2)
 {
 	ri_route_t* route = create_runtime_route(port, FORWARD_MODE_ASYNC, 1);
-	add_out_file_connector(route, 0, file_name1, FLOW_BIDIRECTIONAL);
+	//add_out_file_connector(route, 0, file_name1, FLOW_BIDIRECTIONAL);
+	add_out_sock_connector(route, 0, "localhost", 8081, FLOW_BIDIRECTIONAL);
 	//set_file_out_connector(route, 1, file_name2, NULL);
 	//set_workflow_connector(route, FLOW_SYNC_ANSWER, 1, "../../sample/test_wkf_file", NULL);
 	return route;

@@ -13,12 +13,24 @@ extern int http_header_max_len;
 #define NUM_HTTP_HEADERS			81
 
 typedef struct {
+	int key;
+	char* value;
+	int value_length;
+} http_header_line_t;
+
+http_header_line_t* decode_http_header_line(char* start_of_header, int line_length);
+
+typedef struct {
 	stack_head_t* headers[NUM_HTTP_HEADERS];
 } http_header_t;
+
+int decode_body_length(char* value, int field_length);
 
 void http_headers_init(http_header_t* headers);
 
 void http_headers_free(http_header_t* header);
+
+int is_http_op_code(char* start_of_line, int line_length);
 
 stack_head_t* http_headers_get(http_header_t* header, const int prop_key);
 

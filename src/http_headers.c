@@ -8,6 +8,47 @@ char* http_header_buff;
 int http_header_cur_loc;
 int http_header_max_len;
 
+int find_semicolon2(char* str, int limit)
+{
+	int i = 0;
+	if(str == NULL)return -1;
+	while(str[i] != ':' && i < limit && str[i] != '\0') i++;
+	if(str[i] == ':')
+		return i;
+	else
+		return -1;
+}
+
+http_header_line_t* decode_http_header_line(char* start_of_header, int line_length)
+{
+printf("Http header line: '%s'\n", start_of_header);
+	http_header_line_t* res = NULL;
+	if(line_length == 1 && start_of_header[0] == '\n'){
+		res = (http_header_line_t*)malloc(sizeof(http_header_line_t));
+		res->key = -1;
+		return res;
+	}
+	int pos = find_semicolon2(start_of_header, line_length);
+	if(pos > 0){
+		res = (http_header_line_t*)malloc(sizeof(http_header_line_t));
+		start_of_header[pos] = '\0';
+		res->key = find_header_index(start_of_header);
+		start_of_header[pos] = ':';
+		for(pos++; start_of_header[pos] == ' '; pos++);
+		res->value = start_of_header + (sizeof(char) * (pos));
+		res->value_length = line_length - pos;
+	}
+	return res;
+}
+
+int decode_body_length(char* value, int field_length)
+{
+	int res = 0;
+	int exp = field_length -1;
+	for(int i = 0; i < field_length; res += (pow(10, exp--)) * (value[i] - 48), i++);
+	return res;
+}
+
 void http_headers_init(http_header_t* header)
 {
 	for (int i=0; i < NUM_HTTP_HEADERS; i++) {

@@ -23,6 +23,57 @@ Test(http_headers, semicolon_null)
 	cr_assert(pos == -1, "semicolon expected at position 3, not:%d", pos);
 }
 
+Test(http_headers, semi2_null)
+{
+	char* str= NULL;
+	int pos = find_semicolon2(str, 3);
+	cr_assert(pos == -1, "semicolon expected at position 3, not:%d", pos);
+}
+
+Test(http_headers, semi2)
+{
+	char str[] = "key:value";
+	int pos = find_semicolon2(str, 20);
+	cr_assert(pos == 3, "semicolon expected at position 3, not:%d", pos);
+}
+
+Test(http_headers, semi2_short)
+{
+	char str[] = "key:value";
+	int pos = find_semicolon2(str, 2);
+	cr_assert(pos == -1, "semicolon expected at position -1, not:%d", pos);
+}
+
+Test(http_headers, content_length_1)
+{
+	char str[] = "3451";
+	int res = decode_body_length(str, strlen(str));
+	cr_assert(3451 == res, "expected value of 3451, not:%d", res);
+}
+
+Test(http_headers, decode_1)
+{
+	char str[] = "Content-Length: 120\nHost: Apple";
+	http_header_line_t* r = decode_http_header_line(str, 19);
+	cr_assert(HTTP_CONTENT_LENGTH == r->key, "expected HTTP_CONTENT_LENGTH, not:%d", r->key);
+	cr_assert(r->value_length == 3, "expected length of 3, not:%d", r->value_length);
+	cr_assert(strncmp(r->value, "120", 3)==0, "expected value 120, not:'%s'", r->value);
+}
+
+Test(http_headers, decode_2)
+{
+	char str[] = "\n";
+	http_header_line_t* r = decode_http_header_line(str, 1);
+	cr_assert(-1 == r->key, "expected '-1', not:%d", r->key);
+}
+
+Test(http_headers, semi_false)
+{
+	char str[]= "keyvalue";
+	int pos = find_semicolon2(str, strlen(str));
+	cr_assert(pos == -1, "semicolon expected at position 3, not:%d", pos);
+}
+
 Test(http_headers, kv_true)
 {
 	char str[]= "key:value";

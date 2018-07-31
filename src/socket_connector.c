@@ -7,34 +7,27 @@
 #include "socket_connector.h"
 #include "shared_buffers.h"
 
-request_t* sock_read(const ri_connection_t* connection)
+int read_from_socket(int fd, char* buffer, int max_size)
 {
-	request_t* request = create_request(connection);
-printf("SOCKET read:%d\n", request->in_response.sock_fd);
-	int n = recv(request->in_response.sock_fd, http_message_get_request_buffer(request->http_message), TX_BUFFER_SIZE, 0);
-	if ( n > 0) {
-printf("Read:%d\n", n);
-		request->http_message->raw_message_length = n;
-	} else {
-		release_request(request);
-		request = NULL;
-	}
-	return request;
+	int n = recv(fd, buffer, max_size, 0);
+printf("read_from_socket, size:%s\n", buffer);
+	return n;
 }
 
-void sync_request_reply_to_server(reply_t* reply)
+int split_receive(int socket, char* buffer, int max_size)
 {
-printf("sync_request_reply_to_server\n");
-	int socket = connect_to_server(reply->content.sock->server_name, reply->content.sock->port);
-	reply->content.sock->fd = socket;
+	int n = 0;
+	while((n = recv(socket, buffer, max_size, 0)) > 0){
+printf("%s", buffer);
+	}
+	return n;
 }
-	
+
 int connect_to_server(char* server_name, const int portno)
 {
 	int sockfd, n;
         struct sockaddr_in serv_addr;
         struct hostent *server;
-printf("connect_to_server: %s %d\n", server_name, portno);
         char buffer[256];
         sockfd = socket(AF_INET, SOCK_STREAM, 0);
         if (sockfd < 0){
@@ -50,10 +43,11 @@ printf("connect_to_server: %s %d\n", server_name, portno);
         serv_addr.sin_family = AF_INET;
         bcopy((char *)server->h_addr, (char *)&serv_addr.sin_addr.s_addr, server->h_length);
         serv_addr.sin_port = htons(portno);
-        if(connect(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0)
+	int j = 22;
+        if((j = connect(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr))) < 0){
                 fprintf(stderr, "ERROR connecting:%s %d", server_name, portno);
 		exit(0);
-printf("connect_to_server: %d\n", portno);
+	}
 	return sockfd;
 }
 
