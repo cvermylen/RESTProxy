@@ -48,8 +48,8 @@ printf("AFTER ACCEPTED new connection:%d\n", res->fd);
 	return res;
 }
 
-void close_connection(request_t* request)
+void close_connection(ri_connection_t* conn)
 {
-printf("Close connection:%d\n", request->in_response.sock_fd);
-	close(request->in_response.sock_fd);
+printf("Close connection:%d\n", conn->fd);
+	close(conn->fd);
 }

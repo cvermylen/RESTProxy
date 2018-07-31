@@ -9,18 +9,21 @@
 
 int read_from_socket(int fd, char* buffer, int max_size)
 {
+printf("#####read_from_socket\n");
 	int n = recv(fd, buffer, max_size, 0);
-printf("read_from_socket, size:%s\n", buffer);
+printf("read_from_socket, size:%d\n", n);
 	return n;
 }
 
 int split_receive(int socket, char* buffer, int max_size)
 {
-	int n = 0;
-	while((n = recv(socket, buffer, max_size, 0)) > 0){
-printf("%s", buffer);
+printf("split_receive\n");
+	int total_received = 0, n = 0;
+	while((n = recv(socket, buffer+(total_received*sizeof(char)), max_size-total_received, 0)) > 0){
+		total_received += n;
 	}
-	return n;
+printf("%s", buffer);
+	return total_received;
 }
 
 int connect_to_server(char* server_name, const int portno)

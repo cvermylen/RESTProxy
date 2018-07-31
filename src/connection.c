@@ -42,21 +42,20 @@ void *receive_and_process_data_from_client(void *params)
         request_t* request = NULL;
         do {
                 request = accept_opening_request_from_client(conn);
-printf("Data len:%d\n", request->http_message->raw_message_length);
                 if(request != NULL) {
 printf("Received:%d\n", request->http_message->raw_message_length);
                         conn->total_messages += 1;
                         conn->total_bytes += request->http_message->raw_message_length;
-			decode_request_message(request);
-			calculate_http_transition(request);
-			forward_message_to_all_servers(request);
+			decode_request_message_header(request);
+			process_request_message_body(request);
                         release_buffer_after_processing(request);
                 }else{
                         conn->error = errno;
                 }
-        } while(request->http_message->raw_message_length > 0);
-        close_connection(request);
-	release_request(request);
+        } while(request!= NULL && request->http_message->raw_message_length > 0);
+printf("##### End of connection\n");
+        close_connection(conn);
+	if(request != NULL) release_request(request);
         pthread_exit(conn);
 }
 

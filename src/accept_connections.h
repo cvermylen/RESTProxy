@@ -14,6 +14,6 @@ ri_connection_t* wait_4_connection_request(ri_route_t *route);
 /*!
   \brief close the file descriptor associated to the described connection, and free the memory allocated to the descriptor
  */
-void close_connection(request_t* request);
+void close_connection(ri_connection_t* conn);
 
 #endif

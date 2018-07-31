@@ -153,11 +153,6 @@ printf("In between:'%s'\n", prop[1]);
 printf("Done decode\n");
 }
 
-void calculate_http_transition()
-{
-
-}
-
 void http_headers_free(http_header_t* header)
 {
 	for (int i=0; i < NUM_HTTP_HEADERS; i++) {

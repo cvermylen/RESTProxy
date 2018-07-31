@@ -60,16 +60,31 @@ request_t* create_request(const ri_connection_t* conn, int buff_no, char* buffer
 	return request;
 }
 
+void read_full_http_GET_request(int fd, http_message_t* msg)
+{
+printf("read_full_http_GET_request\n");
+        int n, pos = 0;
+        do {
+                n = read_from_buffer(fd, msg, pos);
+                http_message_update_status(msg, pos+1, n);
+		pos += n + 1;
+        } while(msg->status != HTTP_MSG_STATUS_HEADER_COMPLETE);
+}
+
 request_t* accept_opening_request_from_client(const ri_connection_t* conn)
 {
 printf("accept_opening_request_from_client\n");
 	int buff_no = alloc_buffer();
 	char* buffer = get_buffer(buff_no);
-	int sz = read_from_socket(conn->fd, buffer, TX_BUFFER_SIZE);
+	int sz = 0;
+	sz = read_from_socket(conn->fd, buffer, TX_BUFFER_SIZE);
+	if(sz ==0) return NULL;
 	int code = http_decode_request_type(buffer, sz);
 	request_t* request = NULL;
 	if(code > 0){
 		request = create_request(conn, buff_no, buffer);
+		request->http_message->function = code;
+		request->http_message->raw_message_length = sz;
 		switch(code){
 		case HTTP_REQUEST_GET:
 			read_full_http_GET_request(conn->fd, request->http_message);
@@ -84,6 +99,7 @@ printf("accept_opening_request_from_client\n");
 
 void reply_to_client(void* thread_data)
 {
+printf("reply_to_client\n");
         reply_t* reply = (reply_t*)thread_data;
         sock_write(reply->request->in_response.sock_fd, reply->response_message->buffer, reply->response_message->raw_message_length);
 }
@@ -141,9 +157,20 @@ void forward_message_to_all_servers(request_t* request)
 	}
 }
 
-void decode_request_message(request_t* request)
+void decode_request_message_header(request_t* request)
 {
-	decode_http_message(request->http_message);
+	decode_http_message_header(request->http_message);
+}
+
+void process_request_message_body(request_t* request)
+{
+	switch(request->http_message->function){
+	case HTTP_REQUEST_GET:
+		break;
+	case HTTP_REQUEST_POST:
+		break;
+	}
+        forward_message_to_all_servers(request);
 }
 
 void* sync_request_reply_to_server(reply_t* reply)

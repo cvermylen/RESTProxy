@@ -38,6 +38,7 @@ printf("HTTP_MSG_STATUS_INIT\n");
 			msg->status = HTTP_MSG_STATUS_HEADER;
 		}else{
 			printf("Message is not  HTTP\n");
+			exit(0); //TODO remove
 		}
 		break;
 	case HTTP_MSG_STATUS_HEADER:
@@ -77,6 +78,7 @@ printf("HTTP_MSG_STATUS_HEADER_COMPLETE\n");
 
 int get_line_length(char* buffer)
 {
+printf("get_line_length:'%s'", buffer);
 	int n = 0;
 	while(buffer[n] != '\n' && buffer[n] != '\0')
 		n++;
@@ -104,17 +106,7 @@ http_message_t* http_message_read_from_socket(int fd, http_message_t* msg)
 	return msg;
 }
 
-void read_full_http_GET_request(int fd, http_message_t* msg)
-{
-printf("read_full_http_GET_request\n");
-	int n, pos;
-	do {
-		n = read_from_buffer(fd, msg, pos);
-		http_message_update_status(msg, pos, n);
-	} while(msg->status != HTTP_MSG_STATUS_HEADER_COMPLETE);
-}
-
-void decode_http_message(http_message_t* msg)
+void decode_http_message_header(http_message_t* msg)
 {
 	decode_http_headers_init(msg->buffer, msg->raw_message_length);
 	decode_http_headers(&(msg->header));
