@@ -5,13 +5,14 @@
 #include <str_stack.h>
 #include <stdlib.h>
 
-http_message_t* http_message_init(int buff_no, char* buffer, int size)
+http_message_t* http_message_init(int buff_no, char* buffer, int code, int sz)
 {
 	http_message_t* http_message = (http_message_t*)malloc(sizeof(http_message_t));
 	http_headers_init(&(http_message->header));
 	http_message->buffer_no = buff_no;
 	http_message->buffer = buffer;
-	http_message->raw_message_length = size;
+	http_message->function = code;
+        http_message->raw_message_length = sz;
 	http_message->current_parsing_ptr = get_line_length(buffer); //skip first line as already processed
 	return http_message;
 }

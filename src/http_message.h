@@ -22,7 +22,7 @@ typedef struct {
 	int current_parsing_ptr;
 } http_message_t;
 
-http_message_t* http_message_init();
+http_message_t* http_message_init(int buff_no, char* buffer, int code, int sz);
 
 int get_line_length(char* buffer);
 

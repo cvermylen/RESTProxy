@@ -37,7 +37,7 @@ struct request{
 
 request_t* accept_opening_request_from_client(const ri_connection_t* conn);
 
-request_t* create_request(const ri_connection_t* conn, int buff_no, char* buffer);
+request_t* create_request(const ri_connection_t* conn, int buff_no, char* buffer, int code, int sz);
 
 /*!
   \brief Data that an instance of an out connector needs to send out. The connector instance may be hold in a separate thread.

@@ -44,12 +44,12 @@ reply_t* create_reply(const ri_connection_t* conn, ri_out_connector_t* out_conn)
 	return reply;
 }
 
-request_t* create_request(const ri_connection_t* conn, int buff_no, char* buffer)
+request_t* create_request(const ri_connection_t* conn, int buff_no, char* buffer, int code, int sz)
 {
         request_t* request= (request_t*)malloc(sizeof(request_t));
 	request->forward_mode = conn->route->forward_mode;
         request->buffer_size = TX_BUFFER_SIZE;
-	request->http_message = http_message_init(buff_no, buffer);
+	request->http_message = http_message_init(buff_no, buffer, code, sz);
 	request->out_connections = conn->route->out_connections;
 	request->in_response.sock_fd = conn->fd;
 	request->replies = (reply_t**)malloc(sizeof(reply_t*) * conn->route->out_connections);
@@ -82,9 +82,7 @@ printf("accept_opening_request_from_client\n");
 	int code = http_decode_request_type(buffer, sz);
 	request_t* request = NULL;
 	if(code > 0){
-		request = create_request(conn, buff_no, buffer);
-		request->http_message->function = code;
-		request->http_message->raw_message_length = sz;
+		request = create_request(conn, buff_no, buffer, code, sz);
 		switch(code){
 		case HTTP_REQUEST_GET:
 			read_full_http_GET_request(conn->fd, request->http_message);
@@ -178,10 +176,14 @@ void* sync_request_reply_to_server(reply_t* reply)
         int socket = connect_to_server(reply->content.sock->server_name, reply->content.sock->port);
         reply->content.sock->fd = socket;
         sock_write(socket, reply->request->http_message->buffer, reply->request->http_message->raw_message_length);
-        reply->response_message = http_message_init();
-printf("Message sent:%d\n", reply->response_message->buffer_no);
-        int n = split_receive(socket, reply->response_message->buffer, TX_BUFFER_SIZE);
-        reply->response_message->raw_message_length = n;
+printf("$$$Message sent:\n");
+	int buff_no = alloc_buffer();
+	char* buffer = get_buffer(buff_no);
+        int n = split_receive(socket, buffer, TX_BUFFER_SIZE);
+printf("$$$Received response\n");
+	int code = http_decode_response_type(buffer, n);
+        reply->response_message = http_message_init(buff_no, buffer, code, n);
+	decode_http_message_header(reply->response_message);
 printf("RECEIVED %d response:%s\n", n, reply->response_message->buffer);
         reply->response_callback(reply);
 }

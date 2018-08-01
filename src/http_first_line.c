@@ -8,3 +8,20 @@ int http_decode_request_type(char* buffer, int length)
                 return HTTP_REQUEST_POST;
 	return 0;
 }
+
+int http_decode_response_type(char* buffer, int length)
+{
+	int res = 0;
+	if(strncmp(buffer, "HTTP", 4) == 0){
+		int i = 0;
+		while(buffer[i++] != 0x20);
+		while(buffer[i++] == 0x20);
+		char* code = &(buffer[i]);
+		for(int j=i-1; j<i+2;j++){
+			res = res * 10;
+			res += buffer[j] - 48;
+		}
+	}
+printf("http_decode_response:%d\n", res);
+	return res;
+}

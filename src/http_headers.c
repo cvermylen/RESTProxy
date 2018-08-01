@@ -65,8 +65,13 @@ void decode_http_headers_init(char* buffer, int data_len)
 
 char* get_next_line()
 {
+	int eol_clean = 0;
+	while((http_header_buff[http_header_cur_loc] == 0x0A || http_header_buff[http_header_cur_loc] == 0x0D) && eol_clean < 2 ){
+		eol_clean++;
+		http_header_cur_loc++;
+	}
 	int start = http_header_cur_loc;
-	while((http_header_buff[++http_header_cur_loc] != '\n') && http_header_cur_loc < http_header_max_len);
+	while((http_header_buff[++http_header_cur_loc] != 0x0A && http_header_buff[http_header_cur_loc] != 0x0D) && http_header_cur_loc < http_header_max_len);
 printf("string: cur loc:%d, max_len:%d, start:%d\n", http_header_cur_loc, http_header_max_len, start);
 	char* result = NULL;
 	if(http_header_cur_loc <= http_header_max_len){
@@ -97,11 +102,12 @@ int find_semicolon(char* str)
 char** get_key_value_pair(char* raw_string)
 {
 printf("get_key_value_pair: %s\n", raw_string);
-	char** kv = (char**)malloc(sizeof(char*) * 2);
-	kv[0] = NULL; kv[1] = NULL;
+	char** kv = NULL;
 	int start = 0;
 	int mid = find_semicolon(raw_string);
 	if(mid > 0){
+		kv = (char**)malloc(sizeof(char*) * 2);
+		kv[0] = NULL; kv[1] = NULL;
 		kv[0] = (char*)malloc(sizeof(char) * mid);
 		strncpy(kv[0], raw_string, mid);
 		kv[0][mid] = '\0';
@@ -138,17 +144,25 @@ stack_head_t* http_headers_get(http_header_t* header, const int prop_key)
 void decode_http_headers(http_header_t* header)
 {
 	char* line;
-	while (strlen(line = get_next_line()) > 0){
-printf("line: %s\n", line);
+	int cont = 1;
+	while (cont && strlen(line = get_next_line()) > 0){
+printf("line: %d, '%x'\n", strlen(line), line[0]);
 		char** prop = get_key_value_pair(line);
-		if(prop[0] != NULL){
+		if(prop != NULL){
+			if(prop[0] != NULL){
 printf("In between:'%s'\n", prop[1]);
-			http_headers_add(header, prop[0], prop[1]);
-			free(prop[0]);
-			free(prop[1]);
+				http_headers_add(header, prop[0], prop[1]);
+printf("Before free prop 0\n");
+				free(prop[0]);
+printf("Before free prop 1\n");
+				free(prop[1]);
+			}
+printf("Before free prop\n");
+			free(prop);
 		}
+		cont = 0;
+printf("Before free line\n");
 		free(line);
-		free(prop);
 	}
 printf("Done decode\n");
 }
