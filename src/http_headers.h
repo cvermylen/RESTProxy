@@ -40,9 +40,9 @@ void decode_http_headers_init(char* buffer, int sata_len);
 
 char* get_next_line();
 
-int find_semicolon(char* str);
+int find_semicolon(char* str, int length);
 
-char** get_key_value_pair(char* raw_string);
+char** get_key_value_pair(char* raw_string, int length);
 
 void put_http_header(http_header_t*, char* key, char* value);
 

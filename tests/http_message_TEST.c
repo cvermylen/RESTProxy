@@ -8,8 +8,10 @@ extern char* mock_socket_buffer;
 Test(http_message, init)
 {
 	http_message_t* msg = NULL;
-	msg = http_message_init(0, NULL, 0, 0);
+	char* buff = (char*)malloc(sizeof(char));
+	msg = http_message_init(0, buff, 0, 0);
 	cr_assert(msg != NULL, "init expected to return a non-NULL value");
+	free(buff);
 	http_message_free(msg);
 }
 

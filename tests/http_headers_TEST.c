@@ -5,42 +5,42 @@
 Test(http_headers, semicolon_true)
 {
 	char str[]= "key:value";
-	int pos = find_semicolon(str);
+	int pos = find_semicolon(str, strlen(str));
 	cr_assert(pos == 3, "semicolon expected at position 3, not:%d", pos);
 }
 
 Test(http_headers, semicolon_false)
 {
 	char str[]= "keyvalue";
-	int pos = find_semicolon(str);
+	int pos = find_semicolon(str, strlen(str));
 	cr_assert(pos == -1, "semicolon expected at position 3, not:%d", pos);
 }
 
 Test(http_headers, semicolon_null)
 {
 	char* str= NULL;
-	int pos = find_semicolon(str);
+	int pos = find_semicolon(str, 0);
 	cr_assert(pos == -1, "semicolon expected at position 3, not:%d", pos);
 }
 
 Test(http_headers, semi2_null)
 {
 	char* str= NULL;
-	int pos = find_semicolon2(str, 3);
+	int pos = find_semicolon(str, 3);
 	cr_assert(pos == -1, "semicolon expected at position 3, not:%d", pos);
 }
 
 Test(http_headers, semi2)
 {
 	char str[] = "key:value";
-	int pos = find_semicolon2(str, 20);
+	int pos = find_semicolon(str, 20);
 	cr_assert(pos == 3, "semicolon expected at position 3, not:%d", pos);
 }
 
 Test(http_headers, semi2_short)
 {
 	char str[] = "key:value";
-	int pos = find_semicolon2(str, 2);
+	int pos = find_semicolon(str, 2);
 	cr_assert(pos == -1, "semicolon expected at position -1, not:%d", pos);
 }
 
@@ -70,14 +70,14 @@ Test(http_headers, decode_2)
 Test(http_headers, semi_false)
 {
 	char str[]= "keyvalue";
-	int pos = find_semicolon2(str, strlen(str));
+	int pos = find_semicolon(str, strlen(str));
 	cr_assert(pos == -1, "semicolon expected at position 3, not:%d", pos);
 }
 
 Test(http_headers, kv_true)
 {
 	char str[]= "key:value";
-	char** pair = get_key_value_pair(str);
+	char** pair = get_key_value_pair(str, strlen(str));
 	cr_assert(strcmp("key", pair[0]) == 0, "expected 'key', not %s", pair[0]);
 	cr_assert(strcmp("value", pair[1]) == 0, "expected 'value', not %s", pair[1]);
 	free(pair[0]);
@@ -88,7 +88,7 @@ Test(http_headers, kv_true)
 Test(http_headers, kv_false)
 {
 	char str[] = "key:";
-	char** pair = get_key_value_pair(str);
+	char** pair = get_key_value_pair(str, strlen(str));
 	cr_assert(strcmp("key", pair[0]) == 0, "expected 'key', not %s", pair[0]);
 	cr_assert(pair[1] == NULL, "expected value to be NULL");
 	free(pair[0]);
@@ -98,18 +98,16 @@ Test(http_headers, kv_false)
 Test(http_headers, no_kv)
 {
 	char str[] = "noKeyNoValue";
-	char** pair = get_key_value_pair(str);
-	cr_assert(pair[0] == NULL, "expected 'key' to be NULL");
-	cr_assert(pair[1] == NULL, "expected 'value' to be NULL");
+	char** pair = get_key_value_pair(str, strlen(str));
+	cr_assert(pair == NULL, "expected 'key/value' to be NULL");
 	free(pair);
 }
 
 Test(http_headers, no_key)
 {
 	char str[] = ":value";
-	char** pair = get_key_value_pair(str);
-	cr_assert(pair[0] == NULL, "expected 'key' to be NULL");
-	cr_assert(pair[1] == NULL, "expected 'value' to be NULL");
+	char** pair = get_key_value_pair(str, strlen(str));
+	cr_assert(pair == NULL, "expected 'key/value' to be NULL");
 	free(pair);
 }
 

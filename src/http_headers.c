@@ -8,7 +8,7 @@ char* http_header_buff;
 int http_header_cur_loc;
 int http_header_max_len;
 
-int find_semicolon2(char* str, int limit)
+int find_semicolon(char* str, int limit)
 {
 	int i = 0;
 	if(str == NULL)return -1;
@@ -28,7 +28,7 @@ printf("Http header line: '%s'\n", start_of_header);
 		res->key = -1;
 		return res;
 	}
-	int pos = find_semicolon2(start_of_header, line_length);
+	int pos = find_semicolon(start_of_header, line_length);
 	if(pos > 0){
 		res = (http_header_line_t*)malloc(sizeof(http_header_line_t));
 		start_of_header[pos] = '\0';
@@ -88,23 +88,12 @@ printf("i:%d\n", i);
 	return result;
 }
 
-int find_semicolon(char* str)
-{
-	int i = 0;
-	if(str == NULL)return -1;
-	while(str[i] != ':' && str[i] != '\0') i++;
-	if(str[i] == ':')
-		return i;
-	else
-		return -1;
-}
-
-char** get_key_value_pair(char* raw_string)
+char** get_key_value_pair(char* raw_string, int length)
 {
 printf("get_key_value_pair: %s\n", raw_string);
 	char** kv = NULL;
 	int start = 0;
-	int mid = find_semicolon(raw_string);
+	int mid = find_semicolon(raw_string, length);
 	if(mid > 0){
 		kv = (char**)malloc(sizeof(char*) * 2);
 		kv[0] = NULL; kv[1] = NULL;
@@ -129,7 +118,9 @@ void http_headers_add(http_header_t* header, char* key, char* value)
 {
 printf("Add: %s, '%s'\n", key, value);
 	int index = find_header_index(key);
+printf("Index:%d\n", index);
 	str_stack_push(header->headers[index], value);
+printf("Inserted\n");
 }
 
 stack_head_t* http_headers_get(http_header_t* header, const int prop_key)
@@ -145,9 +136,10 @@ void decode_http_headers(http_header_t* header)
 {
 	char* line;
 	int cont = 1;
+	get_next_line();
 	while (cont && strlen(line = get_next_line()) > 0){
 printf("line: %d, '%x'\n", strlen(line), line[0]);
-		char** prop = get_key_value_pair(line);
+		char** prop = get_key_value_pair(line, strlen(line));
 		if(prop != NULL){
 			if(prop[0] != NULL){
 printf("In between:'%s'\n", prop[1]);
@@ -159,8 +151,9 @@ printf("Before free prop 1\n");
 			}
 printf("Before free prop\n");
 			free(prop);
+		}else{
+			cont = 0;
 		}
-		cont = 0;
 printf("Before free line\n");
 		free(line);
 	}
