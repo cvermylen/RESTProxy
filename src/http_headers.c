@@ -13,18 +13,21 @@ int find_semicolon(char* str, int limit)
 	int i = 0;
 	if(str == NULL)return -1;
 	while(str[i] != ':' && i < limit && str[i] != '\0') i++;
-	if(str[i] == ':')
-		return i;
-	else
-		return -1;
+	return (str[i] == ':')? i : -1;
+}
+
+int is_last_header_line(char* header_line, int line_length)
+{
+	int i = 0;
+	while(header_line[i] == 0x20) i++;
+	return (header_line[i] == '\n');
 }
 
 http_header_line_t* decode_http_header_line(char* start_of_header, int line_length)
 {
 printf("Http header line: '%s'\n", start_of_header);
-	http_header_line_t* res = NULL;
-	if(line_length == 1 && start_of_header[0] == '\n'){
-		res = (http_header_line_t*)malloc(sizeof(http_header_line_t));
+	http_header_line_t* res = (http_header_line_t*)malloc(sizeof(http_header_line_t));
+	if(is_last_header_line(start_of_header, line_length)){
 		res->key = -1;
 		return res;
 	}

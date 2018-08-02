@@ -51,6 +51,36 @@ Test(http_headers, content_length_1)
 	cr_assert(3451 == res, "expected value of 3451, not:%d", res);
 }
 
+Test(http_headers, empty_line_1)
+{
+	char nl[] = "\n";
+	int i = is_last_header_line(nl, 1);
+	cr_assert(i != 0, "expected to be true");
+}
+
+Test(http_headers, empty_line_2)
+{
+	char nl[] = "     \n";
+	int i = is_last_header_line(nl, 1);
+	cr_assert(i != 0, "expected to be true");
+}
+
+Test(http_headers, empty_line_3)
+{
+	char nl[] = "l\n";
+	int i = is_last_header_line(nl, 1);
+	cr_assert(i == 0, "expected to be false");
+}
+
+Test(http_headers, empty_line_4)
+{
+	char* nl = (char*)malloc(sizeof(char)*2);
+	nl[0] = 0x0A;
+	nl[1] = 0x0D;
+	int i = is_last_header_line(nl, 2);
+	cr_assert(i != 0, "expected to be true");
+}
+
 Test(http_headers, decode_1)
 {
 	char str[] = "Content-Length: 120\nHost: Apple";
