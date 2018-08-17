@@ -7,6 +7,7 @@
 #include "accept_connections.h"
 #include "socket_connector.h"
 #include "request_reply.h"
+#include "http_first_line.h"
 #include <stack.h>
 
 stack_head_t* connections_stack;
@@ -52,6 +53,7 @@ printf("Received:%d\n", request->http_message->raw_message_length);
                 }else{
                         conn->error = errno;
                 }
+printf("Next loop in accepting connection\n");
         } while(request!= NULL && request->http_message->raw_message_length > 0);
 printf("##### End of connection\n");
         close_connection(conn);

@@ -19,7 +19,6 @@ typedef struct {
 	http_header_t header;
 	int body_length;
 	char* body;
-	int current_parsing_ptr;
 } http_message_t;
 
 http_message_t* http_message_init(int buff_no, char* buffer, int code, int sz);

@@ -13,7 +13,6 @@ http_message_t* http_message_init(int buff_no, char* buffer, int code, int sz)
 	http_message->buffer = buffer;
 	http_message->function = code;
         http_message->raw_message_length = sz;
-	http_message->current_parsing_ptr = get_line_length(buffer); //skip first line as already processed
 	return http_message;
 }
 
@@ -22,12 +21,7 @@ char* http_message_get_request_buffer(http_message_t* msg)
 	return msg->buffer;
 }
 
-//int calculate_next_header_line(http_message_t* msg, http_header_line_t* line)
-//{
-	
-//}
-
-void http_message_update_status(http_message_t* msg, int start_pos, int length)
+/*void http_message_update_status(http_message_t* msg, int start_pos, int length)
 {
 	int op = 0;
 	http_header_line_t* header_line = NULL;
@@ -45,24 +39,19 @@ printf("HTTP_MSG_STATUS_INIT\n");
 	case HTTP_MSG_STATUS_HEADER:
 printf("HTTP_MSG_STATUS_HEADER:%d, %d\n", start_pos, length);
 		//decode a header line
-		header_line = decode_http_header_line(&msg->buffer[sizeof(char) * start_pos], length);
-		if(header_line) {
+		if(!is_last_header_line(&msg->buffer[sizeof(char) * start_pos], length)) {
+			header_line = decode_http_header_line(&msg->buffer[sizeof(char) * start_pos], length);
 			//calculate_next_header_line(msg, header_line);
 			switch(header_line->key){
 			case HTTP_CONTENT_LENGTH:
 printf("HTTP_CONTENT_LENGTH\n");
 				msg->body_length = decode_body_length(header_line->value, header_line->value_length);
 				break;
-			case -1:
-				msg->status = HTTP_MSG_STATUS_HEADER_COMPLETE;
-printf("End of header\n");
-				break;
 			default:
 				break;
 			}
 		}else{
-			printf("Expected a valid header line");
-			exit(0);
+				msg->status = HTTP_MSG_STATUS_HEADER_COMPLETE;
 		}
 		break;
 	case HTTP_MSG_STATUS_HEADER_COMPLETE:
@@ -75,18 +64,18 @@ printf("HTTP_MSG_STATUS_HEADER_COMPLETE\n");
 		//calculate if complete
 		break;
 	}
-}
+}*/
 
-int get_line_length(char* buffer)
+/*int get_line_length(char* buffer)
 {
 printf("get_line_length:'%s'", buffer);
 	int n = 0;
 	while(buffer[n] != '\n' && buffer[n] != '\0')
 		n++;
 	return n;
-}
+}*/
 
-int read_from_buffer(int fd, http_message_t* msg, int start_index)
+/*int read_from_buffer(int fd, http_message_t* msg, int start_index)
 {
 printf("read_from_buffer start:%d\n", start_index);
 	if(start_index == msg->raw_message_length){
@@ -94,9 +83,9 @@ printf("read_from_buffer start:%d\n", start_index);
 	}
 	int n = get_line_length(msg->buffer + (start_index * sizeof(char)));
 	return n;
-}
+}*/
 
-http_message_t* http_message_read_from_socket(int fd, http_message_t* msg)
+/*http_message_t* http_message_read_from_socket(int fd, http_message_t* msg)
 {
 	int n, pos = 0;
 	do{
@@ -106,10 +95,10 @@ http_message_t* http_message_read_from_socket(int fd, http_message_t* msg)
 	} while(msg->status != HTTP_MSG_STATUS_BODY_COMPLETE);
 	return msg;
 }
-
+*/
 void decode_http_message_header(http_message_t* msg)
 {
-	decode_http_headers_init(msg->buffer, msg->raw_message_length);
+	decode_http_headers_init(&(msg->header), msg->buffer, msg->raw_message_length);
 	decode_http_headers(&(msg->header));
 }
 

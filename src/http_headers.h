@@ -3,13 +3,6 @@
 
 #include <str_stack.h>
 
-#define UNIT_TEST
-#ifdef UNIT_TEST
-extern char* http_header_buff;
-extern int http_header_cur_loc;
-extern int http_header_max_len;
-#endif
-
 #define NUM_HTTP_HEADERS			81
 
 typedef struct {
@@ -22,7 +15,19 @@ http_header_line_t* decode_http_header_line(char* start_of_header, int line_leng
 
 typedef struct {
 	stack_head_t* headers[NUM_HTTP_HEADERS];
+	char* buff;
+	int start_of_line;
+	int last_semicolon;
+	int cur_loc;
+	int max_len;
 } http_header_t;
+
+typedef struct {
+	char* str_start;
+	int str_len;
+} http_line_t;
+
+char* strmncpy(char* buffer, int start, int end);
 
 int decode_body_length(char* value, int field_length);
 
@@ -30,25 +35,15 @@ void http_headers_init(http_header_t* headers);
 
 void http_headers_free(http_header_t* header);
 
-int is_http_op_code(char* start_of_line, int line_length);
-
 stack_head_t* http_headers_get(http_header_t* header, const int prop_key);
 
-void http_headers_add(http_header_t* header, char* key, char* value);
+void http_headers_add(http_header_t* header);
 
-void decode_http_headers_init(char* buffer, int sata_len);
+void decode_http_headers_init(http_header_t* header, char* buffer, int sata_len);
 
-char* get_next_line();
-
-int find_semicolon(char* str, int length);
-
-char** get_key_value_pair(char* raw_string, int length);
-
-void put_http_header(http_header_t*, char* key, char* value);
+http_header_t* get_next_line(http_header_t* header);
 
 void decode_http_headers(http_header_t* header);
-
-void calculate_http_transition();
 
 int find_header_index(const char* header);
 

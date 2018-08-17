@@ -2,46 +2,202 @@
 
 #include <criterion/criterion.h>
 
-Test(http_headers, semicolon_true)
+Test(strmncpy, empty)
+{
+	char* str = "a line";
+	char* result = strmncpy(str, 2, 2);
+	cr_assert(0 == strlen(result), "length not 0 as expected: %d", strlen(result));
+	cr_assert(strcmp("", result) == 0, "expected '', not: %s", result);
+}
+
+Test(strmncpy, happy)
+{
+	char* str = "a non-empty line";
+	char* result = strmncpy(str, 2, 5);
+	cr_assert(3 == strlen(result), "length not 3 as expected: %d", strlen(result));
+	cr_assert(strcmp("non", result) == 0, "expected 'non', not: %s", result);
+}
+
+Test(http_headers_add, happy)
+{
+	http_header_t* header = (http_header_t*)malloc(sizeof(http_header_t));
+	http_headers_init(header);
+	header->buff = "Server:value";
+	header->start_of_line = 0;
+	header->last_semicolon = 6;
+	header->cur_loc = 12;
+	header->max_len = strlen(header->buff);
+	http_headers_add(header);
+	int size = stack_depth(header->headers[57]);
+	cr_assert(1 == size, "expected 1 element at 57, not:%d", size);
+}
+
+Test(http_headers_add, non_existing)
+{
+	http_header_t* header = (http_header_t*)malloc(sizeof(http_header_t));
+	http_headers_init(header);
+	header->buff = "funny:value";
+	header->start_of_line = 0;
+	header->last_semicolon = 5;
+	header->cur_loc = 11;
+	header->max_len = strlen(header->buff);
+	http_headers_add(header);
+}
+
+Test(eol, zero)
+{
+	char str[] = "";
+	http_header_t* header = (http_header_t*)malloc(sizeof(http_header_t));
+	header->buff = str;
+	header->start_of_line = 0;
+	header->cur_loc = 0;
+	header->max_len = 0;
+	skip_eol(header);
+	cr_assert(0 == header->start_of_line, "should not have been updated");
+	cr_assert(0 == header->cur_loc, "should not have been updated");
+	cr_assert(0 == header->max_len, "should not have been updated");
+}
+
+Test(eol, pos_1)
+{
+	char str[] = "\n";
+	http_header_t* header = (http_header_t*)malloc(sizeof(http_header_t));
+	header->buff = str;
+	header->start_of_line = 0;
+	header->cur_loc = 0;
+	header->max_len = 1;
+	skip_eol(header);
+	cr_assert(1 == header->start_of_line, "start_of_line expected:1, found:%d", header->start_of_line);
+	cr_assert(1 == header->cur_loc, "cur_loc expected:1, found: %d", header->cur_loc);
+	cr_assert(1 == header->max_len, "max_len should not have been updated");
+}
+
+Test(eol, pos_2)
+{
+	char str[] = {0x0A, 0x0D};
+	http_header_t* header = (http_header_t*)malloc(sizeof(http_header_t));
+	header->buff = str;
+	header->start_of_line = 0;
+	header->cur_loc = 0;
+	header->max_len = 2;
+	skip_eol(header);
+	cr_assert(2 == header->start_of_line, "start_of_line expected:2, found:%d", header->start_of_line);
+	cr_assert(2 == header->cur_loc, "cur_loc expected:2, found: %d", header->cur_loc);
+	cr_assert(2 == header->max_len, "max_len should not have been updated");
+}
+
+Test(eol, pos_3)
+{
+	char str[] = {0x0A, 0x20, 0x0D};
+	http_header_t* header = (http_header_t*)malloc(sizeof(http_header_t));
+	header->buff = str;
+	header->start_of_line = 0;
+	header->cur_loc = 0;
+	header->max_len = 3;
+	skip_eol(header);
+	cr_assert(1 == header->start_of_line, "start_of_line expected:0, found:%d", header->start_of_line);
+	cr_assert(1 == header->cur_loc, "cur_loc expected:0, found: %d", header->cur_loc);
+	cr_assert(3 == header->max_len, "max_len should not have been updated");
+}
+
+Test(eol, neg_1)
+{
+	char str[] = "  \n";
+	http_header_t* header = (http_header_t*)malloc(sizeof(http_header_t));
+	header->buff = str;
+	header->start_of_line = 0;
+	header->cur_loc = 0;
+	header->max_len = 3;
+	skip_eol(header);
+	cr_assert(0 == header->start_of_line, "start_of_line expected:2, found:%d", header->start_of_line);
+	cr_assert(0 == header->cur_loc, "cur_loc expected:2, found: %d", header->cur_loc);
+	cr_assert(3 == header->max_len, "max_len should not have been updated");
+}
+
+Test(is_eol_reached, empty)
+{
+	char str[] = "";
+	http_header_t* header = (http_header_t*)malloc(sizeof(http_header_t));
+	header->buff = str;
+	header->start_of_line = 0;
+	header->cur_loc = 0;
+	header->max_len = 0;
+	int res = is_eol_reached(header);
+	cr_assert(0 != res, "expected:true, found:%d", res);
+}
+
+Test(is_eol_reached, true_1)
+{
+	char str[] = "\n";
+	http_header_t* header = (http_header_t*)malloc(sizeof(http_header_t));
+	header->buff = str;
+	header->start_of_line = 0;
+	header->cur_loc = 0;
+	header->max_len = 1;
+	int res = is_eol_reached(header);
+	cr_assert(0 != res, "expected:true, found:%d", res);
+}
+
+Test(is_eol_reached, true_2)
+{
+	char str[] = {0x0A, 0x0D};;
+	http_header_t* header = (http_header_t*)malloc(sizeof(http_header_t));
+	header->buff = str;
+	header->start_of_line = 0;
+	header->cur_loc = 0;
+	header->max_len = 2;
+	int res = is_eol_reached(header);
+	cr_assert(0 != res, "expected:true, found:%d", res);
+}
+
+Test(is_eol_reached, false_1)
+{
+	char str[] = " \n";
+	http_header_t* header = (http_header_t*)malloc(sizeof(http_header_t));
+	header->buff = str;
+	header->start_of_line = 0;
+	header->cur_loc = 0;
+	header->max_len = 2;
+	int res = is_eol_reached(header);
+	cr_assert(0 == res, "expected:false, found:%d", res);
+}
+
+Test(is_eol_reached, false_2)
+{
+	char str[] = {0x0D, 0x020};
+	http_header_t* header = (http_header_t*)malloc(sizeof(http_header_t));
+	header->buff = str;
+	header->start_of_line = 0;
+	header->cur_loc = 0;
+	header->max_len = 2;
+	int res = is_eol_reached(header);
+	cr_assert(0 == res, "expected:false, found:%d", res);
+}
+
+Test(get_next_line, semicolon_true)
 {
 	char str[]= "key:value";
-	int pos = find_semicolon(str, strlen(str));
-	cr_assert(pos == 3, "semicolon expected at position 3, not:%d", pos);
+	http_header_t* header = (http_header_t*)malloc(sizeof(http_header_t));
+	header->buff = str;
+	header->start_of_line = 0;
+	header->cur_loc = 0;
+	header->last_semicolon = -1;
+	header->max_len = strlen(str);
+	get_next_line(header);
+	cr_assert(3 == header->last_semicolon, "not the expected position for semicolon: %d", header->last_semicolon);
 }
 
-Test(http_headers, semicolon_false)
+Test(get_next_line, semicolon_false)
 {
 	char str[]= "keyvalue";
-	int pos = find_semicolon(str, strlen(str));
-	cr_assert(pos == -1, "semicolon expected at position 3, not:%d", pos);
-}
-
-Test(http_headers, semicolon_null)
-{
-	char* str= NULL;
-	int pos = find_semicolon(str, 0);
-	cr_assert(pos == -1, "semicolon expected at position 3, not:%d", pos);
-}
-
-Test(http_headers, semi2_null)
-{
-	char* str= NULL;
-	int pos = find_semicolon(str, 3);
-	cr_assert(pos == -1, "semicolon expected at position 3, not:%d", pos);
-}
-
-Test(http_headers, semi2)
-{
-	char str[] = "key:value";
-	int pos = find_semicolon(str, 20);
-	cr_assert(pos == 3, "semicolon expected at position 3, not:%d", pos);
-}
-
-Test(http_headers, semi2_short)
-{
-	char str[] = "key:value";
-	int pos = find_semicolon(str, 2);
-	cr_assert(pos == -1, "semicolon expected at position -1, not:%d", pos);
+	http_header_t* header = (http_header_t*)malloc(sizeof(http_header_t));
+	header->buff = str;
+	header->start_of_line = 0;
+	header->cur_loc = 0;
+	header->last_semicolon = -1;
+	header->max_len = strlen(str);
+	get_next_line(header);
+	cr_assert(-1 == header->last_semicolon, "not the expected position for semicolon: %d", header->last_semicolon);
 }
 
 Test(http_headers, content_length_1)
@@ -51,131 +207,191 @@ Test(http_headers, content_length_1)
 	cr_assert(3451 == res, "expected value of 3451, not:%d", res);
 }
 
-Test(http_headers, empty_line_1)
+Test(decode_http_headers, empty_0)
 {
-	char nl[] = "\n";
-	int i = is_last_header_line(nl, 1);
-	cr_assert(i != 0, "expected to be true");
+	char str[] = "";
+	http_header_t* header = (http_header_t*)malloc(sizeof(http_header_t));
+	header->buff = str;
+	header->start_of_line = 0;
+	header->last_semicolon = -1;
+	header->cur_loc = 0;
+	header->max_len = 26;
+	http_headers_init(header);
+	decode_http_headers(header);
 }
 
-Test(http_headers, empty_line_2)
+Test(decode_http_headers, empty_1)
 {
-	char nl[] = "     \n";
-	int i = is_last_header_line(nl, 1);
-	cr_assert(i != 0, "expected to be true");
+	char str[] = "HTTP 1/1 GET\n";
+	http_header_t* header = (http_header_t*)malloc(sizeof(http_header_t));
+	header->buff = str;
+	header->start_of_line = 0;
+	header->last_semicolon = -1;
+	header->cur_loc = 0;
+	header->max_len = 26;
+	http_headers_init(header);
+	decode_http_headers(header);
 }
 
-Test(http_headers, empty_line_3)
+Test(decode_http_headers, happy_1)
 {
-	char nl[] = "l\n";
-	int i = is_last_header_line(nl, 1);
-	cr_assert(i == 0, "expected to be false");
+	char str[] = "HTTP 1/1 GET\nAccept: Apple\nServer: localhost\n\n<html>\n";
+	http_header_t* header = (http_header_t*)malloc(sizeof(http_header_t));
+	header->buff = str;
+	header->start_of_line = 0;
+	header->last_semicolon = -1;
+	header->cur_loc = 0;
+	header->max_len = 26;
+	http_headers_init(header);
+	decode_http_headers(header);
+	int size = stack_depth(header->headers[0]);
+	cr_assert(1 == size, "expected 'Accept' in headers");
+	size = stack_depth(header->headers[57]);
+	cr_assert(1 == size, "expected 'Server' in headers");
 }
 
-Test(http_headers, empty_line_4)
+Test(get_next_line, 1_line)
 {
-	char* nl = (char*)malloc(sizeof(char)*2);
-	nl[0] = 0x0A;
-	nl[1] = 0x0D;
-	int i = is_last_header_line(nl, 2);
-	cr_assert(i != 0, "expected to be true");
+	http_header_t* header = (http_header_t*)malloc(sizeof(http_header_t));
+	header->buff = "1_line, a single line";
+	header->cur_loc = 0;
+	header->max_len = strlen(header->buff);
+	header->start_of_line = 0;
+	get_next_line(header);
+	cr_assert(0 == header->start_of_line, "start_of_line should not have changed: %d", header->start_of_line);
+	cr_assert(21 == header->cur_loc, "end of line not as expected: %d", header->cur_loc);
 }
 
-Test(http_headers, decode_1)
+Test(get_next_line, 2_line)
 {
-	char str[] = "Content-Length: 120\nHost: Apple";
-	http_header_line_t* r = decode_http_header_line(str, 19);
-	cr_assert(HTTP_CONTENT_LENGTH == r->key, "expected HTTP_CONTENT_LENGTH, not:%d", r->key);
-	cr_assert(r->value_length == 3, "expected length of 3, not:%d", r->value_length);
-	cr_assert(strncmp(r->value, "120", 3)==0, "expected value 120, not:'%s'", r->value);
+	http_header_t* header = (http_header_t*)malloc(sizeof(http_header_t));
+	header->buff = "line1\nline2";
+	header->cur_loc = 0;
+	header->max_len = strlen(header->buff);
+	header->start_of_line = 0;
+	get_next_line(header);
+	get_next_line(header);
+	cr_assert(6 == header->start_of_line, "start_of_line should not have changed: %d", header->start_of_line);
+	cr_assert(11 == header->cur_loc, "end of line not as expected: %d", header->cur_loc);
 }
 
-Test(http_headers, decode_2)
+Test(get_next_line, last_line)
 {
-	char str[] = "\n";
-	http_header_line_t* r = decode_http_header_line(str, 1);
-	cr_assert(-1 == r->key, "expected '-1', not:%d", r->key);
-}
-
-Test(http_headers, semi_false)
-{
-	char str[]= "keyvalue";
-	int pos = find_semicolon(str, strlen(str));
-	cr_assert(pos == -1, "semicolon expected at position 3, not:%d", pos);
-}
-
-Test(http_headers, kv_true)
-{
-	char str[]= "key:value";
-	char** pair = get_key_value_pair(str, strlen(str));
-	cr_assert(strcmp("key", pair[0]) == 0, "expected 'key', not %s", pair[0]);
-	cr_assert(strcmp("value", pair[1]) == 0, "expected 'value', not %s", pair[1]);
-	free(pair[0]);
-	free(pair[1]);
-	free(pair);
-}
-
-Test(http_headers, kv_false)
-{
-	char str[] = "key:";
-	char** pair = get_key_value_pair(str, strlen(str));
-	cr_assert(strcmp("key", pair[0]) == 0, "expected 'key', not %s", pair[0]);
-	cr_assert(pair[1] == NULL, "expected value to be NULL");
-	free(pair[0]);
-	free(pair);
-}
-
-Test(http_headers, no_kv)
-{
-	char str[] = "noKeyNoValue";
-	char** pair = get_key_value_pair(str, strlen(str));
-	cr_assert(pair == NULL, "expected 'key/value' to be NULL");
-	free(pair);
-}
-
-Test(http_headers, no_key)
-{
-	char str[] = ":value";
-	char** pair = get_key_value_pair(str, strlen(str));
-	cr_assert(pair == NULL, "expected 'key/value' to be NULL");
-	free(pair);
-}
-
-Test(http_headers, 1_line)
-{
-	http_header_buff = "1_line, a single line";
-	http_header_cur_loc = 0;
-	http_header_max_len = strlen(http_header_buff);
-	char* str = get_next_line();
-	cr_assert(strcmp("1_line, a single line", str) == 0, "Not the expected result:%s", str);
-	free(str);
-}
-
-Test(http_headers, last_line)
-{
-	http_header_buff = "a single line";
-	http_header_cur_loc = 0;
-	http_header_max_len = strlen(http_header_buff);
-	char* str = get_next_line();
-	str = get_next_line();
-	cr_assert(strlen(str) == 0, "next line after line should be NULL");
+	http_header_t* header = (http_header_t*)malloc(sizeof(http_header_t));
+	header->buff = "a single line";
+	header->cur_loc = 0;
+	header->start_of_line = 0;
+	header->max_len = strlen(header->buff);
+	get_next_line(header);
+	get_next_line(header);
+	cr_assert(13 == header->cur_loc, "cur_loc should point after the last caracter, not:%d", header->cur_loc);
+	cr_assert(13 == header->start_of_line, "start_of_line should point after the last caracter, not:%d", header->start_of_line);
 
 }
 
-Test(http_headers, 3_lines)
+Test(get_next_line, 3_lines)
 {
-	http_header_buff = "first line\nsecond line\nthird line";
-	http_header_cur_loc = 0;
-	http_header_max_len = strlen(http_header_buff);
-	char* str1 = get_next_line();
-	cr_assert(strcmp("first line", str1) == 0, "first line not as expected:%s", str1);
-	free(str1);
-	char* str2 = get_next_line();
-	cr_assert(strcmp("second line", str2) == 0, "second line not as expected: %s", str2);
-	free(str2);
-	char* str3 = get_next_line();
-	cr_assert(strcmp("third line", str3) == 0, "third line not as expected: %s", str3);
-	free(str3);
+	http_header_t* header = (http_header_t*)malloc(sizeof(http_header_t));
+	header->buff = "first line\nsecond line\nthird line";
+	header->cur_loc = 0;
+	header->start_of_line = 0;
+	header->max_len = strlen(header->buff);
+	get_next_line(header);
+	get_next_line(header);
+	get_next_line(header);
+	cr_assert(33 == header->cur_loc, "expcted end of third line at 33, not %d", header->cur_loc);
+	cr_assert(23 == header->start_of_line, "expcted end of third line at 33, not %d", header->start_of_line);
+}
+
+Test(strlen, 1_line)
+{
+	http_header_t* header = (http_header_t*)malloc(sizeof(http_header_t));
+	header->buff = "a line";
+	header->start_of_line = 0;
+	header->cur_loc = 0;
+	header->max_len = strlen(header->buff);
+	get_next_line(header);
+	int i = header_strlen(header);
+	cr_assert(6 == i, "Not the expected length: %d", i);
+}
+
+Test(strlen, 1_line_cr)
+{
+	http_header_t* header = (http_header_t*)malloc(sizeof(http_header_t));
+	header->buff = "a line\n";
+	header->start_of_line = 0;
+	header->cur_loc = 0;
+	header->max_len = strlen(header->buff);
+	get_next_line(header);
+	int i = header_strlen(header);
+	cr_assert(6 == i, "Not the expected length: %d", i);
+}
+
+Test(strlen, 1_line_cr_2)
+{
+	http_header_t* header = (http_header_t*)malloc(sizeof(http_header_t));
+	char str[] = {'a',' ','l','i','n','e', 0x0A, 0x0D};
+	header->buff = str;
+	header->start_of_line = 0;
+	header->cur_loc = 0;
+	header->max_len = strlen(header->buff);
+	get_next_line(header);
+	int i = header_strlen(header);
+	cr_assert(6 == i, "Not the expected length: %d", i);
+}
+
+Test(strlen, 2_line_cr)
+{
+	http_header_t* header = (http_header_t*)malloc(sizeof(http_header_t));
+	header->buff = "a line\nsecond line";
+	header->start_of_line = 0;
+	header->cur_loc = 0;
+	header->max_len = 18;
+	get_next_line(header);
+	get_next_line(header);
+	int i = header_strlen(header);
+	cr_assert(11 == i, "Not the expected length: %d", i);
+}
+
+Test(strlen, 2_line_cr_2)
+{
+	http_header_t* header = (http_header_t*)malloc(sizeof(http_header_t));
+	char str[] = {'a',' ','l','i','n','e',0x0A,0x0D,'s','e','c','o','n','d',' ','l','i','n','e'};
+	header->buff = str;
+	header->start_of_line = 0;
+	header->cur_loc = 0;
+	header->max_len = 19;
+	get_next_line(header);
+	get_next_line(header);
+	int i = header_strlen(header);
+	cr_assert(11 == i, "Not the expected length: %d", i);
+}
+
+Test(strlen, empty)
+{
+	http_header_t* header = (http_header_t*)malloc(sizeof(http_header_t));
+	header->buff = "a line\n\nsecond line";
+	header->start_of_line = 0;
+	header->cur_loc = 0;
+	header->max_len = 19;
+	get_next_line(header);
+	get_next_line(header);
+	int i = header_strlen(header);
+	cr_assert(0 == i, "Not the expected length: %d", i);
+}
+
+Test(strlen, empty_2)
+{
+	http_header_t* header = (http_header_t*)malloc(sizeof(http_header_t));
+	char str[] = {'a',' ','l','i','n','e',0x0A,0x0D,0x0A,0x0D,'s','e','c','o','n','d',' ','l','i','n','e'};
+	header->buff = str;
+	header->start_of_line = 0;
+	header->cur_loc = 0;
+	header->max_len = 21;
+	get_next_line(header);
+	get_next_line(header);
+	int i = header_strlen(header);
+	cr_assert(0 == i, "Not the expected length: %d", i);
 }
 
 Test(http_headers, get_empty)
@@ -191,7 +407,13 @@ Test(http_header, get_1)
 {
         http_header_t* header = (http_header_t*)malloc(sizeof(http_header_t));
 	http_headers_init(header);
-        http_headers_add(header, HTTP_HEADER_STRINGS[3], "value1");
+	char str[] = "Accept-Language:value1";
+	header->buff = str;
+	header->start_of_line = 0;
+	header->cur_loc = 22;
+	header->max_len = strlen(str);
+	header->last_semicolon = 15;
+        http_headers_add(header);
         stack_head_t* st = http_headers_get(header, 3);
         cr_assert(1 == stack_depth(st), "expected stack depth to be 1, not: %d", stack_depth(st));
         char* s = str_stack_pop(st);
@@ -206,21 +428,27 @@ Test(http_header, get_2)
 {
         http_header_t* header = (http_header_t*)malloc(sizeof(http_header_t));
 	http_headers_init(header);
-        http_headers_add(header, HTTP_HEADER_STRINGS[3], "value1");
-        http_headers_add(header, HTTP_HEADER_STRINGS[3], "value2");
+	char str[] = "Accept-Language:value1";
+	header->buff = str;
+	header->start_of_line = 0;
+	header->cur_loc = 21;
+	header->max_len = strlen(str);
+	header->last_semicolon = 15;
+        http_headers_add(header);
+        http_headers_add(header);
         stack_head_t* st = http_headers_get(header, 3);
         cr_assert(2 == stack_depth(st), "expected stack depth to be 2, not: %d", stack_depth(st));
         str_stack_free(st);
         http_headers_free(header);
 }
 
-Test(http_header, parse_retrieve)
+Test(decode_http_header, parse_retrieve)
 {
 	http_header_t* header = (http_header_t*)malloc(sizeof(http_header_t));
 	http_headers_init(header);
 	char msg[] = "HTTP/1.1 200 OK\nDate: Mon, 23 May 2005 22:38:34 GMT\nContent-Type: text/html; charset=UTF-8\nContent-Length: 14\nLast-Modified: Wed, 08 Jan 2003 23:11:55 GMT\nServer: Apache/1.3.3.7 (Unix) (Red-Hat/Linux)\nETag: \"3f80f-1b6-3e1cb03b\"\nAccept-Ranges: bytes\n\n<html>\n</html>";
 
-	decode_http_headers_init(msg, strlen(msg));
+	decode_http_headers_init(header, msg, strlen(msg));
 	decode_http_headers(header);
 	stack_head_t* vals = http_headers_get(header, HTTP_CONTENT_TYPE);
 	cr_assert(vals->num_elems == 1, "expected to have 1 element for Content-Type, not: %d", vals->num_elems);

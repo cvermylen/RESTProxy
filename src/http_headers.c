@@ -2,47 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <math.h>
 #include <str_stack.h>
-
-char* http_header_buff;
-int http_header_cur_loc;
-int http_header_max_len;
-
-int find_semicolon(char* str, int limit)
-{
-	int i = 0;
-	if(str == NULL)return -1;
-	while(str[i] != ':' && i < limit && str[i] != '\0') i++;
-	return (str[i] == ':')? i : -1;
-}
-
-int is_last_header_line(char* header_line, int line_length)
-{
-	int i = 0;
-	while(header_line[i] == 0x20) i++;
-	return (header_line[i] == '\n');
-}
-
-http_header_line_t* decode_http_header_line(char* start_of_header, int line_length)
-{
-printf("Http header line: '%s'\n", start_of_header);
-	http_header_line_t* res = (http_header_line_t*)malloc(sizeof(http_header_line_t));
-	if(is_last_header_line(start_of_header, line_length)){
-		res->key = -1;
-		return res;
-	}
-	int pos = find_semicolon(start_of_header, line_length);
-	if(pos > 0){
-		res = (http_header_line_t*)malloc(sizeof(http_header_line_t));
-		start_of_header[pos] = '\0';
-		res->key = find_header_index(start_of_header);
-		start_of_header[pos] = ':';
-		for(pos++; start_of_header[pos] == ' '; pos++);
-		res->value = start_of_header + (sizeof(char) * (pos));
-		res->value_length = line_length - pos;
-	}
-	return res;
-}
 
 int decode_body_length(char* value, int field_length)
 {
@@ -59,73 +20,77 @@ void http_headers_init(http_header_t* header)
 	}
 }
 
-void decode_http_headers_init(char* buffer, int data_len)
+void decode_http_headers_init(http_header_t* header, char* buffer, int data_len)
 {
-	http_header_buff = buffer;
-	http_header_cur_loc = 0;
-	http_header_max_len = data_len;
+	header->buff = buffer;
+	header->cur_loc = 0;
+	header->last_semicolon = -1;
+	header->max_len = data_len;
 }
 
-char* get_next_line()
+/*
+ \pre buff is not NULL
+ \pre start_of_line <= cur_loc <= max_len
+*/
+void skip_eol(http_header_t* header)
 {
-	int eol_clean = 0;
-	while((http_header_buff[http_header_cur_loc] == 0x0A || http_header_buff[http_header_cur_loc] == 0x0D) && eol_clean < 2 ){
-		eol_clean++;
-		http_header_cur_loc++;
+	if (header->cur_loc < header->max_len && header->buff[header->cur_loc] == 0x0A
+			&& header->buff[header->cur_loc + 1] == 0x0D){
+		header->cur_loc += 2;
+	}else if(header->buff[header->cur_loc] == '\n'){
+		header->cur_loc += 1;
 	}
-	int start = http_header_cur_loc;
-	while((http_header_buff[++http_header_cur_loc] != 0x0A && http_header_buff[http_header_cur_loc] != 0x0D) && http_header_cur_loc < http_header_max_len);
-printf("string: cur loc:%d, max_len:%d, start:%d\n", http_header_cur_loc, http_header_max_len, start);
-	char* result = NULL;
-	if(http_header_cur_loc <= http_header_max_len){
-		result = (char*)malloc(sizeof(char) * (http_header_cur_loc - start + 1));
-		int i = 0;
-		for(; i < http_header_cur_loc - start; result[i]=http_header_buff[start+i], i++);
-printf("i:%d\n", i);
-		result[i] = '\0';
-		http_header_cur_loc += 1;
-	}else{
-		result = (char*) malloc (sizeof(char));
-		result[0] = '\0';
+	header->start_of_line = header-> cur_loc;
+}
+
+int is_eol_reached(http_header_t* header)
+{
+	return (header->cur_loc == header->max_len) || 
+		((header->cur_loc < header->max_len) && 
+			 (header->cur_loc < header->max_len && 
+				header->buff[header->cur_loc] == 0x0A && 
+				header->buff[header->cur_loc+1] == 0x0D) ||
+			(header->buff[header->cur_loc] == '\n' ));
+}
+
+http_header_t* get_next_line(http_header_t* header)
+{
+	skip_eol(header);
+	while(!is_eol_reached(header)) {
+		if(header->buff[header->cur_loc] == ':')
+			header->last_semicolon = header->cur_loc;
+		header->cur_loc +=1;
 	}
+	return header;
+}
+
+int header_strlen(http_header_t* header)
+{
+	return header->cur_loc - header->start_of_line;
+}
+
+char* strmncpy(char* buffer, int start, int end)
+{
+	char* result = (char*)malloc(sizeof(char) * (end - start +1));
+	strncpy(result, &buffer[start], end - start);
+	result[end - start] = '\0';
 	return result;
 }
 
-char** get_key_value_pair(char* raw_string, int length)
+void http_headers_add(http_header_t* header)
 {
-printf("get_key_value_pair: %s\n", raw_string);
-	char** kv = NULL;
-	int start = 0;
-	int mid = find_semicolon(raw_string, length);
-	if(mid > 0){
-		kv = (char**)malloc(sizeof(char*) * 2);
-		kv[0] = NULL; kv[1] = NULL;
-		kv[0] = (char*)malloc(sizeof(char) * mid);
-		strncpy(kv[0], raw_string, mid);
-		kv[0][mid] = '\0';
-		int last = strlen(raw_string);
-		if(last > (mid + 1)){
-			mid = mid +1;
-			while(isspace(raw_string[mid])) mid++;
-			kv[1] = (char*)malloc(sizeof(char) * (last-mid+1));
-			int i = 0;
-			for(; i < (last-mid); kv[1][i] = raw_string[mid+ i], i++);
-			kv[1][i] = '\0';
-		}
-	}
-printf("done getKV\n");
-	return kv;
-}
-
-void http_headers_add(http_header_t* header, char* key, char* value)
-{
-printf("Add: %s, '%s'\n", key, value);
+	char* key = strmncpy(header->buff, header->start_of_line, header->last_semicolon);
 	int index = find_header_index(key);
-printf("Index:%d\n", index);
-	str_stack_push(header->headers[index], value);
-printf("Inserted\n");
+	int start_value_pos = header->last_semicolon + 1;
+	while(header->buff[start_value_pos] == 0x20) start_value_pos++;
+	char* value = strmncpy(header->buff, start_value_pos, header->cur_loc);
+	if(index >= 0)
+		str_stack_push(header->headers[index], value);
+	free(key);
+	free(value);
 }
 
+	
 stack_head_t* http_headers_get(http_header_t* header, const int prop_key)
 {
         stack_head_t* result = NULL;
@@ -137,30 +102,15 @@ stack_head_t* http_headers_get(http_header_t* header, const int prop_key)
 
 void decode_http_headers(http_header_t* header)
 {
-	char* line;
 	int cont = 1;
-	get_next_line();
-	while (cont && strlen(line = get_next_line()) > 0){
-printf("line: %d, '%x'\n", strlen(line), line[0]);
-		char** prop = get_key_value_pair(line, strlen(line));
-		if(prop != NULL){
-			if(prop[0] != NULL){
-printf("In between:'%s'\n", prop[1]);
-				http_headers_add(header, prop[0], prop[1]);
-printf("Before free prop 0\n");
-				free(prop[0]);
-printf("Before free prop 1\n");
-				free(prop[1]);
-			}
-printf("Before free prop\n");
-			free(prop);
+	get_next_line(header);
+	while(cont && header_strlen(get_next_line(header)) > 0){
+		if(header->last_semicolon > header->start_of_line){
+			http_headers_add(header);
 		}else{
 			cont = 0;
 		}
-printf("Before free line\n");
-		free(line);
 	}
-printf("Done decode\n");
 }
 
 void http_headers_free(http_header_t* header)

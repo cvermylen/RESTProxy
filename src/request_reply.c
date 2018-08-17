@@ -60,7 +60,7 @@ request_t* create_request(const ri_connection_t* conn, int buff_no, char* buffer
 	return request;
 }
 
-void read_full_http_GET_request(int fd, http_message_t* msg)
+/*void read_full_http_GET_request(int fd, http_message_t* msg)
 {
 printf("read_full_http_GET_request\n");
         int n, pos = 0;
@@ -69,7 +69,7 @@ printf("read_full_http_GET_request\n");
                 http_message_update_status(msg, pos+1, n);
 		pos += n + 1;
         } while(msg->status != HTTP_MSG_STATUS_HEADER_COMPLETE);
-}
+}*/
 
 request_t* accept_opening_request_from_client(const ri_connection_t* conn)
 {
@@ -85,12 +85,13 @@ printf("accept_opening_request_from_client\n");
 		request = create_request(conn, buff_no, buffer, code, sz);
 		switch(code){
 		case HTTP_REQUEST_GET:
-			read_full_http_GET_request(conn->fd, request->http_message);
+			//read_full_http_GET_request(conn->fd, request->http_message);
 			break;
 		case HTTP_REQUEST_POST:
 			printf("Not implemented yet\n");
 			exit(0);
 		}
+printf("%s\n", buffer);
 	}
         return request;
 }
@@ -100,6 +101,7 @@ void reply_to_client(void* thread_data)
 printf("reply_to_client\n");
         reply_t* reply = (reply_t*)thread_data;
         sock_write(reply->request->in_response.sock_fd, reply->response_message->buffer, reply->response_message->raw_message_length);
+printf("sent to client\n");
 }
 
 void release_reply(reply_t* reply)
