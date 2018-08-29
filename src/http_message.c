@@ -48,7 +48,6 @@ void receive_reply(reply_t* reply)
 	//read first line
 	int sz = read_from_socket(reply->content.sock->fd, buffer, TX_BUFFER_SIZE);
 	int code = http_decode_response_type(buffer, sz);
-	//int n = split_receive(reply->content.sock->fd, buffer, TX_BUFFER_SIZE);
 printf("RECEIVED:%d response:%s\n", sz, buffer);
 	//int code = http_decode_response_type(buffer, n);
 	reply->response_message = http_message_init(buff_no, buffer, code, sz);
