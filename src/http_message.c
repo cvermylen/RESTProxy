@@ -58,51 +58,6 @@ printf("Body length:%d\n", reply->response_message->body_length);
 printf("Body received\n");
 }
 
-/*void http_message_update_status(http_message_t* msg, int start_pos, int length)
-{
-	int op = 0;
-	http_header_line_t* header_line = NULL;
-	switch(msg->status){
-	case HTTP_MSG_STATUS_INIT:
-printf("HTTP_MSG_STATUS_INIT\n");
-		//decode header line
-		if(msg->function > 0) {
-			msg->status = HTTP_MSG_STATUS_HEADER;
-		}else{
-			printf("Message is not  HTTP\n");
-			exit(0); //TODO remove
-		}
-		break;
-	case HTTP_MSG_STATUS_HEADER:
-printf("HTTP_MSG_STATUS_HEADER:%d, %d\n", start_pos, length);
-		//decode a header line
-		if(!is_last_header_line(&msg->buffer[sizeof(char) * start_pos], length)) {
-			header_line = decode_http_header_line(&msg->buffer[sizeof(char) * start_pos], length);
-			//calculate_next_header_line(msg, header_line);
-			switch(header_line->key){
-			case HTTP_CONTENT_LENGTH:
-printf("HTTP_CONTENT_LENGTH\n");
-				msg->body_length = decode_body_length(header_line->value, header_line->value_length);
-				break;
-			default:
-				break;
-			}
-		}else{
-				msg->status = HTTP_MSG_STATUS_HEADER_COMPLETE;
-		}
-		break;
-	case HTTP_MSG_STATUS_HEADER_COMPLETE:
-printf("HTTP_MSG_STATUS_HEADER_COMPLETE\n");
-		msg->body_length -= length - start_pos;
-		if(msg->body_length == 0)
-			msg->status = HTTP_MSG_STATUS_BODY_COMPLETE;
-		//accumulate datao
-		//previous state has to be HTTP_MSG_STATUS_LENGTH
-		//calculate if complete
-		break;
-	}
-}*/
-
 void http_message_free(http_message_t* msg)
 {
 	http_headers_free(&(msg->header));

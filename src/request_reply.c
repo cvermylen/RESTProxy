@@ -59,17 +59,6 @@ request_t* create_request(const ri_connection_t* conn, int buff_no, char* buffer
 	return request;
 }
 
-/*void read_full_http_GET_request(int fd, http_message_t* msg)
-{
-printf("read_full_http_GET_request\n");
-        int n, pos = 0;
-        do {
-                n = read_from_buffer(fd, msg, pos);
-                http_message_update_status(msg, pos+1, n);
-		pos += n + 1;
-        } while(msg->status != HTTP_MSG_STATUS_HEADER_COMPLETE);
-}*/
-
 request_t* accept_opening_request_from_client(const ri_connection_t* conn)
 {
 printf("accept_opening_request_from_client\n");
