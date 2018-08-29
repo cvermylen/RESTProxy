@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <sys/socket.h>
+#include <fcntl.h>
 #include <netinet/in.h>
 #include <netdb.h>
 #include <strings.h>
@@ -19,7 +20,9 @@ int split_receive(int socket, char* buffer, int max_size)
 {
 printf("split_receive\n");
 	int total_received = 0, n = 0;
-	while((n = recv(socket, buffer+(total_received*sizeof(char)), max_size-total_received, 0)) > 0){
+	while((n = recv(socket, buffer+(total_received*sizeof(char)), max_size-total_received, MSG_PEEK)) > 0){
+		n = recv(socket, buffer+(total_received*sizeof(char)), max_size-total_received, 0);
+printf("Receiving: %d\n", n);
 		total_received += n;
 	}
 printf("%s", buffer);

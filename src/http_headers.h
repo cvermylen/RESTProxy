@@ -15,6 +15,7 @@ http_header_line_t* decode_http_header_line(char* start_of_header, int line_leng
 
 typedef struct {
 	stack_head_t* headers[NUM_HTTP_HEADERS];
+	int fd;
 	char* buff;
 	int start_of_line;
 	int last_semicolon;
@@ -29,7 +30,7 @@ typedef struct {
 
 char* strmncpy(char* buffer, int start, int end);
 
-int decode_body_length(char* value, int field_length);
+int decode_body_length(http_header_t* header);
 
 void http_headers_init(http_header_t* headers);
 
@@ -39,11 +40,11 @@ stack_head_t* http_headers_get(http_header_t* header, const int prop_key);
 
 void http_headers_add(http_header_t* header);
 
-void decode_http_headers_init(http_header_t* header, char* buffer, int sata_len);
+void decode_http_headers_init(http_header_t* header, int fd, char* buffer, int sata_len);
 
 http_header_t* get_next_line(http_header_t* header);
 
-void decode_http_headers(http_header_t* header);
+int decode_http_headers(http_header_t* header);
 
 int find_header_index(const char* header);
 

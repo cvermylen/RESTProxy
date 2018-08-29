@@ -15,14 +15,13 @@ Test(http_message, init)
 	http_message_free(msg);
 }
 
-/*Test(http_message, line_length1)
+Test(receive_body, has_already_received_body_content)
 {
-	char text[] = "a short line\nfollowed by another";
-	int first = get_line_length(text);
-	cr_assert(12 == first, "size of 'a short line' expected to be 12, not:%d", first);
-	int second = get_line_length(text+(sizeof(char) *13));
-	cr_assert(19 == second, "size of 'followed by another' expected to be 19, not:%d", second);
-}*/
+	http_message_t* msg = (http_message_t*)malloc(sizeof(http_message_t));
+	msg->raw_message_length = 10;
+	msg->body_length = 5;
+	receive_body(0, msg, 5);
+}
 
 /*Test(http_message, read_from_buffer_0)
 {

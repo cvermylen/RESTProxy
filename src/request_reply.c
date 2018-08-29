@@ -14,7 +14,6 @@ void *push_data_2_destination(void *params)
 printf("BUFFER:%s\n", reply->request->http_message->buffer);
         switch(reply->type){
         case TYPE_SOCKET:
-printf("TYPE SOCKET\n");
 		reply->content.sock->consumer_callback(reply);
                 break;
         case TYPE_FILE:
@@ -141,7 +140,7 @@ void wait_4_all_sender_to_complete(request_t* request)
         int rc = pthread_create(&request->async_replies_thread, NULL, async_join_threads, request);
 }
 
-void forward_data(reply_t* reply)
+void forward_to_one_server(reply_t* reply)
 {
 	if(reply->request->forward_mode != FORWARD_MODE_SEQ){
 		int rc = pthread_create(&reply->pthread, NULL, push_data_2_destination, reply);
@@ -153,13 +152,13 @@ void forward_data(reply_t* reply)
 void forward_message_to_all_servers(request_t* request)
 {
 	for(int i=0; i < request->out_connections; i++){
-		forward_data(request->replies[i]);
+		forward_to_one_server(request->replies[i]);
 	}
 }
 
 void decode_request_message_header(request_t* request)
 {
-	decode_http_message_header(request->http_message);
+	decode_http_message_header(request->in_response.sock_fd, request->http_message);
 }
 
 void process_request_message_body(request_t* request)
@@ -179,13 +178,6 @@ void* sync_request_reply_to_server(reply_t* reply)
         reply->content.sock->fd = socket;
         sock_write(socket, reply->request->http_message->buffer, reply->request->http_message->raw_message_length);
 printf("$$$Message sent:\n");
-	int buff_no = alloc_buffer();
-	char* buffer = get_buffer(buff_no);
-        int n = split_receive(socket, buffer, TX_BUFFER_SIZE);
-printf("$$$Received response\n");
-	int code = http_decode_response_type(buffer, n);
-        reply->response_message = http_message_init(buff_no, buffer, code, n);
-	decode_http_message_header(reply->response_message);
-printf("RECEIVED %d response:%s\n", n, reply->response_message->buffer);
+	receive_reply(reply);
         reply->response_callback(reply);
 }

@@ -21,6 +21,43 @@ char* http_message_get_request_buffer(http_message_t* msg)
 	return msg->buffer;
 }
 
+int decode_http_message_header(int fd, http_message_t* msg)
+{
+	decode_http_headers_init(&(msg->header), fd, msg->buffer, msg->raw_message_length);
+	int end_of_header = decode_http_headers(&(msg->header));
+	msg->raw_message_length = msg->header.max_len;
+	msg->body_length = decode_body_length(&(msg->header));
+	return end_of_header;
+}
+
+void receive_body(int fd, http_message_t* msg, int start_pos)
+{
+	int remain = msg->raw_message_length - (start_pos + msg->body_length + 1);
+printf("receive body: raw length:%d, start_pos:%d, remainder:%d\n", msg->raw_message_length, start_pos, remain);
+	while(remain > 0){
+		int n = read_from_socket(fd, &(msg->buffer[start_pos + msg->body_length - remain]), TX_BUFFER_SIZE);
+if(n==0)exit(0);
+		remain -= n;
+	}
+}
+
+void receive_reply(reply_t* reply)
+{
+	int buff_no = alloc_buffer();
+	char* buffer = get_buffer(buff_no);
+	//read first line
+	int sz = read_from_socket(reply->content.sock->fd, buffer, TX_BUFFER_SIZE);
+	int code = http_decode_response_type(buffer, sz);
+	//int n = split_receive(reply->content.sock->fd, buffer, TX_BUFFER_SIZE);
+printf("RECEIVED:%d response:%s\n", sz, buffer);
+	//int code = http_decode_response_type(buffer, n);
+	reply->response_message = http_message_init(buff_no, buffer, code, sz);
+	int start_of_body = decode_http_message_header(reply->content.sock->fd, reply->response_message);
+printf("Body length:%d\n", reply->response_message->body_length);
+	receive_body(reply->content.sock->fd, reply->response_message, start_of_body);
+printf("Body received\n");
+}
+
 /*void http_message_update_status(http_message_t* msg, int start_pos, int length)
 {
 	int op = 0;
@@ -65,42 +102,6 @@ printf("HTTP_MSG_STATUS_HEADER_COMPLETE\n");
 		break;
 	}
 }*/
-
-/*int get_line_length(char* buffer)
-{
-printf("get_line_length:'%s'", buffer);
-	int n = 0;
-	while(buffer[n] != '\n' && buffer[n] != '\0')
-		n++;
-	return n;
-}*/
-
-/*int read_from_buffer(int fd, http_message_t* msg, int start_index)
-{
-printf("read_from_buffer start:%d\n", start_index);
-	if(start_index == msg->raw_message_length){
-		msg->raw_message_length = read_from_socket(fd, msg->buffer + (start_index*sizeof(char)), TX_BUFFER_SIZE);
-	}
-	int n = get_line_length(msg->buffer + (start_index * sizeof(char)));
-	return n;
-}*/
-
-/*http_message_t* http_message_read_from_socket(int fd, http_message_t* msg)
-{
-	int n, pos = 0;
-	do{
-		n = read_from_buffer(fd, msg, pos);
-		http_message_update_status(msg, pos, n);
-		pos += n + 1;
-	} while(msg->status != HTTP_MSG_STATUS_BODY_COMPLETE);
-	return msg;
-}
-*/
-void decode_http_message_header(http_message_t* msg)
-{
-	decode_http_headers_init(&(msg->header), msg->buffer, msg->raw_message_length);
-	decode_http_headers(&(msg->header));
-}
 
 void http_message_free(http_message_t* msg)
 {

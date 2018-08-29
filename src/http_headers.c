@@ -1,16 +1,29 @@
 #include "http_headers.h"
+#include "shared_buffers.h"
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 #include <math.h>
 #include <str_stack.h>
 
-int decode_body_length(char* value, int field_length)
+int str2int(char* value, int field_length)
 {
 	int res = 0;
 	int exp = field_length -1;
 	for(int i = 0; i < field_length; res += (pow(10, exp--)) * (value[i] - 48), i++);
 	return res;
+}
+
+int decode_body_length(http_header_t* header)
+{
+	int result = 0;
+	stack_head_t* st = http_headers_get(header, HTTP_CONTENT_LENGTH);
+	char* value = str_stack_top(st);
+	if(value != NULL){
+printf("Value:'%s'\n", value);
+		result = str2int(value, strlen(value));
+	}
+	return result;
 }
 
 void http_headers_init(http_header_t* header)
@@ -20,8 +33,9 @@ void http_headers_init(http_header_t* header)
 	}
 }
 
-void decode_http_headers_init(http_header_t* header, char* buffer, int data_len)
+void decode_http_headers_init(http_header_t* header, int fd, char* buffer, int data_len)
 {
+	header->fd = fd;
 	header->buff = buffer;
 	header->cur_loc = 0;
 	header->last_semicolon = -1;
@@ -56,6 +70,12 @@ int is_eol_reached(http_header_t* header)
 http_header_t* get_next_line(http_header_t* header)
 {
 	skip_eol(header);
+printf("get_next_line, cur_loc:%d, max_len:%d\n", header->cur_loc, header->max_len);
+	if(header->cur_loc >= header->max_len){
+printf("Read from socket\n");
+		int sz = read_from_socket(header->fd, &(header->buff[header->max_len]), TX_BUFFER_SIZE);
+		header->max_len += sz;
+	}
 	while(!is_eol_reached(header)) {
 		if(header->buff[header->cur_loc] == ':')
 			header->last_semicolon = header->cur_loc;
@@ -83,7 +103,8 @@ void http_headers_add(http_header_t* header)
 	int index = find_header_index(key);
 	int start_value_pos = header->last_semicolon + 1;
 	while(header->buff[start_value_pos] == 0x20) start_value_pos++;
-	char* value = strmncpy(header->buff, start_value_pos, header->cur_loc);
+	int offset = (header->buff[header->cur_loc] == 0x0A)? 1:0;
+	char* value = strmncpy(header->buff, start_value_pos, header->cur_loc - offset);
 	if(index >= 0)
 		str_stack_push(header->headers[index], value);
 	free(key);
@@ -100,8 +121,9 @@ stack_head_t* http_headers_get(http_header_t* header, const int prop_key)
         return result;
 }
 
-void decode_http_headers(http_header_t* header)
+int decode_http_headers(http_header_t* header)
 {
+printf("decode_http_headers\n");
 	int cont = 1;
 	get_next_line(header);
 	while(cont && header_strlen(get_next_line(header)) > 0){
@@ -111,6 +133,7 @@ void decode_http_headers(http_header_t* header)
 			cont = 0;
 		}
 	}
+	return header->cur_loc;
 }
 
 void http_headers_free(http_header_t* header)

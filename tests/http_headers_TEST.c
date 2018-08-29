@@ -200,11 +200,35 @@ Test(get_next_line, semicolon_false)
 	cr_assert(-1 == header->last_semicolon, "not the expected position for semicolon: %d", header->last_semicolon);
 }
 
-Test(http_headers, content_length_1)
+Test(str2int, happy)
 {
 	char str[] = "3451";
-	int res = decode_body_length(str, strlen(str));
+	int res = str2int(str, strlen(str));
 	cr_assert(3451 == res, "expected value of 3451, not:%d", res);
+}
+
+Test(str2int, enpty)
+{
+	char str[] = "";
+	int res = str2int(str, 0);
+	cr_assert(0 == res, "expected to be 0, not:%d", res);
+}
+
+Test(body_length, empty)
+{
+	http_header_t* header = (http_header_t*)malloc(sizeof(http_header_t));
+	http_headers_init(header);
+	int result = decode_body_length(header);
+	cr_assert(0 == result, "expected 0 if field not present, not:%d", result);
+}
+
+Test(body_length, happy)
+{
+	http_header_t* header = (http_header_t*)malloc(sizeof(http_header_t));
+	http_headers_init(header);
+	str_stack_push(header->headers[HTTP_CONTENT_LENGTH], "32");
+	int result = decode_body_length(header);
+	cr_assert(32 == result, "expected 32, not:%d", result);
 }
 
 Test(decode_http_headers, empty_0)
@@ -448,7 +472,7 @@ Test(decode_http_header, parse_retrieve)
 	http_headers_init(header);
 	char msg[] = "HTTP/1.1 200 OK\nDate: Mon, 23 May 2005 22:38:34 GMT\nContent-Type: text/html; charset=UTF-8\nContent-Length: 14\nLast-Modified: Wed, 08 Jan 2003 23:11:55 GMT\nServer: Apache/1.3.3.7 (Unix) (Red-Hat/Linux)\nETag: \"3f80f-1b6-3e1cb03b\"\nAccept-Ranges: bytes\n\n<html>\n</html>";
 
-	decode_http_headers_init(header, msg, strlen(msg));
+	decode_http_headers_init(header, 0, msg, strlen(msg));
 	decode_http_headers(header);
 	stack_head_t* vals = http_headers_get(header, HTTP_CONTENT_TYPE);
 	cr_assert(vals->num_elems == 1, "expected to have 1 element for Content-Type, not: %d", vals->num_elems);
