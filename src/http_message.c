@@ -32,25 +32,19 @@ int decode_http_message_header(int fd, http_message_t* msg)
 
 void receive_body(int fd, http_message_t* msg, int start_pos)
 {
-	int remain = msg->raw_message_length - (start_pos + msg->body_length + 1);
+	int remain = (start_pos + msg->body_length + 1) - msg->raw_message_length;
 printf("receive body: raw length:%d, start_pos:%d, remainder:%d\n", msg->raw_message_length, start_pos, remain);
 	while(remain > 0){
-		int n = read_from_socket(fd, &(msg->buffer[start_pos + msg->body_length - remain]), TX_BUFFER_SIZE);
+		int n = read_from_socket(fd, &(msg->buffer[msg->raw_message_length]), TX_BUFFER_SIZE);
 if(n==0)exit(0);
 		remain -= n;
+		msg->raw_message_length += n;
 	}
 }
 
 void receive_reply(reply_t* reply)
 {
-	int buff_no = alloc_buffer();
-	char* buffer = get_buffer(buff_no);
-	//read first line
-	int sz = read_from_socket(reply->content.sock->fd, buffer, TX_BUFFER_SIZE);
-	int code = http_decode_response_type(buffer, sz);
-printf("RECEIVED:%d response:%s\n", sz, buffer);
-	//int code = http_decode_response_type(buffer, n);
-	reply->response_message = http_message_init(buff_no, buffer, code, sz);
+	accept_reply_from_server(reply);
 	int start_of_body = decode_http_message_header(reply->content.sock->fd, reply->response_message);
 printf("Body length:%d\n", reply->response_message->body_length);
 	receive_body(reply->content.sock->fd, reply->response_message, start_of_body);

@@ -69,8 +69,9 @@ int is_eol_reached(http_header_t* header)
 
 http_header_t* get_next_line(http_header_t* header)
 {
+printf("get_next_line1, cur_loc:%d, max_len:%d\n", header->cur_loc, header->max_len);
 	skip_eol(header);
-printf("get_next_line, cur_loc:%d, max_len:%d\n", header->cur_loc, header->max_len);
+printf("get_next_line2, cur_loc:%d, max_len:%d\n", header->cur_loc, header->max_len);
 	if(header->cur_loc >= header->max_len){
 printf("Read from socket\n");
 		int sz = read_from_socket(header->fd, &(header->buff[header->max_len]), TX_BUFFER_SIZE);
@@ -81,6 +82,7 @@ printf("Read from socket\n");
 			header->last_semicolon = header->cur_loc;
 		header->cur_loc +=1;
 	}
+printf("cur_loc:%d, last_semicolon:%d\n", header->cur_loc, header->last_semicolon);
 	return header;
 }
 

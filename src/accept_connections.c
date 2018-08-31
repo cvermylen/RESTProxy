@@ -34,13 +34,9 @@ printf("binded port:%d\n", sockfd);
 
 ri_connection_t* wait_4_connection_request(ri_route_t *route)
 {
-printf("wait_4..\n");
-	//ri_route_t *res = create_runtime_route(route);
 	ri_connection_t* res = (ri_connection_t*)malloc(sizeof(ri_connection_t));
 	res->route = route;
-	//res->in_connector->content.sock->sockaddr_size = sizeof(struct sockaddr_in);
 	ri_sock_connector_t *conn = route->in_connector->content.sock;
-printf("?? %s\n", (conn == NULL)?("NULL"):("NOT NULL"));
 printf("BEFORE ACCEPTING new connection:%d\n", conn->fd);
 	res->fd = accept(conn->fd, &(conn->cli_addr), &(conn->sockaddr_size));	
 	if(res->fd <0) {printf("EXIT\n");}

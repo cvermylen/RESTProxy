@@ -59,6 +59,16 @@ request_t* create_request(const ri_connection_t* conn, int buff_no, char* buffer
 	return request;
 }
 
+void accept_reply_from_server(reply_t* reply)
+{
+	int buff_no = alloc_buffer();
+        char* buffer = get_buffer(buff_no);
+	int sz = read_from_socket(reply->content.sock->fd, buffer, TX_BUFFER_SIZE);
+        int code = http_decode_response_type(buffer, sz);
+printf("RECEIVED:%d response:%s\n", sz, buffer);
+	reply->response_message = http_message_init(buff_no, buffer, code, sz);
+}
+
 request_t* accept_opening_request_from_client(const ri_connection_t* conn)
 {
 printf("accept_opening_request_from_client\n");
@@ -73,7 +83,6 @@ printf("accept_opening_request_from_client\n");
 		request = create_request(conn, buff_no, buffer, code, sz);
 		switch(code){
 		case HTTP_REQUEST_GET:
-			//read_full_http_GET_request(conn->fd, request->http_message);
 			break;
 		case HTTP_REQUEST_POST:
 			printf("Not implemented yet\n");
