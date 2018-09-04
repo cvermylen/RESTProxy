@@ -42,15 +42,6 @@ if(n==0)exit(0);
 	}
 }
 
-void receive_reply(reply_t* reply)
-{
-	accept_reply_from_server(reply);
-	int start_of_body = decode_http_message_header(reply->content.sock->fd, reply->response_message);
-printf("Body length:%d\n", reply->response_message->body_length);
-	receive_body(reply->content.sock->fd, reply->response_message, start_of_body);
-printf("Body received\n");
-}
-
 void http_message_free(http_message_t* msg)
 {
 	http_headers_free(&(msg->header));

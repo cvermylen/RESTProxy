@@ -69,6 +69,15 @@ printf("RECEIVED:%d response:%s\n", sz, buffer);
 	reply->response_message = http_message_init(buff_no, buffer, code, sz);
 }
 
+void receive_reply(reply_t* reply)
+{
+        accept_reply_from_server(reply);
+        int start_of_body = decode_http_message_header(reply->content.sock->fd, reply->response_message);
+printf("Body length:%d\n", reply->response_message->body_length);
+        receive_body(reply->content.sock->fd, reply->response_message, start_of_body);
+printf("Body received\n");
+}
+
 request_t* accept_opening_request_from_client(const ri_connection_t* conn)
 {
 printf("accept_opening_request_from_client\n");
