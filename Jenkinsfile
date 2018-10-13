@@ -4,7 +4,11 @@ pipeline {
    stages {
       stage('Build') {
          steps {
-            echo 'toto'
+            cmake {
+               cleanBuild()
+               srcDir('src')
+               buildDir('bin')
+            }
          }
       }
    }
