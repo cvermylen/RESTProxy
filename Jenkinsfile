@@ -3,7 +3,9 @@ pipeline {
 
    stages {
       stage('Build') {
-         echo 'toto'
+         steps {
+            echo 'toto'
+         }
       }
    }
 }
