@@ -1,2 +1,2 @@
 FROM alpine:3.7
-RUN apk update && install cmake
+RUN apk update && add cmake
