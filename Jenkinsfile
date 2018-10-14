@@ -4,7 +4,7 @@ pipeline {
    stages {
       stage('Build') {
          steps {
-            cmake installation:'InSearchPath', workingDir:'.'
+            cmake installation:'InSearchPath', workingDir:'.', srcDir:'src'
          }
       }
    }
