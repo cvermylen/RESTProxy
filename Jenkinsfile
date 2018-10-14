@@ -4,7 +4,7 @@ pipeline {
    stages {
       stage('Build') {
          steps {
-            cmake 'InSearchPath'{
+            cmake (arguments:[installation:'InSearchPath']){
                cmakeInstallation('InSearchPath')
                cleanBuild()
                srcDir('src')
