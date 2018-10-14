@@ -4,8 +4,10 @@ pipeline {
    stages {
       stage('Build') {
          steps {
-            cmake arguments:'..', installation:'/usr/bin/cmake', workingDir:'src'
-            cmake arguments:'--build .', installation:'InSearchPath', workingDir:'src'
+            sh 'pwd'
+            git url: 'file:///data/git/RESTProxy.git', branch: 'master'
+            sh 'cmake ..'
+            sh 'cmake --build .'
          }
       }
    }
