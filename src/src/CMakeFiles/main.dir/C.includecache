@@ -1,0 +1,36 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/christian/projects/RESTProxy/src/main.c
+shared_buffers.h
+/Users/christian/projects/RESTProxy/src/shared_buffers.h
+route_instance.h
+/Users/christian/projects/RESTProxy/src/route_instance.h
+route_def.h
+/Users/christian/projects/RESTProxy/src/route_def.h
+stdio.h
+-
+signal.h
+-
+stdlib.h
+-
+
+/Users/christian/projects/RESTProxy/src/route_def.h
+stdio.h
+-
+
+/Users/christian/projects/RESTProxy/src/route_instance.h
+pthread.h
+-
+stdio.h
+-
+netinet/in.h
+-
+
+/Users/christian/projects/RESTProxy/src/shared_buffers.h
+

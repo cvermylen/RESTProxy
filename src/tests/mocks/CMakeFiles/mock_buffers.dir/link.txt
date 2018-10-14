@@ -1,0 +1,2 @@
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ar qc libmock_buffers.a  CMakeFiles/mock_buffers.dir/mock_file_connector.c.o CMakeFiles/mock_buffers.dir/mock_socket_connector.c.o CMakeFiles/mock_buffers.dir/mock_buffers.c.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib libmock_buffers.a
