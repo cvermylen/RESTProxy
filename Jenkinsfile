@@ -5,7 +5,6 @@ pipeline {
       stage('Build') {
          steps {
             cmake installation:'InSearchPath'
-            }
          }
       }
    }
