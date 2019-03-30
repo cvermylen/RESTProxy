@@ -16,7 +16,9 @@ set(SOURCE_UTILS
   socket_connector.c
   file_connector.c
 )
+
 set(CMAKE_BUILD_TYPE "Debug")
+
 add_library(gateway ${SOURCE_FILES})
 add_library(buffers ${SOURCE_UTILS})
 add_executable(main main.c)
