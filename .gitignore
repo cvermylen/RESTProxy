@@ -6,15 +6,15 @@ bin
 # CLion
 .idea
 src/Testing/
-src/DartConfiguration.tcl
+DartConfiguration.tcl
 
 # Cmake
-src/tests/CMakeFiles/
-src/src/CMakeFiles/
+CMakeFiles/
+cmake_install.cmake
+CTestTestfile.cmake
 cmake-build-debug
-src/CMakeFiles/
-src/CMakeCache.txt
-src/CTestTestfile.cmake
+CMakeCache.txt
+Makefile
 
 # Object files
 *.o
