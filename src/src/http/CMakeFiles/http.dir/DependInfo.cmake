@@ -4,7 +4,9 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
-  "/Users/christian/projects/RESTProxy/src/main.c" "/Users/christian/projects/RESTProxy/src/src/CMakeFiles/main.dir/main.c.o"
+  "/Users/christian/projects/RESTProxy/src/http/http_first_line.c" "/Users/christian/projects/RESTProxy/src/src/http/CMakeFiles/http.dir/http_first_line.c.o"
+  "/Users/christian/projects/RESTProxy/src/http/http_headers.c" "/Users/christian/projects/RESTProxy/src/src/http/CMakeFiles/http.dir/http_headers.c.o"
+  "/Users/christian/projects/RESTProxy/src/http/http_message.c" "/Users/christian/projects/RESTProxy/src/src/http/CMakeFiles/http.dir/http_message.c.o"
   )
 set(CMAKE_C_COMPILER_ID "AppleClang")
 
@@ -15,9 +17,6 @@ set(CMAKE_C_TARGET_INCLUDE_PATH
 
 # Targets to which this target links.
 set(CMAKE_TARGET_LINKED_INFO_FILES
-  "/Users/christian/projects/RESTProxy/src/src/CMakeFiles/gateway.dir/DependInfo.cmake"
-  "/Users/christian/projects/RESTProxy/src/src/CMakeFiles/buffers.dir/DependInfo.cmake"
-  "/Users/christian/projects/RESTProxy/src/src/http/CMakeFiles/http.dir/DependInfo.cmake"
   )
 
 # Fortran module output directory.

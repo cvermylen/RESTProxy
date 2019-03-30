@@ -525,6 +525,19 @@ gateway/fast:
 .PHONY : gateway/fast
 
 #=============================================================================
+# Target rules for targets named http
+
+# Build rule for target.
+http: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 http
+.PHONY : http
+
+# fast build rule for target.
+http/fast:
+	$(MAKE) -f src/http/CMakeFiles/http.dir/build.make src/http/CMakeFiles/http.dir/build
+.PHONY : http/fast
+
+#=============================================================================
 # Target rules for targets named http_first_line_TEST_test
 
 # Build rule for target.
@@ -681,6 +694,7 @@ help:
 	@echo "... main"
 	@echo "... buffers"
 	@echo "... gateway"
+	@echo "... http"
 	@echo "... http_first_line_TEST_test"
 	@echo "... http_message_TEST_test"
 	@echo "... route_instance_TEST_test"

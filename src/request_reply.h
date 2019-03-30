@@ -4,7 +4,7 @@
 //#include "hashmap.h"
 #include "connection.h"
 #include "route_instance.h"
-#include "http_message.h"
+#include "http/http_message.h"
 
 typedef struct request request_t;
 
@@ -45,6 +45,10 @@ request_t* create_request(const ri_connection_t* conn, int buff_no, char* buffer
 request_t* create_runtime_thread_data(int fd, ri_in_connector_t* in, ri_out_connector_t *conn, int buffer_size, char *buffer, int data_len);
 
 void decode_request_message(request_t* request);
+
+void decode_request_message_header(request_t* request);
+
+void process_request_message_body(request_t* request);
 
 void release_conn_runtime_thread_data(request_t* d);
 

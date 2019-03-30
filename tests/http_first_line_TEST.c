@@ -1,4 +1,4 @@
-#include "../src/http_first_line.h"
+#include "../src/http/http_first_line.h"
 #include <criterion/criterion.h>
 
 Test(http_first_line, op_code_1)

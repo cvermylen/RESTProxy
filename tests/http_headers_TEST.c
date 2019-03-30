@@ -1,4 +1,4 @@
-#include "../src/http_headers.h"
+#include "../src/http/http_headers.h"
 
 #include <criterion/criterion.h>
 
@@ -6,7 +6,7 @@ Test(strmncpy, empty)
 {
 	char* str = "a line";
 	char* result = strmncpy(str, 2, 2);
-	cr_assert(0 == strlen(result), "length not 0 as expected: %d", strlen(result));
+	cr_assert(0 == strlen(result), "length not 0 as expected: %lu", strlen(result));
 	cr_assert(strcmp("", result) == 0, "expected '', not: %s", result);
 }
 
@@ -14,7 +14,7 @@ Test(strmncpy, happy)
 {
 	char* str = "a non-empty line";
 	char* result = strmncpy(str, 2, 5);
-	cr_assert(3 == strlen(result), "length not 3 as expected: %d", strlen(result));
+	cr_assert(3 == strlen(result), "length not 3 as expected: %lu", strlen(result));
 	cr_assert(strcmp("non", result) == 0, "expected 'non', not: %s", result);
 }
 
@@ -22,7 +22,7 @@ Test(http_headers_add, happy)
 {
 	http_header_t* header = (http_header_t*)malloc(sizeof(http_header_t));
 	http_headers_init(header);
-	header->buff = "Server:value";
+	header->buff = "Server:value\n";
 	header->start_of_line = 0;
 	header->last_semicolon = 6;
 	header->cur_loc = 12;
@@ -200,6 +200,19 @@ Test(get_next_line, semicolon_false)
 	cr_assert(-1 == header->last_semicolon, "not the expected position for semicolon: %d", header->last_semicolon);
 }
 
+Test(get_next_line, special_char)
+{
+    char str[] = "Content-Type: text/html; charset=UTF-8";
+    http_header_t* header = (http_header_t*)malloc(sizeof(http_header_t));
+    header->buff = str;
+    header->start_of_line = 0;
+    header->cur_loc = 0;
+    header->last_semicolon = -1;
+    header->max_len = strlen(str);
+    get_next_line(header);
+    http_headers_add(header);
+    cr_assert(12 == header->last_semicolon, "not the expected position for semicolon: %d", header->last_semicolon);
+}
 Test(str2int, happy)
 {
 	char str[] = "3451";
@@ -477,7 +490,7 @@ Test(decode_http_header, parse_retrieve)
 	stack_head_t* vals = http_headers_get(header, HTTP_CONTENT_TYPE);
 	cr_assert(vals->num_elems == 1, "expected to have 1 element for Content-Type, not: %d", vals->num_elems);
 	char* value = str_stack_pop(vals);
-	cr_assert(strcmp("text/html; charset=UTF-8", value) == 0, "expected value 'text/html', not %s", value);
+	cr_assert(strcmp("text/html; charset=UTF-8", value) == 0, "expected value 'text/html; charset=UTF-8', not %s", value);
 	free(value);
 	http_headers_free(header);
 }

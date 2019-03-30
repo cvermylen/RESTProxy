@@ -57,35 +57,9 @@ include src/CMakeFiles/gateway.dir/progress.make
 # Include the compile flags for this target's objects.
 include src/CMakeFiles/gateway.dir/flags.make
 
-src/CMakeFiles/gateway.dir/http_headers.c.o: src/CMakeFiles/gateway.dir/flags.make
-src/CMakeFiles/gateway.dir/http_headers.c.o: http_headers.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/christian/projects/RESTProxy/src/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object src/CMakeFiles/gateway.dir/http_headers.c.o"
-	cd /Users/christian/projects/RESTProxy/src/src && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/gateway.dir/http_headers.c.o   -c /Users/christian/projects/RESTProxy/src/http_headers.c
-
-src/CMakeFiles/gateway.dir/http_headers.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/gateway.dir/http_headers.c.i"
-	cd /Users/christian/projects/RESTProxy/src/src && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /Users/christian/projects/RESTProxy/src/http_headers.c > CMakeFiles/gateway.dir/http_headers.c.i
-
-src/CMakeFiles/gateway.dir/http_headers.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/gateway.dir/http_headers.c.s"
-	cd /Users/christian/projects/RESTProxy/src/src && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /Users/christian/projects/RESTProxy/src/http_headers.c -o CMakeFiles/gateway.dir/http_headers.c.s
-
-src/CMakeFiles/gateway.dir/http_message.c.o: src/CMakeFiles/gateway.dir/flags.make
-src/CMakeFiles/gateway.dir/http_message.c.o: http_message.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/christian/projects/RESTProxy/src/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object src/CMakeFiles/gateway.dir/http_message.c.o"
-	cd /Users/christian/projects/RESTProxy/src/src && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/gateway.dir/http_message.c.o   -c /Users/christian/projects/RESTProxy/src/http_message.c
-
-src/CMakeFiles/gateway.dir/http_message.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/gateway.dir/http_message.c.i"
-	cd /Users/christian/projects/RESTProxy/src/src && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /Users/christian/projects/RESTProxy/src/http_message.c > CMakeFiles/gateway.dir/http_message.c.i
-
-src/CMakeFiles/gateway.dir/http_message.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/gateway.dir/http_message.c.s"
-	cd /Users/christian/projects/RESTProxy/src/src && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /Users/christian/projects/RESTProxy/src/http_message.c -o CMakeFiles/gateway.dir/http_message.c.s
-
 src/CMakeFiles/gateway.dir/request_reply.c.o: src/CMakeFiles/gateway.dir/flags.make
 src/CMakeFiles/gateway.dir/request_reply.c.o: request_reply.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/christian/projects/RESTProxy/src/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object src/CMakeFiles/gateway.dir/request_reply.c.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/christian/projects/RESTProxy/src/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object src/CMakeFiles/gateway.dir/request_reply.c.o"
 	cd /Users/christian/projects/RESTProxy/src/src && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/gateway.dir/request_reply.c.o   -c /Users/christian/projects/RESTProxy/src/request_reply.c
 
 src/CMakeFiles/gateway.dir/request_reply.c.i: cmake_force
@@ -98,7 +72,7 @@ src/CMakeFiles/gateway.dir/request_reply.c.s: cmake_force
 
 src/CMakeFiles/gateway.dir/connection.c.o: src/CMakeFiles/gateway.dir/flags.make
 src/CMakeFiles/gateway.dir/connection.c.o: connection.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/christian/projects/RESTProxy/src/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object src/CMakeFiles/gateway.dir/connection.c.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/christian/projects/RESTProxy/src/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object src/CMakeFiles/gateway.dir/connection.c.o"
 	cd /Users/christian/projects/RESTProxy/src/src && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/gateway.dir/connection.c.o   -c /Users/christian/projects/RESTProxy/src/connection.c
 
 src/CMakeFiles/gateway.dir/connection.c.i: cmake_force
@@ -111,7 +85,7 @@ src/CMakeFiles/gateway.dir/connection.c.s: cmake_force
 
 src/CMakeFiles/gateway.dir/accept_connections.c.o: src/CMakeFiles/gateway.dir/flags.make
 src/CMakeFiles/gateway.dir/accept_connections.c.o: accept_connections.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/christian/projects/RESTProxy/src/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building C object src/CMakeFiles/gateway.dir/accept_connections.c.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/christian/projects/RESTProxy/src/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object src/CMakeFiles/gateway.dir/accept_connections.c.o"
 	cd /Users/christian/projects/RESTProxy/src/src && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/gateway.dir/accept_connections.c.o   -c /Users/christian/projects/RESTProxy/src/accept_connections.c
 
 src/CMakeFiles/gateway.dir/accept_connections.c.i: cmake_force
@@ -124,7 +98,7 @@ src/CMakeFiles/gateway.dir/accept_connections.c.s: cmake_force
 
 src/CMakeFiles/gateway.dir/error_handler.c.o: src/CMakeFiles/gateway.dir/flags.make
 src/CMakeFiles/gateway.dir/error_handler.c.o: error_handler.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/christian/projects/RESTProxy/src/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building C object src/CMakeFiles/gateway.dir/error_handler.c.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/christian/projects/RESTProxy/src/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object src/CMakeFiles/gateway.dir/error_handler.c.o"
 	cd /Users/christian/projects/RESTProxy/src/src && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/gateway.dir/error_handler.c.o   -c /Users/christian/projects/RESTProxy/src/error_handler.c
 
 src/CMakeFiles/gateway.dir/error_handler.c.i: cmake_force
@@ -137,7 +111,7 @@ src/CMakeFiles/gateway.dir/error_handler.c.s: cmake_force
 
 src/CMakeFiles/gateway.dir/log.c.o: src/CMakeFiles/gateway.dir/flags.make
 src/CMakeFiles/gateway.dir/log.c.o: log.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/christian/projects/RESTProxy/src/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building C object src/CMakeFiles/gateway.dir/log.c.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/christian/projects/RESTProxy/src/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building C object src/CMakeFiles/gateway.dir/log.c.o"
 	cd /Users/christian/projects/RESTProxy/src/src && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/gateway.dir/log.c.o   -c /Users/christian/projects/RESTProxy/src/log.c
 
 src/CMakeFiles/gateway.dir/log.c.i: cmake_force
@@ -150,7 +124,7 @@ src/CMakeFiles/gateway.dir/log.c.s: cmake_force
 
 src/CMakeFiles/gateway.dir/workflow_handler.c.o: src/CMakeFiles/gateway.dir/flags.make
 src/CMakeFiles/gateway.dir/workflow_handler.c.o: workflow_handler.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/christian/projects/RESTProxy/src/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building C object src/CMakeFiles/gateway.dir/workflow_handler.c.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/christian/projects/RESTProxy/src/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building C object src/CMakeFiles/gateway.dir/workflow_handler.c.o"
 	cd /Users/christian/projects/RESTProxy/src/src && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/gateway.dir/workflow_handler.c.o   -c /Users/christian/projects/RESTProxy/src/workflow_handler.c
 
 src/CMakeFiles/gateway.dir/workflow_handler.c.i: cmake_force
@@ -163,7 +137,7 @@ src/CMakeFiles/gateway.dir/workflow_handler.c.s: cmake_force
 
 src/CMakeFiles/gateway.dir/route_instance.c.o: src/CMakeFiles/gateway.dir/flags.make
 src/CMakeFiles/gateway.dir/route_instance.c.o: route_instance.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/christian/projects/RESTProxy/src/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building C object src/CMakeFiles/gateway.dir/route_instance.c.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/christian/projects/RESTProxy/src/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building C object src/CMakeFiles/gateway.dir/route_instance.c.o"
 	cd /Users/christian/projects/RESTProxy/src/src && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/gateway.dir/route_instance.c.o   -c /Users/christian/projects/RESTProxy/src/route_instance.c
 
 src/CMakeFiles/gateway.dir/route_instance.c.i: cmake_force
@@ -174,37 +148,19 @@ src/CMakeFiles/gateway.dir/route_instance.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/gateway.dir/route_instance.c.s"
 	cd /Users/christian/projects/RESTProxy/src/src && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /Users/christian/projects/RESTProxy/src/route_instance.c -o CMakeFiles/gateway.dir/route_instance.c.s
 
-src/CMakeFiles/gateway.dir/http_first_line.c.o: src/CMakeFiles/gateway.dir/flags.make
-src/CMakeFiles/gateway.dir/http_first_line.c.o: http_first_line.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/christian/projects/RESTProxy/src/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building C object src/CMakeFiles/gateway.dir/http_first_line.c.o"
-	cd /Users/christian/projects/RESTProxy/src/src && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/gateway.dir/http_first_line.c.o   -c /Users/christian/projects/RESTProxy/src/http_first_line.c
-
-src/CMakeFiles/gateway.dir/http_first_line.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/gateway.dir/http_first_line.c.i"
-	cd /Users/christian/projects/RESTProxy/src/src && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /Users/christian/projects/RESTProxy/src/http_first_line.c > CMakeFiles/gateway.dir/http_first_line.c.i
-
-src/CMakeFiles/gateway.dir/http_first_line.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/gateway.dir/http_first_line.c.s"
-	cd /Users/christian/projects/RESTProxy/src/src && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /Users/christian/projects/RESTProxy/src/http_first_line.c -o CMakeFiles/gateway.dir/http_first_line.c.s
-
 # Object files for target gateway
 gateway_OBJECTS = \
-"CMakeFiles/gateway.dir/http_headers.c.o" \
-"CMakeFiles/gateway.dir/http_message.c.o" \
 "CMakeFiles/gateway.dir/request_reply.c.o" \
 "CMakeFiles/gateway.dir/connection.c.o" \
 "CMakeFiles/gateway.dir/accept_connections.c.o" \
 "CMakeFiles/gateway.dir/error_handler.c.o" \
 "CMakeFiles/gateway.dir/log.c.o" \
 "CMakeFiles/gateway.dir/workflow_handler.c.o" \
-"CMakeFiles/gateway.dir/route_instance.c.o" \
-"CMakeFiles/gateway.dir/http_first_line.c.o"
+"CMakeFiles/gateway.dir/route_instance.c.o"
 
 # External object files for target gateway
 gateway_EXTERNAL_OBJECTS =
 
-src/libgateway.a: src/CMakeFiles/gateway.dir/http_headers.c.o
-src/libgateway.a: src/CMakeFiles/gateway.dir/http_message.c.o
 src/libgateway.a: src/CMakeFiles/gateway.dir/request_reply.c.o
 src/libgateway.a: src/CMakeFiles/gateway.dir/connection.c.o
 src/libgateway.a: src/CMakeFiles/gateway.dir/accept_connections.c.o
@@ -212,10 +168,9 @@ src/libgateway.a: src/CMakeFiles/gateway.dir/error_handler.c.o
 src/libgateway.a: src/CMakeFiles/gateway.dir/log.c.o
 src/libgateway.a: src/CMakeFiles/gateway.dir/workflow_handler.c.o
 src/libgateway.a: src/CMakeFiles/gateway.dir/route_instance.c.o
-src/libgateway.a: src/CMakeFiles/gateway.dir/http_first_line.c.o
 src/libgateway.a: src/CMakeFiles/gateway.dir/build.make
 src/libgateway.a: src/CMakeFiles/gateway.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/christian/projects/RESTProxy/src/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Linking C static library libgateway.a"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/christian/projects/RESTProxy/src/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Linking C static library libgateway.a"
 	cd /Users/christian/projects/RESTProxy/src/src && $(CMAKE_COMMAND) -P CMakeFiles/gateway.dir/cmake_clean_target.cmake
 	cd /Users/christian/projects/RESTProxy/src/src && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/gateway.dir/link.txt --verbose=$(VERBOSE)
 

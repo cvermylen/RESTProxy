@@ -274,87 +274,6 @@ file_connector.c.s:
 	cd /Users/christian/projects/RESTProxy/src && $(MAKE) -f src/CMakeFiles/buffers.dir/build.make src/CMakeFiles/buffers.dir/file_connector.c.s
 .PHONY : file_connector.c.s
 
-http_first_line.o: http_first_line.c.o
-
-.PHONY : http_first_line.o
-
-# target to build an object file
-http_first_line.c.o:
-	cd /Users/christian/projects/RESTProxy/src && $(MAKE) -f src/CMakeFiles/gateway.dir/build.make src/CMakeFiles/gateway.dir/http_first_line.c.o
-.PHONY : http_first_line.c.o
-
-http_first_line.i: http_first_line.c.i
-
-.PHONY : http_first_line.i
-
-# target to preprocess a source file
-http_first_line.c.i:
-	cd /Users/christian/projects/RESTProxy/src && $(MAKE) -f src/CMakeFiles/gateway.dir/build.make src/CMakeFiles/gateway.dir/http_first_line.c.i
-.PHONY : http_first_line.c.i
-
-http_first_line.s: http_first_line.c.s
-
-.PHONY : http_first_line.s
-
-# target to generate assembly for a file
-http_first_line.c.s:
-	cd /Users/christian/projects/RESTProxy/src && $(MAKE) -f src/CMakeFiles/gateway.dir/build.make src/CMakeFiles/gateway.dir/http_first_line.c.s
-.PHONY : http_first_line.c.s
-
-http_headers.o: http_headers.c.o
-
-.PHONY : http_headers.o
-
-# target to build an object file
-http_headers.c.o:
-	cd /Users/christian/projects/RESTProxy/src && $(MAKE) -f src/CMakeFiles/gateway.dir/build.make src/CMakeFiles/gateway.dir/http_headers.c.o
-.PHONY : http_headers.c.o
-
-http_headers.i: http_headers.c.i
-
-.PHONY : http_headers.i
-
-# target to preprocess a source file
-http_headers.c.i:
-	cd /Users/christian/projects/RESTProxy/src && $(MAKE) -f src/CMakeFiles/gateway.dir/build.make src/CMakeFiles/gateway.dir/http_headers.c.i
-.PHONY : http_headers.c.i
-
-http_headers.s: http_headers.c.s
-
-.PHONY : http_headers.s
-
-# target to generate assembly for a file
-http_headers.c.s:
-	cd /Users/christian/projects/RESTProxy/src && $(MAKE) -f src/CMakeFiles/gateway.dir/build.make src/CMakeFiles/gateway.dir/http_headers.c.s
-.PHONY : http_headers.c.s
-
-http_message.o: http_message.c.o
-
-.PHONY : http_message.o
-
-# target to build an object file
-http_message.c.o:
-	cd /Users/christian/projects/RESTProxy/src && $(MAKE) -f src/CMakeFiles/gateway.dir/build.make src/CMakeFiles/gateway.dir/http_message.c.o
-.PHONY : http_message.c.o
-
-http_message.i: http_message.c.i
-
-.PHONY : http_message.i
-
-# target to preprocess a source file
-http_message.c.i:
-	cd /Users/christian/projects/RESTProxy/src && $(MAKE) -f src/CMakeFiles/gateway.dir/build.make src/CMakeFiles/gateway.dir/http_message.c.i
-.PHONY : http_message.c.i
-
-http_message.s: http_message.c.s
-
-.PHONY : http_message.s
-
-# target to generate assembly for a file
-http_message.c.s:
-	cd /Users/christian/projects/RESTProxy/src && $(MAKE) -f src/CMakeFiles/gateway.dir/build.make src/CMakeFiles/gateway.dir/http_message.c.s
-.PHONY : http_message.c.s
-
 log.o: log.c.o
 
 .PHONY : log.o
@@ -568,15 +487,6 @@ help:
 	@echo "... file_connector.o"
 	@echo "... file_connector.i"
 	@echo "... file_connector.s"
-	@echo "... http_first_line.o"
-	@echo "... http_first_line.i"
-	@echo "... http_first_line.s"
-	@echo "... http_headers.o"
-	@echo "... http_headers.i"
-	@echo "... http_headers.s"
-	@echo "... http_message.o"
-	@echo "... http_message.i"
-	@echo "... http_message.s"
 	@echo "... log.o"
 	@echo "... log.i"
 	@echo "... log.s"

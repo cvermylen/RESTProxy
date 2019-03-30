@@ -45,6 +45,8 @@ stdlib.h
 -
 errno.h
 -
+unistd.h
+-
 route_def.h
 /Users/christian/projects/RESTProxy/src/route_def.h
 shared_buffers.h
@@ -57,8 +59,8 @@ socket_connector.h
 /Users/christian/projects/RESTProxy/src/socket_connector.h
 request_reply.h
 /Users/christian/projects/RESTProxy/src/request_reply.h
-http_first_line.h
-/Users/christian/projects/RESTProxy/src/http_first_line.h
+http/http_first_line.h
+/Users/christian/projects/RESTProxy/src/http/http_first_line.h
 stack.h
 -
 
@@ -80,51 +82,17 @@ stdlib.h
 
 /Users/christian/projects/RESTProxy/src/file_connector.h
 
-/Users/christian/projects/RESTProxy/src/http_first_line.c
-http_first_line.h
-/Users/christian/projects/RESTProxy/src/http_first_line.h
+/Users/christian/projects/RESTProxy/src/http/http_first_line.h
 
-/Users/christian/projects/RESTProxy/src/http_first_line.h
-
-/Users/christian/projects/RESTProxy/src/http_headers.c
-http_headers.h
-/Users/christian/projects/RESTProxy/src/http_headers.h
-shared_buffers.h
-/Users/christian/projects/RESTProxy/src/shared_buffers.h
-stdlib.h
--
-string.h
--
-ctype.h
--
-math.h
--
+/Users/christian/projects/RESTProxy/src/http/http_headers.h
 str_stack.h
 -
 
-/Users/christian/projects/RESTProxy/src/http_headers.h
-str_stack.h
--
-
-/Users/christian/projects/RESTProxy/src/http_message.c
-http_message.h
-/Users/christian/projects/RESTProxy/src/http_message.h
-request_reply.h
-/Users/christian/projects/RESTProxy/src/request_reply.h
-http_headers.h
-/Users/christian/projects/RESTProxy/src/http_headers.h
-shared_buffers.h
-/Users/christian/projects/RESTProxy/src/shared_buffers.h
-str_stack.h
--
-stdlib.h
--
-
-/Users/christian/projects/RESTProxy/src/http_message.h
+/Users/christian/projects/RESTProxy/src/http/http_message.h
 stack.h
 -
 http_headers.h
-/Users/christian/projects/RESTProxy/src/http_headers.h
+/Users/christian/projects/RESTProxy/src/http/http_headers.h
 
 /Users/christian/projects/RESTProxy/src/log.c
 log.h
@@ -149,18 +117,18 @@ request_reply.h
 /Users/christian/projects/RESTProxy/src/request_reply.h
 socket_connector.h
 /Users/christian/projects/RESTProxy/src/socket_connector.h
-http_message.h
-/Users/christian/projects/RESTProxy/src/http_message.h
-http_first_line.h
-/Users/christian/projects/RESTProxy/src/http_first_line.h
+http/http_message.h
+/Users/christian/projects/RESTProxy/src/http/http_message.h
+http/http_first_line.h
+/Users/christian/projects/RESTProxy/src/http/http_first_line.h
 
 /Users/christian/projects/RESTProxy/src/request_reply.h
 connection.h
 /Users/christian/projects/RESTProxy/src/connection.h
 route_instance.h
 /Users/christian/projects/RESTProxy/src/route_instance.h
-http_message.h
-/Users/christian/projects/RESTProxy/src/http_message.h
+http/http_message.h
+/Users/christian/projects/RESTProxy/src/http/http_message.h
 
 /Users/christian/projects/RESTProxy/src/route_def.h
 stdio.h

@@ -3,16 +3,16 @@ router:
 		flow: bidirectional
 		protocol: http
 		content: UTF-8
-		connector:
+		- connector:
 			type: TYPE_SOCKET
 			flow: TYPE_SOURCE
 			mode: tcp
 			port: 80
-		connector:
+		- connector:
 			type: TYPE_WORKFLOW
 			flow: SYNC_ANSWER
 			configFile:~/http_responses.txt 
-		connector:
+		- connector:
 			type: TYPE_FILE
 			flow: TTPE_SYNC
 			location: ~/http

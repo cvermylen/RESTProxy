@@ -5,8 +5,8 @@
 #include "connection.h"
 #include "request_reply.h"
 #include "socket_connector.h"
-#include "http_message.h"
-#include "http_first_line.h"
+#include "http/http_message.h"
+#include "http/http_first_line.h"
 
 void *push_data_2_destination(void *params)
 {

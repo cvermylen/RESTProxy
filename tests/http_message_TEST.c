@@ -1,5 +1,5 @@
-#include "../src/http_message.h"
-#include "../src/http_first_line.h"
+#include "../src/http/http_message.h"
+#include "../src/http/http_first_line.h"
 #include <str_stack.h>
 #include <criterion/criterion.h>
 

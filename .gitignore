@@ -3,6 +3,19 @@ bin
 # Prerequisites
 *.d
 
+# CLion
+.idea
+src/Testing/
+src/DartConfiguration.tcl
+
+# Cmake
+src/tests/CMakeFiles/
+src/src/CMakeFiles/
+cmake-build-debug
+src/CMakeFiles/
+src/CMakeCache.txt
+src/CTestTestfile.cmake
+
 # Object files
 *.o
 *.ko
