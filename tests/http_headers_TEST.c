@@ -302,10 +302,8 @@ Test(get_next_line, 1_line)
 Test(get_next_line, 2_line)
 {
 	http_header_t* header = (http_header_t*)malloc(sizeof(http_header_t));
-	header->buff = "line1\nline2";
-	header->cur_loc = 0;
-	header->max_len = strlen(header->buff);
-	header->start_of_line = 0;
+    decode_http_headers_init(header, 0, "line1\nline2", strlen("line1\nline2"));
+
 	get_next_line(header);
 	get_next_line(header);
 	cr_assert(6 == header->start_of_line, "start_of_line should not have changed: %d", header->start_of_line);
@@ -315,10 +313,8 @@ Test(get_next_line, 2_line)
 Test(get_next_line, last_line)
 {
 	http_header_t* header = (http_header_t*)malloc(sizeof(http_header_t));
-	header->buff = "a single line";
-	header->cur_loc = 0;
-	header->start_of_line = 0;
-	header->max_len = strlen(header->buff);
+    decode_http_headers_init(header, 0, "a single line", strlen("a single line"));
+
 	get_next_line(header);
 	get_next_line(header);
 	cr_assert(13 == header->cur_loc, "cur_loc should point after the last caracter, not:%d", header->cur_loc);

@@ -41,6 +41,7 @@ void decode_http_headers_init(http_header_t* header, int fd, char* buffer, int d
 	header->cur_loc = 0;
 	header->last_semicolon = -1;
 	header->max_len = data_len;
+	header->start_of_line = 0; //TODO: validate
 }
 
 /*
@@ -137,15 +138,17 @@ char* http_headers_get_header_value(http_header_t* header)
     return value;
 }
 
-void http_headers_add(http_header_t* header)
-{
-	char* key = strmncpy(header->buff, header->start_of_line, header->last_semicolon);
-	int index = find_header_index(key);
-	char* value = http_headers_get_header_value(header);
-	if(index >= 0)
-		str_stack_push(header->headers[index], value);
+void http_headers_add(http_header_t* header) {
+    char *key = strmncpy(header->buff, header->start_of_line, header->last_semicolon);
+    int index = find_header_index(key);
+    char *value = NULL;
+    if (index >= 0) {
+        value = http_headers_get_header_value(header);
+        str_stack_push(header->headers[index], value);
+        free(value);
+    }
 	free(key);
-	free(value);
+
 }
 
 	

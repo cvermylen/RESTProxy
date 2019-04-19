@@ -11,6 +11,7 @@ int http_decode_request_type(char* buffer, int length)
 	return 0;
 }
 
+//TODO: use str2int from the header module
 int http_decode_response_type(char* buffer, int length)
 {
 	int res = 0;

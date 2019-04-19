@@ -6,14 +6,6 @@
 #define NUM_HTTP_HEADERS			81
 
 typedef struct {
-	int key;
-	char* value;
-	int value_length;
-} http_header_line_t;
-
-http_header_line_t* decode_http_header_line(char* start_of_header, int line_length);
-
-typedef struct {
 	stack_head_t* headers[NUM_HTTP_HEADERS];
 	int fd;
 	char* buff;
@@ -23,10 +15,6 @@ typedef struct {
 	int max_len;
 } http_header_t;
 
-typedef struct {
-	char* str_start;
-	int str_len;
-} http_line_t;
 
 char* strmncpy(char* buffer, int start, int end);
 

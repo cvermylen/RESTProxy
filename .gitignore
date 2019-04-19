@@ -5,6 +5,7 @@ bin
 
 # CLion
 .idea
+Gateway.cbp
 src/Testing/
 DartConfiguration.tcl
 

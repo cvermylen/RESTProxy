@@ -1,0 +1,115 @@
+Start testing: Apr 17 07:16 EDT
+----------------------------------------------------------
+Unable to find executable: accept_connections_TEST
+1/7 Testing: accept_connections_TEST
+1/7 Test: accept_connections_TEST
+Command: ""
+Directory: /Users/christian/projects/RESTProxy/tests
+"accept_connections_TEST" start time: 
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"accept_connections_TEST" end time: Apr 17 07:16 EDT
+"accept_connections_TEST" time elapsed: 00:00:00
+----------------------------------------------------------
+
+Unable to find executable: shared_buffers_TEST_test
+2/7 Testing: shared_buffers_TEST_test
+2/7 Test: shared_buffers_TEST_test
+Command: ""
+Directory: /Users/christian/projects/RESTProxy/tests
+"shared_buffers_TEST_test" start time: 
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"shared_buffers_TEST_test" end time: Apr 17 07:16 EDT
+"shared_buffers_TEST_test" time elapsed: 00:00:00
+----------------------------------------------------------
+
+Unable to find executable: socket_connector_TEST_test
+3/7 Testing: socket_connector_TEST_test
+3/7 Test: socket_connector_TEST_test
+Command: ""
+Directory: /Users/christian/projects/RESTProxy/tests
+"socket_connector_TEST_test" start time: 
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"socket_connector_TEST_test" end time: Apr 17 07:16 EDT
+"socket_connector_TEST_test" time elapsed: 00:00:00
+----------------------------------------------------------
+
+Unable to find executable: route_instance_TEST_test
+4/7 Testing: route_instance_TEST_test
+4/7 Test: route_instance_TEST_test
+Command: ""
+Directory: /Users/christian/projects/RESTProxy/tests
+"route_instance_TEST_test" start time: 
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"route_instance_TEST_test" end time: Apr 17 07:16 EDT
+"route_instance_TEST_test" time elapsed: 00:00:00
+----------------------------------------------------------
+
+Unable to find executable: http_headers_TEST_test
+5/7 Testing: http_headers_TEST_test
+5/7 Test: http_headers_TEST_test
+Command: ""
+Directory: /Users/christian/projects/RESTProxy/tests
+"http_headers_TEST_test" start time: 
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"http_headers_TEST_test" end time: Apr 17 07:16 EDT
+"http_headers_TEST_test" time elapsed: 00:00:00
+----------------------------------------------------------
+
+Unable to find executable: http_message_TEST_test
+6/7 Testing: http_message_TEST_test
+6/7 Test: http_message_TEST_test
+Command: ""
+Directory: /Users/christian/projects/RESTProxy/tests
+"http_message_TEST_test" start time: 
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"http_message_TEST_test" end time: Apr 17 07:16 EDT
+"http_message_TEST_test" time elapsed: 00:00:00
+----------------------------------------------------------
+
+Unable to find executable: http_first_line_TEST_test
+7/7 Testing: http_first_line_TEST_test
+7/7 Test: http_first_line_TEST_test
+Command: ""
+Directory: /Users/christian/projects/RESTProxy/tests
+"http_first_line_TEST_test" start time: 
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"http_first_line_TEST_test" end time: Apr 17 07:16 EDT
+"http_first_line_TEST_test" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Apr 17 07:16 EDT
