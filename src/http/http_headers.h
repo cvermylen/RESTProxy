@@ -1,7 +1,7 @@
 #ifndef HTTP_HEADERS_H
 #define HTTP_HEADERS_H
 
-#include <str_stack.h>
+//#include <str_stack.h>
 
 #define NUM_HTTP_HEADERS			81
 
@@ -24,7 +24,7 @@ void http_headers_init(http_header_t* headers);
 
 void http_headers_free(http_header_t* header);
 
-stack_head_t* http_headers_get(http_header_t* header, const int prop_key);
+//stack_head_t* http_headers_get(http_header_t* header, const int prop_key);
 
 void http_headers_add(http_header_t* header);
 
