@@ -1,7 +1,7 @@
 #ifndef HTTP_MESSAGE_H
 #define HTTP_MESSAGE_H
 
-#include <stack.h>
+//#include <stack.h>
 #include "http_headers.h"
 
 #define HTTP_MSG_STATUS_INIT	0

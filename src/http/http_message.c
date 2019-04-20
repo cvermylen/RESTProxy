@@ -3,7 +3,7 @@
 #include "http_headers.h"
 #include "../shared_buffers.h"
 #include "../socket_connector.h"
-#include <str_stack.h>
+//#include <str_stack.h>
 #include <stdlib.h>
 
 http_message_t* http_message_init(int buff_no, char* buffer, int code, int sz)
