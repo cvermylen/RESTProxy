@@ -5,7 +5,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <math.h>
-#include <str_stack.h>
+//#include <str_stack.h>
 
 int str2int(char* value, int field_length)
 {
@@ -18,19 +18,19 @@ int str2int(char* value, int field_length)
 int decode_body_length(http_header_t* header)
 {
 	int result = 0;
-	stack_head_t* st = http_headers_get(header, HTTP_CONTENT_LENGTH);
+/*	stack_head_t* st = http_headers_get(header, HTTP_CONTENT_LENGTH);
 	char* value = str_stack_top(st);
 	if(value != NULL){
 printf("Value:'%s'\n", value);
 		result = str2int(value, strlen(value));
-	}
+	}*/
 	return result;
 }
 
 void http_headers_init(http_header_t* header)
 {
 	for (int i=0; i < NUM_HTTP_HEADERS; i++) {
-		header->headers[i] = stack_init();
+//		header->headers[i] = stack_init();
 	}
 }
 
@@ -144,7 +144,7 @@ void http_headers_add(http_header_t* header) {
     char *value = NULL;
     if (index >= 0) {
         value = http_headers_get_header_value(header);
-        str_stack_push(header->headers[index], value);
+//        str_stack_push(header->headers[index], value);
         free(value);
     }
 	free(key);
@@ -152,14 +152,14 @@ void http_headers_add(http_header_t* header) {
 }
 
 	
-stack_head_t* http_headers_get(http_header_t* header, const int prop_key)
+/*stack_head_t* http_headers_get(http_header_t* header, const int prop_key)
 {
         stack_head_t* result = NULL;
         if(prop_key >= 0 && prop_key < NUM_HTTP_HEADERS){
                 result = header->headers[prop_key];
         }
         return result;
-}
+}*/
 
 int decode_http_headers(http_header_t* header)
 {
@@ -179,7 +179,7 @@ printf("decode_http_headers\n");
 void http_headers_free(http_header_t* header)
 {
 	for (int i=0; i < NUM_HTTP_HEADERS; i++) {
-		str_stack_free(header->headers[i]);
+//		str_stack_free(header->headers[i]);
 	}
 }
 
