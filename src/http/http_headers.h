@@ -6,7 +6,7 @@
 #define NUM_HTTP_HEADERS			81
 
 typedef struct {
-	stack_head_t* headers[NUM_HTTP_HEADERS];
+//	stack_head_t* headers[NUM_HTTP_HEADERS];
 	int fd;
 	char* buff;
 	int start_of_line;
