@@ -9,9 +9,9 @@
 #include "socket_connector.h"
 #include "request_reply.h"
 #include "http/http_first_line.h"
-#include <stack.h>
+//#include <stack.h>
 
-stack_head_t *connections_stack;
+//stack_head_t *connections_stack;
 int program_should_continue = 1;
 
 void release_buffer_after_processing(request_t *request) {
@@ -62,13 +62,13 @@ void *receive_and_process_data_from_client(void *params) {
 
 void *socket_connector(void *param) {
     ri_route_t *route = (ri_route_t *) param;
-    connections_stack = stack_init();
+//    connections_stack = stack_init();
     printf("socket_connector\n");
     pthread_t thread;
     do {
         ri_connection_t *cli = wait_4_connection_request(route);
         if (cli->fd > 0) {
-            stack_push(connections_stack, cli);
+//            stack_push(connections_stack, cli);
             printf("%d\n", cli->fd);
             int rc = pthread_create(&thread, NULL, receive_and_process_data_from_client, (void *) cli);
         }
@@ -80,10 +80,10 @@ void *socket_connector(void *param) {
 void close_remaining_connections() {
     printf("close_remaining_connections\n");
     ri_connection_t *conn = NULL;
-    while ((conn = (ri_connection_t *) stack_pop(connections_stack))) {
+/*    while ((conn = (ri_connection_t *) stack_pop(connections_stack))) {
         printf("Close this one:%d\n", conn->fd);
         close(conn->fd);
-    }
+    }*/
     printf("Done closing\n");
 }
 
