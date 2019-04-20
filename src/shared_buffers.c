@@ -50,7 +50,7 @@ int alloc_buffer()
 	int current = -1;
 	sem_wait(mutex);
 	if(last < 0){
-		log_msg("Request to alloc a buffer has failed, Network buffer pool is empty");
+		//log_msg("Request to alloc a buffer has failed, Network buffer pool is empty");
 	}else{
 		current = free_buffer_list[last];
 		free_buffer_list[last--] = -1;
