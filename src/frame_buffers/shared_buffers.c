@@ -1,9 +1,10 @@
 #include "shared_buffers.h"
-#include "log.h"
+#include "../logs/log.h"
 #include <string.h>
 #include <stdlib.h>
 #include <semaphore.h>
 #include <stdio.h>
+#include <fcntl.h>
 
 static char **messages;
 static int *free_buffer_list;
@@ -50,7 +51,9 @@ int alloc_buffer()
 	int current = -1;
 	sem_wait(mutex);
 	if(last < 0){
-		log_msg("Request to alloc a buffer has failed, Network buffer pool is empty");
+		//log_msg("Request to alloc a buffer has failed, Network buffer pool is empty");
+		printf("Request to alloc a buffer has failed, Network buffer pool is empty");
+		exit(0);
 	}else{
 		current = free_buffer_list[last];
 		free_buffer_list[last--] = -1;
@@ -61,9 +64,7 @@ int alloc_buffer()
 
 void free_buffer(int buffer_no)
 {
-printf("free_buffer 1:%d\n", buffer_no);
 	sem_wait(mutex);
-printf("free buffer 2:%d\n", buffer_no);
 	if(buffer_no >= 0 && buffer_no < max_buffers){
 		release_buffer(buffer_no);
 	}

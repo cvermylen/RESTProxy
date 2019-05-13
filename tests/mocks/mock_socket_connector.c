@@ -1,10 +1,10 @@
-#include "../../src/socket_connector.h"
+#include "../../src/socket/socket_connector.h"
 #include <stdlib.h>
 #include <string.h>
 
-request_t* sock_read(const ri_connection_t* connection)
+int sock_read(const int sockfd, char *dest, const int max_length, int flags)
 {
-	return NULL;
+	return 0;
 }
 
 char* mock_socket_buffer;

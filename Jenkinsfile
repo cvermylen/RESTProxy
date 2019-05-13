@@ -1,4 +1,3 @@
-:q
 pipeline {
    agent { dockerfile true }
 

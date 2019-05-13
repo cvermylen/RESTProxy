@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <stack.h>
+//#include <stack.h>
 
 workflow_t* workflows;
 
@@ -22,7 +22,7 @@ workflow_rule_t* read_rule(FILE* fd, char *buffer)
 {
 	workflow_rule_t* res = NULL;
 	buffer = fgets(buffer, 4096, fd);
-	int i, depth = 0;
+/*	int i, depth = 0;
 	stack_head_t* stack;
 	if(strcmp(buffer, "{") == 0){
 		stack = stack_init();
@@ -40,7 +40,7 @@ workflow_rule_t* read_rule(FILE* fd, char *buffer)
 			res->instruction->lines[i] = stack_pop(stack);
 		}
 		stack_free(stack);
-	}
+	}*/
 	return res;
 }
 

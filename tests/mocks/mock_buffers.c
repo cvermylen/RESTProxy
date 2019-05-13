@@ -1,4 +1,4 @@
-#include "../../src/shared_buffers.h"
+#include "../../src/frame_buffers/shared_buffers.h"
 #include <stdlib.h>
 
 int alloc_buffer()
