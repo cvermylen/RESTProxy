@@ -1,24 +1,10 @@
 #ifndef ROUTE_INSTANCE_H
 #define ROUTE_INSTANCE_H
 #include <pthread.h>
-#include <stdio.h>
-#include <netinet/in.h>
 
-typedef struct {
-        int port;
-        int mode;
-        int fd;
-	struct sockaddr cli_addr;
-        socklen_t sockaddr_size;
-	char* server_name;
-        void *(*consumer_callback)(void * sock_params);
-} ri_sock_connector_t;
+#include "socket/socket_connector.h"
+#include "file_connector.h"
 
-typedef struct {
-        char *filename;
-        FILE *file;
-        void (*output_callback)(void *parms);
-} ri_file_connector_t;
 
 typedef struct {
         char *filename;
@@ -62,8 +48,6 @@ typedef struct {
 int create_conn_runtime_thread_data(int fd, ri_in_connector_t* in_conn, ri_out_connector_t *conn, int buffer_size, char *buffer, int data_len);
 
 ri_route_t *create_runtime_route(const int port, const int mode, const int num_connectors);
-
-ri_sock_connector_t *create_runtime_sock_connector(const int port);
 
 void add_out_file_connector(ri_route_t* route, const int index, const char* filename, const int flow);
 

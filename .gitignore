@@ -6,7 +6,7 @@ bin
 # CLion
 .idea
 Gateway.cbp
-src/Testing/
+Testing/
 DartConfiguration.tcl
 
 # Cmake

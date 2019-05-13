@@ -1,12 +1,12 @@
 #ifndef HTTP_HEADERS_H
 #define HTTP_HEADERS_H
 
-//#include <str_stack.h>
+#include <str_stack.h>
 
 #define NUM_HTTP_HEADERS			81
 
 typedef struct {
-//	stack_head_t* headers[NUM_HTTP_HEADERS];
+	stack_head_t* headers[NUM_HTTP_HEADERS];
 	int fd;
 	char* buff;
 	int start_of_line;
@@ -15,16 +15,27 @@ typedef struct {
 	int max_len;
 } http_header_t;
 
+/*!
+ * \brief Allocate and initialize the header with as many entries as defined per 'NUM_HTTP_HEADERS'.
+ * DOES NOT initialize the values to start the parsing though. (maybe change that ...)
+ * @return
+ */
+http_header_t* http_headers_init(int fd, char *buffer, int data_len);
 
 char* strmncpy(char* buffer, int start, int end);
 
+/*!
+ * \private
+ * \brief The http header 'Body Length' contains a decimal value that is used to parse the actual message. In the header,
+ * the value is stored as a String
+ * @param header
+ * @return
+ */
 int decode_body_length(http_header_t* header);
-
-void http_headers_init(http_header_t* headers);
 
 void http_headers_free(http_header_t* header);
 
-//stack_head_t* http_headers_get(http_header_t* header, const int prop_key);
+stack_head_t* http_headers_get(http_header_t* header, const int prop_key);
 
 void http_headers_add(http_header_t* header);
 
@@ -43,6 +54,8 @@ void skip_eol (http_header_t* header);
 int header_strlen(http_header_t* header);
 
 int str2int(char* value, int field_length);
+
+char* http_headers_to_string(http_header_t* header);
 
 extern char* HTTP_HEADER_STRINGS[];
 

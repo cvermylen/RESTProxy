@@ -6,7 +6,52 @@
 #include <strings.h>
 #include <stdio.h>
 #include "socket_connector.h"
-#include "shared_buffers.h"
+#include "../frame_buffers/shared_buffers.h"
+#include "../route_def.h"
+
+int bind_port(const int portno) {
+    printf("bind_port %d\n", portno);
+    if (portno <= 0 || portno > 65535)
+        return -1;
+
+    struct sockaddr_in serv_addr;
+    int sockfd;
+
+    int true = 1;
+    sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &true, sizeof(int));
+    bzero((char *) &serv_addr, sizeof(serv_addr));
+    serv_addr.sin_family = AF_INET;
+    serv_addr.sin_addr.s_addr = INADDR_ANY;
+    serv_addr.sin_port = htons(portno);
+    if (bind(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0)
+        return BINDING_ERROR;
+    listen(sockfd, 5);
+    printf("binded port:%d\n", sockfd);
+    return sockfd;
+}
+
+int create_input_socket_connector(const int port)
+{
+    printf("create_input_socket_connector\n");
+    return bind_port(port);
+}
+
+void release_runtime_sock_connector(ri_sock_connector_t *conn)
+{
+    free(conn);
+}
+
+ri_sock_connector_t *create_runtime_sock_connector(const int port, void *socket_connector(void *param))
+{
+    printf("create_runtime_sock_connector\n");
+    ri_sock_connector_t *res = (ri_sock_connector_t*)malloc(sizeof(ri_sock_connector_t));
+    res->port = port;
+    res->mode = MODE_TCP;
+    res->fd = create_input_socket_connector(port);
+    res->consumer_callback = socket_connector;
+    return res;
+}
 
 int read_from_socket(int fd, char* buffer, int max_size)
 {

@@ -170,12 +170,6 @@ static ri_route_t* mock_route(const int out_conn)
 	cr_assert(containers[0] == -1, "Expected -1, but received:%d", containers[0]);
 }*/
 
-Test(route, sock_conn)
-{
-	ri_sock_connector_t* res = create_runtime_sock_connector(1);
-	cr_assert(res != NULL, "'create_runtime_sock_connector' should not return NULL");
-	cr_assert(res->mode == MODE_TCP, "'mode' field should be copied over");
-}
 
 Test(route, file_conn)
 {

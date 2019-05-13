@@ -1,6 +1,5 @@
-#include "socket_connector.h"
-#include "accept_connections.h"
-#include "shared_buffers.h"
+#include "socket/socket_connector.h"
+#include "frame_buffers/shared_buffers.h"
 #include "route_def.h"
 #include "route_instance.h"
 #include "file_connector.h"
@@ -11,26 +10,29 @@
 #include <pthread.h>
 #include <errno.h>
 
-int create_input_socket_connector(const int port)
-{
-printf("create_input_socket_connector\n");
-	return bind_port(port);
+int program_should_continue = 1;
+
+void *socket_connector(void *param) {
+    ri_route_t *route = (ri_route_t *) param;
+//    connections_stack = stack_init();
+    printf("socket_connector\n");
+    pthread_t thread;
+    do {
+        ri_connection_t *cli = wait_4_connection_request(route);
+        if (cli->fd > 0) {
+//            stack_push(connections_stack, cli);
+            printf("%d\n", cli->fd);
+            int rc = pthread_create(&thread, NULL, receive_and_process_data_from_client, (void *) cli);
+        }
+    } while (program_should_continue);
+    printf("END SOCKET CONNECTOR\n");
+    return NULL;
 }
 
-ri_sock_connector_t *create_runtime_sock_connector(const int port)
-{
-printf("create_runtime_sock_connector\n");
-	ri_sock_connector_t *res = (ri_sock_connector_t*)malloc(sizeof(ri_sock_connector_t));
-	res->port = port;
-	res->mode = MODE_TCP;
-	res->fd = create_input_socket_connector(port);
-	res->consumer_callback = socket_connector;
-	return res;
-}
-	
-void release_runtime_sock_connector(ri_sock_connector_t *conn)
-{
-	free(conn);
+void close_connections(ri_route_t *route) {
+    printf("Close connection\n");
+    close_in_connector(route->in_connector);
+    program_should_continue = 0;
 }
 
 ri_out_connector_t* create_runtime_out_sock_connector(const int flow, const char* hostname, const int port)
@@ -55,7 +57,7 @@ ri_out_connector_t *create_runtime_out_file_connector(const int flow, const char
 {
 printf("create_runtime_file_connector\n");
 	ri_file_connector_t * res = (ri_file_connector_t*)malloc(sizeof(ri_file_connector_t));
-	res->filename = (char*)malloc((strlen(filename) + 1) * sizeof(char));;
+	res->filename = (char*)malloc((strlen(filename) + 1) * sizeof(char));
 	strcpy(res->filename, filename);
 	res->file = fopen(res->filename, "w");
 	res->output_callback = file_writer;
@@ -68,11 +70,6 @@ printf("create_runtime_file_connector\n");
 		conn->response_callback = reply_to_client;
 	}
 	return conn;
-}
-
-void release_runtime_file_connector(ri_file_connector_t *conn)
-{
-	free(conn);
 }
 
 void release_runtime_out_connector(ri_out_connector_t *conn)
@@ -95,7 +92,7 @@ printf("create_runtime_in_connector\n");
 	res->type = type;
 	switch(type){
 	case TYPE_SOCKET:
-		res->content.sock = create_runtime_sock_connector(port);
+		res->content.sock = create_runtime_sock_connector(port, socket_connector);
 		break;
 	case TYPE_FILE:
 		// res->content.file = create_runtime_file_connector(&(conn->content.file));

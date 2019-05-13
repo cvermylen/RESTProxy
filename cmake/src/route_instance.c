@@ -59,16 +59,6 @@ int* create_all_runtime_thread_data(ri_route_t *route, int buffer_size, char *bu
 	return pool;
 }
 
-ri_sock_connector_t *create_runtime_sock_connector(rt_sock_connector_t *conn)
-{
-	ri_sock_connector_t *res = (ri_sock_connector_t*)malloc(sizeof(ri_sock_connector_t));
-	res->port = conn->port;
-	res->mode = conn->mode;
-	res->fd = conn->fd;
-	res->consumer_callback = conn->consumer_callback;
-	return res;
-}
-	
 void release_runtime_sock_connector(ri_sock_connector_t *conn)
 {
 	free(conn);

@@ -16,12 +16,12 @@ typedef struct {
 	char* buffer;
 	int buffer_no;
 	int raw_message_length;
-	http_header_t header;
+	http_header_t* header;
 	int body_length;
 	char* body;
 } http_message_t;
 
-http_message_t* http_message_init(int buff_no, char* buffer, int code, int sz);
+http_message_t* http_message_init(int fd, int buff_no, char* buffer, int code, int sz);
 
 int get_line_length(char* buffer);
 

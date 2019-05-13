@@ -1,5 +1,5 @@
 #include <criterion/criterion.h>
-#include "../src/shared_buffers.h"
+#include "../src/frame_buffers/shared_buffers.h"
 
 Test(buffers, init)
 {

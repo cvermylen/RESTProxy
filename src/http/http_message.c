@@ -1,15 +1,15 @@
 #include "http_message.h"
 #include "../request_reply.h"
 #include "http_headers.h"
-#include "../shared_buffers.h"
-#include "../socket_connector.h"
+#include "../frame_buffers/shared_buffers.h"
+#include "../socket/socket_connector.h"
 //#include <str_stack.h>
 #include <stdlib.h>
 
-http_message_t* http_message_init(int buff_no, char* buffer, int code, int sz)
+http_message_t* http_message_init(int fd, int buff_no, char* buffer, int code, int sz)
 {
 	http_message_t* http_message = (http_message_t*)malloc(sizeof(http_message_t));
-	http_headers_init(&(http_message->header));
+	http_message->header = http_headers_init(fd, buffer, sz);
 	http_message->buffer_no = buff_no;
 	http_message->buffer = buffer;
 	http_message->function = code;
@@ -24,10 +24,10 @@ char* http_message_get_request_buffer(http_message_t* msg)
 
 int decode_http_message_header(int fd, http_message_t* msg)
 {
-	decode_http_headers_init(&(msg->header), fd, msg->buffer, msg->raw_message_length);
-	int end_of_header = decode_http_headers(&(msg->header));
-	msg->raw_message_length = msg->header.max_len;
-	msg->body_length = decode_body_length(&(msg->header));
+	//decode_http_headers_init(&(msg->header), fd, msg->buffer, msg->raw_message_length);
+	int end_of_header = decode_http_headers(msg->header);
+	msg->raw_message_length = msg->header->max_len;
+	msg->body_length = decode_body_length(msg->header);
 	return end_of_header;
 }
 
