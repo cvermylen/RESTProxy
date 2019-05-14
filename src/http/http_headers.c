@@ -36,26 +36,27 @@ http_header_t* http_headers_init(int fd, char *buffer, int data_len) {
     header->cur_loc = 0;
     header->last_semicolon = -1;
     header->max_len = data_len;
-    header->start_of_line = 0; //TODO: validate
+    header->start_of_line = 0;
     return header;
 }
 
-void decode_http_headers_init(http_header_t *header, int fd, char *buffer, int data_len) {
+/*void decode_http_headers_init(http_header_t *header, int fd, char *buffer, int data_len) {
     header->fd = fd;
     header->buff = buffer;
     header->cur_loc = 0;
     header->last_semicolon = -1;
     header->max_len = data_len;
-    header->start_of_line = 0; //TODO: validate
-}
+    header->start_of_line = 0;
+}*/
 
 /*
  \pre buff is not NULL
  \pre start_of_line <= cur_loc <= max_len
 */
 void skip_eol(http_header_t *header) {
-    if (header->cur_loc < header->max_len && header->buff[header->cur_loc] == 0x0A
-        && header->buff[header->cur_loc + 1] == 0x0D) {
+    if (header->cur_loc < header->max_len &&
+        (header->buff[header->cur_loc] == 0x0A && header->buff[header->cur_loc + 1] == 0x0D)
+        || (header->buff[header->cur_loc] == 0x0D && header->buff[header->cur_loc + 1] == 0x0A)){
         header->cur_loc += 2;
     } else if (header->buff[header->cur_loc] == '\n') {
         header->cur_loc += 1;
@@ -178,7 +179,7 @@ int decode_http_headers(http_header_t *header) {
 
 void http_headers_free(http_header_t *header) {
     for (int i = 0; i < NUM_HTTP_HEADERS; i++) {
-//		str_stack_free(header->headers[i]);
+		str_stack_free(header->headers[i]);
     }
 }
 

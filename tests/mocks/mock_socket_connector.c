@@ -8,10 +8,15 @@ int sock_read(const int sockfd, char *dest, const int max_length, int flags)
 }
 
 char* mock_socket_buffer;
+
 int read_from_socket(int fd, char* buffer, int max_size)
 {
-	strcpy(buffer, mock_socket_buffer);
-	return strlen(mock_socket_buffer);
+    if (mock_socket_buffer) {
+        strcpy(buffer, mock_socket_buffer);
+        return strlen(mock_socket_buffer);
+    } else {
+        return -1;
+    }
 }
 
 int split_receive(int socket, char* buffer, int max_size)

@@ -45,6 +45,6 @@ if(n==0)exit(0);
 
 void http_message_free(http_message_t* msg)
 {
-	http_headers_free(&(msg->header));
+	http_headers_free(msg->header);
 	free(msg);
 }

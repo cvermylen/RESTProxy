@@ -47,7 +47,7 @@ Test(http_headers_add, non_existing) {
     http_headers_add(header);
 }
 
-Test(eol, zero) {
+Test(eol, empty_string) {
     http_header_t *header = http_headers_init(0, "", 0);
 
     skip_eol(header);
@@ -57,7 +57,7 @@ Test(eol, zero) {
     cr_assert(0 == header->max_len, "should not have been updated");
 }
 
-Test(eol, pos_1) {
+Test(eol, unix_1) {
     http_header_t *header = http_headers_init(0, "\n", 1);
 
     skip_eol(header);
@@ -67,7 +67,7 @@ Test(eol, pos_1) {
     cr_assert(1 == header->max_len, "max_len should not have been updated");
 }
 
-Test(eol, pos_2) {
+Test(eol, ms_1) {
     char str[] = {0x0A, 0x0D};
     http_header_t *header = http_headers_init(0, str, 2);
 
@@ -78,7 +78,18 @@ Test(eol, pos_2) {
     cr_assert(2 == header->max_len, "max_len should not have been updated");
 }
 
-Test(eol, pos_3) {
+Test(eol, ms_2) {
+    char str[] = {0x0D, 0x0A};
+    http_header_t *header = http_headers_init(0, str, 2);
+
+    skip_eol(header);
+
+    cr_assert(2 == header->start_of_line, "start_of_line expected:2, found:%d", header->start_of_line);
+    cr_assert(2 == header->cur_loc, "cur_loc expected:2, found: %d", header->cur_loc);
+    cr_assert(2 == header->max_len, "max_len should not have been updated");
+}
+
+Test(eol, ms_3) {
     char str[] = {0x0A, 0x20, 0x0D};
     http_header_t *header = http_headers_init(0, str, 3);
 
@@ -89,7 +100,7 @@ Test(eol, pos_3) {
     cr_assert(3 == header->max_len, "max_len should not have been updated");
 }
 
-Test(eol, neg_1) {
+Test(eol, unix_2) {
     char str[] = "  \n";
     http_header_t *header = http_headers_init(0, str, 3);
 
@@ -207,8 +218,7 @@ Test(body_length, happy) {
 
 Test(decode_http_headers, empty_0) {
     char str[] = "";
-    http_header_t *header = http_headers_init(0, str, 26);
-    header->last_semicolon = -1; //TODO ??
+    http_header_t *header = http_headers_init(0, str, strlen(""));
 
     decode_http_headers(header);
 
@@ -217,8 +227,7 @@ Test(decode_http_headers, empty_0) {
 
 Test(decode_http_headers, empty_1) {
     char str[] = "HTTP 1/1 GET\n";
-    http_header_t *header = http_headers_init(0, str, strlen(str));
-    header->last_semicolon = -1; //TODO ???
+    http_header_t *header = http_headers_init(0, str, strlen("HTTP 1/1 GET\n"));
 
     decode_http_headers(header);
 
@@ -227,8 +236,7 @@ Test(decode_http_headers, empty_1) {
 
 Test(decode_http_headers, happy_1) {
     char str[] = "HTTP 1/1 GET\nAccept: Apple\nServer: localhost\n\n<html>\n";
-    http_header_t *header = http_headers_init(0, str, strlen(str));
-    header->last_semicolon = -1; //TODO ???
+    http_header_t *header = http_headers_init(0, str, strlen("HTTP 1/1 GET\nAccept: Apple\nServer: localhost\n\n<html>\n"));
 
     decode_http_headers(header);
 
@@ -239,7 +247,7 @@ Test(decode_http_headers, happy_1) {
 }
 
 Test(get_next_line, 1_line) {
-    http_header_t *header = http_headers_init(0, "1_line, a single line", strlen(header->buff));
+    http_header_t *header = http_headers_init(0, "1_line, a single line", strlen("1_line, a single line"));
 
     get_next_line(header);
 
