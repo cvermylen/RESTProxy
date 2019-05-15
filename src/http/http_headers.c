@@ -40,15 +40,6 @@ http_header_t* http_headers_init(int fd, char *buffer, int data_len) {
     return header;
 }
 
-/*void decode_http_headers_init(http_header_t *header, int fd, char *buffer, int data_len) {
-    header->fd = fd;
-    header->buff = buffer;
-    header->cur_loc = 0;
-    header->last_semicolon = -1;
-    header->max_len = data_len;
-    header->start_of_line = 0;
-}*/
-
 /*
  \pre buff is not NULL
  \pre start_of_line <= cur_loc <= max_len

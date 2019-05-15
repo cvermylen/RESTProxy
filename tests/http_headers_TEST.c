@@ -159,7 +159,6 @@ Test(is_eol_reached, false_2) {
 Test(get_next_line, semicolon_true) {
     char str[] = "key:value";
     http_header_t *header = http_headers_init(0, str, strlen(str));
-    header->last_semicolon = -1; //TODO should that be -1 or 0?
 
     get_next_line(header);
 
@@ -169,7 +168,6 @@ Test(get_next_line, semicolon_true) {
 Test(get_next_line, semicolon_false) {
     char str[] = "keyvalue";
     http_header_t *header = http_headers_init(0, str, strlen(str));
-    header->last_semicolon = -1;
 
     get_next_line(header);
 
@@ -179,12 +177,23 @@ Test(get_next_line, semicolon_false) {
 Test(get_next_line, special_char) {
     char str[] = "Content-Type: text/html; charset=UTF-8";
     http_header_t *header = http_headers_init(0, str, strlen(str));
-    header->last_semicolon = -1;
 
     get_next_line(header);
     http_headers_add(header);
 
     cr_assert(12 == header->last_semicolon, "not the expected position for semicolon: %d", header->last_semicolon);
+}
+
+//TODO write get_next_line with line split over 2, 3 reads from socket
+Test(get_next_line, read_from_socket)
+{
+
+    cr_assert(0, "FAIL");
+}
+
+Test(get_next_line, line_spread_over_3_reads)
+{
+    cr_assert(0, "FAIL");
 }
 
 Test(str2int, happy) {
