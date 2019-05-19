@@ -1,15 +1,17 @@
 #include "../src/http/http_message.h"
 #include "../src/http/http_first_line.h"
+#include "../src/frame_buffers/shared_buffers.h"
+#include "mocks/mock_socket_connector.h"
 #include <str_stack.h>
 #include <criterion/criterion.h>
 
-extern char* mock_socket_buffer;
+extern int http_message_buffer_size;
 
 Test(http_message, init)
 {
 	char* buff = (char*)malloc(sizeof(char));
 
-    http_message_t* msg = http_message_init(0, 0, buff, 0, 0);
+    http_message_t* msg = http_message_init(0);
 
     cr_assert(msg != NULL, "init expected to return a non-NULL value");
 
@@ -19,56 +21,69 @@ Test(http_message, init)
 
 Test(http_message, init2)
 {
-    http_message_t* msg = http_message_init(0, 0, NULL, 0, 0);
+    http_message_buffer_size = 0;  //Expect to have only one buffer
+    http_message_t* msg = http_message_init(0);
 
     cr_assert(msg != NULL, "init expected to return a non-NULL value");
-
+    cr_assert(msg->last_received == msg->last_sent, "With not buffer, both should be equal");
+    cr_assert(msg->status == HTTP_MSG_STATUS_HEADER, "Status should be initialized");
     http_message_free(msg);
+}
+
+/*!
+ * Define an empty list of buffers (override BUFFER_SIZE to 0)
+ */
+Test(read_from_source, read_in_one_buffer)
+{
+    http_message_buffer_size = 1;  // 2 ^ 1 = 2 buffers
+    http_message_t* msg = http_message_init(0);
+    mock_socket_connect_stack_to_fd(0);
+    char buff[] = "dummy";
+    mock_socket_push_buffer(0, buff);
+
+    int n = read_next_buffer_from_source(msg);
+	cr_assert(5 == n, "expected length 5, not: %d", n);
+	cr_assert(msg->last_received == 1, "Should have been updated to 1, currently is: %ud", msg->last_received);
+	cr_assert(msg->last_sent == 0, "Last_sent expected to be 0, not:%d", msg->last_sent);
+	cr_assert(msg->data_sizes[1] == n, "Data size for buffer[1] should be 5, not: %d", msg->data_sizes[1]);
+	http_message_free(msg);
+}
+
+Test(http_message, 2_read_should_block)
+{
+    http_message_buffer_size = 1;  // 2 ^ 1 = 2 buffers
+    http_message_t* msg = http_message_init(0);
+    mock_socket_connect_stack_to_fd(0);
+    char buff2[] = "Second Line";
+    mock_socket_push_buffer(0, buff2);
+    char buff1[] = "First Line";
+    mock_socket_push_buffer(0, buff1);
+
+	read_next_buffer_from_source(msg);
+	int m = read_next_buffer_from_source(msg);
+
+	cr_assert(0 == m, "Not buffer available for the second read, expected to return '0', not:%d", m);
+	http_message_free(msg);
+}
+
+Test(free_buffer, free_1)
+{
+    http_message_buffer_size = 1;  // 2 ^ 1 = 2 buffers
+    http_message_t* msg = http_message_init(0);
+    msg->buffers[0] = alloc_buffer();
+    http_message_free_buffer(msg);
+
+    cr_assert(1 == msg->last_sent, "Expected last message to be 1, not:%d", msg->last_sent);
+    cr_assert(1 == msg->last_received, "Last received should not have moved: %d", msg->last_received);
 }
 
 Test(receive_body, has_already_received_body_content)
 {
-	http_message_t* msg = (http_message_t*)malloc(sizeof(http_message_t));
-	msg->raw_message_length = 10;
-	msg->body_length = 5;
-	receive_body(0, msg, 5);
+    http_message_t* msg = (http_message_t*)malloc(sizeof(http_message_t));
+    msg->raw_message_length = 10;
+    msg->body_length = 5;
+    receive_body(0, msg, 5);
 }
-
-/*Test(http_message, read_from_buffer_0)
-{
-	http_message_t* msg = (http_message_t*)malloc(sizeof(http_message_t));
-	msg->buffer = (char*)malloc(sizeof(char) * 1024);
-	mock_socket_buffer = "dummy";
-	int n = read_from_buffer(0, msg, 0);
-	cr_assert(5 == n, "expected length 5, not: %d", n);
-}*/
-
-/*Test(http_message, read_from_buffer_1)
-{
-	http_message_t* msg = (http_message_t*)malloc(sizeof(http_message_t));
-	msg->buffer = (char*)malloc(sizeof(char) * 1024);
-	strcpy(msg->buffer, "two words\n");
-	msg->raw_message_length = strlen(msg->buffer);
-	mock_socket_buffer = NULL;
-	int n = read_from_buffer(0, msg, 3);
-	cr_assert(6 == n, "expected length 6, not: %d", n);
-}*/
-
-/*Test(http_message, read_from_buffer_2)
-{
-	http_message_t* msg = (http_message_t*)malloc(sizeof(http_message_t));
-	msg->buffer = (char*)malloc(sizeof(char) * 1024);
-	strcpy(msg->buffer, "first line\nthen a second line");
-	msg->raw_message_length = 29;
-	mock_socket_buffer = NULL;
-	int n = read_from_buffer(0, msg, 0);
-	int m = read_from_buffer(0, msg, n+1);
-	cr_assert(18 == m, "expected length 18, not: %d", m);
-	char* res = (char*)malloc(sizeof(char) * 19);
-	strncpy(res, msg->buffer+n+1, m);
-	res[m] = '\0';
-	cr_assert(strcmp("then a second line", res) == 0, "not as expected:'%s'", res);
-}*/
 
 /*Test(http_message, update_status_1)
 {

@@ -26,6 +26,10 @@ int decode_body_length(http_header_t *header) {
     return result;
 }
 
+//TODO REFACTOR. headers needs to get its data from the message, and a message contains the headers.
+// BUT we want to avoid a circular dependency. Callbacks is not the nicest way, as there is no reason
+// for genericity.
+//
 http_header_t* http_headers_init(int fd, char *buffer, int data_len) {
     http_header_t* header = (http_header_t*)malloc(sizeof(http_header_t));
     for (int i = 0; i < NUM_HTTP_HEADERS; i++) {
@@ -44,7 +48,7 @@ http_header_t* http_headers_init(int fd, char *buffer, int data_len) {
  \pre buff is not NULL
  \pre start_of_line <= cur_loc <= max_len
 */
-void skip_eol(http_header_t *header) {
+void skip_eol (http_header_t *header) {
     if (header->cur_loc < header->max_len &&
         (header->buff[header->cur_loc] == 0x0A && header->buff[header->cur_loc + 1] == 0x0D)
         || (header->buff[header->cur_loc] == 0x0D && header->buff[header->cur_loc + 1] == 0x0A)){
@@ -55,7 +59,7 @@ void skip_eol(http_header_t *header) {
     header->start_of_line = header->cur_loc;
 }
 
-int is_eol_reached(http_header_t *header) {
+int is_eol_reached (http_header_t *header) {
     return (header->cur_loc == header->max_len) ||
            (((header->cur_loc < header->max_len) &&
              (header->cur_loc < header->max_len &&
@@ -64,7 +68,7 @@ int is_eol_reached(http_header_t *header) {
             (header->buff[header->cur_loc] == '\n'));
 }
 
-http_header_t *get_next_line(http_header_t *header) {
+http_header_t* get_next_line(http_header_t* header) {
 
     printf("get_next_line1, cur_loc:%d, max_len:%d\n", header->cur_loc, header->max_len);
     skip_eol(header);
@@ -84,11 +88,11 @@ http_header_t *get_next_line(http_header_t *header) {
     return header;
 }
 
-int header_strlen(http_header_t *header) {
+int header_strlen (http_header_t *header) {
     return header->cur_loc - header->start_of_line;
 }
 
-int is_two_bytes_eol(char *ptr) {
+int is_two_bytes_eol (char *ptr) {
     return ((*ptr == 0x0A && ptr[1] == 0x0D) || (*ptr == 0x0D && ptr[1] == 0x0A));
 }
 

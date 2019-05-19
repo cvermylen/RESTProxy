@@ -8,7 +8,7 @@
 typedef struct {
 	stack_head_t* headers[NUM_HTTP_HEADERS];
 	int fd;
-	char* buff;
+	char* buff; //TODO should be eliminated and replaced by a pointer to the message
 	int start_of_line;
 	int last_semicolon;
 	int cur_loc;
@@ -33,6 +33,16 @@ char* strmncpy(char* buffer, int start, int end);
  */
 int decode_body_length(http_header_t* header);
 
+/*!
+ * Reads the next header line from the I/O buffer. If needed, the buffer can be replenish with a call to the I/O
+ * subsystem, as many times as needed until an 'end of line' is found. 'End of line' (EOL) can either be a single
+ * '\n' (unix-style) or a 2-bytes '0x0A 0x0D' MS-style. Note we will handle these 2 bytes in any order, as some
+ * hand-made test cases are nuts.
+ * @param header
+ * @return
+ */
+http_header_t* get_next_line(http_header_t* header);
+
 void http_headers_free(http_header_t* header);
 
 stack_head_t* http_headers_get(http_header_t* header, const int prop_key);
@@ -40,8 +50,6 @@ stack_head_t* http_headers_get(http_header_t* header, const int prop_key);
 void http_headers_add(http_header_t* header);
 
 void decode_http_headers_init(http_header_t* header, int fd, char* buffer, int sata_len);
-
-http_header_t* get_next_line(http_header_t* header);
 
 int decode_http_headers(http_header_t* header);
 

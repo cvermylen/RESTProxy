@@ -25,6 +25,9 @@ void override_tx_buffer_size(int t)
 	tx_buffer_size = t;
 }
 
+/*! TODO: replace the semaphore to allow multiple process on the same file system
+ *
+ */
 void init_shared_buffers()
 {
 	mutex = (semaphore *)malloc(sizeof(semaphore));

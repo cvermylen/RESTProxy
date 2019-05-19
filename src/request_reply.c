@@ -20,7 +20,7 @@ void release_buffer_after_processing(request_t *request) {
             }
             //No break here
         case FORWARD_MODE_SEQ:
-            free_buffer(request->http_message->buffer_no);
+            http_message_free_buffer(request->http_message);
             //close_in_connector(re);
             break;
         case FORWARD_MODE_ASYNC:
@@ -32,7 +32,7 @@ void release_buffer_after_processing(request_t *request) {
 
 void *push_data_2_destination(void *params) {
     reply_t *reply = (reply_t *) params;
-    printf("BUFFER:%s\n", reply->request->http_message->buffer);
+    printf("BUFFER:%s\n", reply->request->http_message->buffers[reply->request->http_message->last_sent]);
     switch (reply->type) {
         case TYPE_SOCKET:
             reply->content.sock->consumer_callback(reply);
@@ -63,11 +63,11 @@ reply_t *create_reply(const ri_connection_t *conn, ri_out_connector_t *out_conn)
     return reply;
 }
 
-request_t *create_request(const ri_connection_t *conn, int buff_no, char *buffer, int code, int sz) {
+request_t* request_init(const ri_connection_t *conn) {
     request_t *request = (request_t *) malloc(sizeof(request_t));
     request->forward_mode = conn->route->forward_mode;
     request->buffer_size = TX_BUFFER_SIZE;
-    request->http_message = http_message_init(conn->fd, buff_no, buffer, code, sz);
+    request->http_message = NULL;
     request->out_connections = conn->route->out_connections;
     request->in_response.sock_fd = conn->fd;
     request->replies = (reply_t **) malloc(sizeof(reply_t *) * conn->route->out_connections);
@@ -78,13 +78,18 @@ request_t *create_request(const ri_connection_t *conn, int buff_no, char *buffer
     return request;
 }
 
+request_t* receive_new_request (const ri_connection_t *conn)
+{
+    request_t* request = request_init(conn);
+    request->http_message = receive_new_http_message(conn->fd);
+    http_message_decode_request_type (request->http_message);
+    read_next_buffer_from_source(request->http_message);
+    decode_http_message_header(conn->fd, request->http_message);
+}
+
 void accept_reply_from_server(reply_t *reply) {
-    int buff_no = alloc_buffer();
-    char *buffer = get_buffer(buff_no);
-    int sz = read_from_socket(reply->content.sock->fd, buffer, TX_BUFFER_SIZE);
-    int code = http_decode_response_type(buffer, sz);
-    printf("RECEIVED:%d response:%s\n", sz, buffer);
-    reply->response_message = http_message_init(reply->content.sock->fd, buff_no, buffer, code, sz);
+    reply->response_message = receive_new_http_message(reply->content.sock->fd);
+    http_message_decode_response_type(reply->response_message);
 }
 
 void receive_reply(reply_t *reply) {
@@ -97,23 +102,17 @@ void receive_reply(reply_t *reply) {
 
 request_t *accept_opening_request_from_client(const ri_connection_t *conn) {
     printf("accept_opening_request_from_client\n");
-    int buff_no = alloc_buffer();
-    char *buffer = get_buffer(buff_no);
-    int sz = 0;
-    sz = read_from_socket(conn->fd, buffer, TX_BUFFER_SIZE);
-    if (sz == 0) return NULL;
-    int code = http_decode_request_type(buffer, sz);
-    request_t *request = NULL;
-    if (code > 0) {
-        request = create_request(conn, buff_no, buffer, code, sz);
-        switch (code) {
+    request_t* request = receive_new_request(conn);;
+
+    if (request != NULL) {
+        switch (request->http_message->function) {
             case HTTP_REQUEST_GET:
                 break;
             case HTTP_REQUEST_POST:
                 printf("Not implemented yet\n");
                 exit(0);
         }
-        printf("%s\n", buffer);
+        printf("%s\n", get_buffer(request->http_message->buffers[request->http_message->last_received]));
     }
     return request;
 }
@@ -121,7 +120,7 @@ request_t *accept_opening_request_from_client(const ri_connection_t *conn) {
 void reply_to_client(void *thread_data) {
     printf("reply_to_client\n");
     reply_t *reply = (reply_t *) thread_data;
-    sock_write(reply->request->in_response.sock_fd, reply->response_message->buffer,
+    sock_write(reply->request->in_response.sock_fd, reply->response_message->buffers[reply->response_message->last_sent],
                reply->response_message->raw_message_length);
     printf("sent to client\n");
 }
@@ -150,7 +149,7 @@ void *async_join_threads(void *params) {
     }
     printf("...joined\n");
     release_request(request);
-    free_buffer(request->http_message->buffer_no);
+    http_message_free_buffer(request->http_message);
     //close(at->route->in_connector->content.sock->fd);
     return NULL;
 }
@@ -187,12 +186,12 @@ void process_request_message_body(request_t *request) {
     forward_message_to_all_servers(request);
 }
 
-//TODO refactor: the following 3 methods are symetric: same functionality, one foe socket, the other one for file. Reafctor to make generic
+//TODO REFACTOR: the following 3 methods are symetric: same functionality, one foe socket, the other one for file. Reafctor to make generic
 // at this level and push down what is specific
 void *sync_request_reply_to_server(reply_t *reply) {
     int socket = connect_to_server(reply->content.sock->server_name, reply->content.sock->port);
     reply->content.sock->fd = socket;
-    sock_write(socket, reply->request->http_message->buffer, reply->request->http_message->raw_message_length);
+    sock_write(socket, reply->request->http_message->buffers[reply->request->http_message->last_sent], reply->request->http_message->raw_message_length);
     printf("$$$Message sent:\n");
     receive_reply(reply);
     reply->response_callback(reply);
@@ -204,9 +203,9 @@ reply_t* create_response(reply_t* data){
     int buff_no = alloc_buffer();
     char* buffer = get_buffer(buff_no);
     int code = http_decode_response_type(buffer, strlen(resp));
-    http_message_t* msg = http_message_init(data->content.file->file, buff_no, buffer, code, strlen(resp));
+    http_message_t* msg = http_message_init(data->content.file->file);
     data->response_message = msg;
-    strcpy(msg->buffer, resp);
+    // TODO: must be refactoredstrcpy(msg->buffer, resp);
     msg->raw_message_length = strlen(resp);
     return data;
 }
@@ -214,7 +213,7 @@ reply_t* create_response(reply_t* data){
 void file_writer(void *params)
 {
     reply_t* reply = (reply_t*) params;
-    fputs(reply->request->http_message->buffer, reply->content.file->file);
+    // TODO must be refactored fputs(reply->request->http_message->buffer, reply->content.file->file);
     fflush(reply->content.file->file);
     if(reply->flow == FLOW_BIDIRECTIONAL){
         reply->response_callback(create_response(reply));

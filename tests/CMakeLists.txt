@@ -20,9 +20,9 @@ target_link_libraries (connections_TEST gateway stack mock_buffers mock_socket m
 target_link_libraries (shared_buffers_TEST_test gateway buffers http pthread m ${CRITERION_LIBRARIES})
 target_link_libraries (socket_connector_TEST_test gateway buffers stack mock_socket mock_buffers http pthread m ${CRITERION_LIBRARIES})
 target_link_libraries (route_instance_TEST_test gateway buffers  http pthread m ${CRITERION_LIBRARIES})
-target_link_libraries (http_headers_TEST_test mock_buffers gateway buffers stack http socket_conn pthread m ${CRITERION_LIBRARIES})
+target_link_libraries (http_headers_TEST_test mock_buffers gateway buffers stack http socket_conn mock_socket_connector pthread m ${CRITERION_LIBRARIES})
 target_link_libraries (http_first_line_TEST_test mock_buffers gateway  http pthread m ${CRITERION_LIBRARIES})
-target_link_libraries (http_message_TEST_test mock_socket_connector gateway http stack pthread m ${CRITERION_LIBRARIES})
+target_link_libraries (http_message_TEST_test mock_socket_connector gateway http stack frame_buffers pthread m ${CRITERION_LIBRARIES})
 
 set_property (TARGET mock_socket_connector_TEST PROPERTY C_STANDARD 99)
 set_property (TARGET connections_TEST PROPERTY C_STANDARD 99)

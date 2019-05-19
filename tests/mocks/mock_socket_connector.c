@@ -51,6 +51,7 @@ int read_from_socket(int fd, char* buffer, int max_size)
 {
     if (mock_socket_receive_buffer && mock_socket_receive_buffer[fd] && mock_socket_receive_buffer[fd]->num_elems > 0) {
         char* tmp_str = str_stack_pop(mock_socket_receive_buffer[fd]);
+        printf("read_from_socket\n");
         strcpy(buffer, tmp_str);
         int result = strlen(tmp_str);
         free(tmp_str);

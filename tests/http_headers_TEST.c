@@ -1,5 +1,6 @@
 #include "../src/http/http_headers.h"
 #include <stdio.h>
+#include "mocks/mock_socket_connector.h"
 
 #include <criterion/criterion.h>
 
@@ -187,6 +188,13 @@ Test(get_next_line, special_char) {
 //TODO write get_next_line with line split over 2, 3 reads from socket
 Test(get_next_line, read_from_socket)
 {
+    char str1[] = " charset=UTF-8";
+    char str2[] = "Content-Type: text/html;";
+    mock_socket_connect_stack_to_fd(1);
+    mock_socket_push_buffer(1, str1);
+    http_header_t *header = http_headers_init(0, str2, strlen(str2));
+
+    get_next_line(header);
 
     cr_assert(0, "FAIL");
 }
