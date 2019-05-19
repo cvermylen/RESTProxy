@@ -66,4 +66,5 @@ void decode_http_message(http_message_t* msg);
 
 http_message_t* parse(char* raw_message, const int message_length);
 
+void send_next_buffer_to_destination (http_message_t* msg, char move_pointer, int destination_fd);
 #endif

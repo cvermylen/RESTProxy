@@ -1,8 +1,10 @@
 #include "http_first_line.h"
+#include "../frame_buffers/shared_buffers.h"
 #include <string.h>
 #include <stdio.h>
 
-int http_decode_request_type(char *buffer, int length) {
+int http_decode_request_type(int buffer_no, int length) {
+    char* buffer = get_buffer(buffer_no);
     if (strncmp(buffer, "GET", 3) == 0)
         return HTTP_REQUEST_GET;
     if (strncmp(buffer, "POST", 4) == 0)
@@ -11,7 +13,8 @@ int http_decode_request_type(char *buffer, int length) {
 }
 
 //TODO: use str2int from the header module
-int http_decode_response_type(char *buffer, int length) {
+int http_decode_response_type(int buffer_no, int length) {
+    char* buffer = get_buffer(buffer_no);
     int res = 0;
     if (strncmp(buffer, "HTTP", 4) == 0) {
         int i = 0;

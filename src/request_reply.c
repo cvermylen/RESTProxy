@@ -32,7 +32,7 @@ void release_buffer_after_processing(request_t *request) {
 
 void *push_data_2_destination(void *params) {
     reply_t *reply = (reply_t *) params;
-    printf("BUFFER:%s\n", reply->request->http_message->buffers[reply->request->http_message->last_sent]);
+    //printf("BUFFER:%s\n", reply->request->http_message->buffers[reply->request->http_message->last_sent]);
     switch (reply->type) {
         case TYPE_SOCKET:
             reply->content.sock->consumer_callback(reply);
@@ -112,7 +112,7 @@ request_t *accept_opening_request_from_client(const ri_connection_t *conn) {
                 printf("Not implemented yet\n");
                 exit(0);
         }
-        printf("%s\n", get_buffer(request->http_message->buffers[request->http_message->last_received]));
+        //printf("%s\n", get_buffer(request->http_message->buffers[request->http_message->last_received]));
     }
     return request;
 }
@@ -120,8 +120,8 @@ request_t *accept_opening_request_from_client(const ri_connection_t *conn) {
 void reply_to_client(void *thread_data) {
     printf("reply_to_client\n");
     reply_t *reply = (reply_t *) thread_data;
-    sock_write(reply->request->in_response.sock_fd, reply->response_message->buffers[reply->response_message->last_sent],
-               reply->response_message->raw_message_length);
+    send_next_buffer_to_destination (reply->response_message, 1, reply->request->in_response.sock_fd);
+
     printf("sent to client\n");
 }
 
@@ -191,7 +191,7 @@ void process_request_message_body(request_t *request) {
 void *sync_request_reply_to_server(reply_t *reply) {
     int socket = connect_to_server(reply->content.sock->server_name, reply->content.sock->port);
     reply->content.sock->fd = socket;
-    sock_write(socket, reply->request->http_message->buffers[reply->request->http_message->last_sent], reply->request->http_message->raw_message_length);
+    send_next_buffer_to_destination (reply->request->http_message, 1, socket);
     printf("$$$Message sent:\n");
     receive_reply(reply);
     reply->response_callback(reply);
@@ -202,7 +202,6 @@ char resp[] = "HTTP/1.1 200 OK\nDate: Mon, 23 May 2005 22:38:34 GMT\nContent-Typ
 reply_t* create_response(reply_t* data){
     int buff_no = alloc_buffer();
     char* buffer = get_buffer(buff_no);
-    int code = http_decode_response_type(buffer, strlen(resp));
     http_message_t* msg = http_message_init(data->content.file->file);
     data->response_message = msg;
     // TODO: must be refactoredstrcpy(msg->buffer, resp);

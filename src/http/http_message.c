@@ -33,12 +33,11 @@ http_message_t* http_message_init(int fd) {
  *  15 - 1
  */
 int read_next_buffer_from_source (http_message_t* msg) {
+    int buffer_no = alloc_entry_in_circular_buffer (msg->buffers);
     int r = 0;
-    if (((msg->last_received + 1) | http_message_buffer_size) != msg->last_sent) {
-        msg->last_received = (msg->last_received + 1) & http_message_buffer_size;
-        msg->buffers[msg->last_received] = alloc_buffer();
-        r = read_from_socket(msg->fd, get_buffer(msg->buffers[msg->last_received]), TX_BUFFER_SIZE);
-        msg->data_sizes[msg->last_received] = r;
+    if (buffer_no >= 0) {
+        r = read_from_socket(msg->fd, get_buffer(buffer_no), TX_BUFFER_SIZE);
+        set_data_size_for_last_received_buffer (msg->buffers, r);
     }
     return r;
 }
@@ -54,23 +53,18 @@ http_message_t* receive_new_http_message(int fd)
 
 void http_message_decode_request_type (http_message_t* msg)
 {
-    int code = http_decode_request_type(get_last_received_buffer(msg), get_last_received_size(msg));
+    int code = http_decode_request_type(get_last_received_buffer(msg->buffers), get_last_received_size(msg->buffers));
     msg->function = code;
 }
 
 void http_message_decode_response_type(http_message_t* msg){
-    int code = http_decode_response_type(get_last_received_buffer(msg), get_last_received_size(msg));
+    int code = http_decode_response_type(get_last_received_buffer(msg->buffers), get_last_received_size(msg->buffers));
     msg->function = code;
 }
 
 void http_message_free_buffer (http_message_t* msg)
 {
-    if (msg->last_sent != msg->last_received) {
-        free_buffer(msg->buffers[msg->last_sent]);
-        msg->buffers[msg->last_sent] = -1;
-        msg->data_sizes[msg->last_sent] = -1;
-        msg->last_sent = (msg->last_sent + 1) & http_message_buffer_size;
-    }
+    free_last_sent_in_circular_buffer (msg->buffers);
 }
 
 int decode_http_message_header(int fd, http_message_t *msg) {
@@ -98,7 +92,23 @@ void receive_body(int fd, http_message_t *msg, int start_pos) {
     }
 }
 
+/*!
+ * Send the next buffer to its destination, and possibly indicates the buffer as 'sent'.
+ * @param msg
+ */
+void send_next_buffer_to_destination (http_message_t* msg, char move_pointer, int destination_fd)
+{
+    if (!is_empty_circular_buffer(msg->buffers)) {
+        char* buffer = get_to_be_sent_buffer(msg->buffers);
+        sock_write(destination_fd, buffer, get_to_be_sent_size(msg->buffers));
+        if (move_pointer) {
+            buffer_has_been_sent (msg->buffers);
+        }
+    }
+}
+
 void http_message_free(http_message_t *msg) {
     http_headers_free(msg->header);
+    free_circular_buffer (msg->buffers);
     free(msg);
 }
