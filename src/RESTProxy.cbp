@@ -45,29 +45,29 @@
 					<DistClean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
-			<Target title="request_reply.o">
-				<Option output="/home/christian/CLionProjects/RESTProxy/src/CMakeFiles/request_reply.o.dir/request_reply.o.objlib" prefix_auto="0" extension_auto="0"/>
+			<Target title="connection.o">
+				<Option output="/home/christian/CLionProjects/RESTProxy/src/CMakeFiles/connection.o.dir/connection.o.objlib" prefix_auto="0" extension_auto="0"/>
 				<Option working_dir="/home/christian/CLionProjects/RESTProxy/src"/>
 				<Option object_output="./"/>
 				<Option type="2"/>
 				<Option compiler="gcc"/>
 				<Compiler/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 request_reply.o"/>
+					<Build command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 connection.o"/>
 					<CompileFile command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
 					<Clean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 clean"/>
 					<DistClean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
-			<Target title="request_reply.o/fast">
-				<Option output="/home/christian/CLionProjects/RESTProxy/src/CMakeFiles/request_reply.o.dir/request_reply.o.objlib" prefix_auto="0" extension_auto="0"/>
+			<Target title="connection.o/fast">
+				<Option output="/home/christian/CLionProjects/RESTProxy/src/CMakeFiles/connection.o.dir/connection.o.objlib" prefix_auto="0" extension_auto="0"/>
 				<Option working_dir="/home/christian/CLionProjects/RESTProxy/src"/>
 				<Option object_output="./"/>
 				<Option type="2"/>
 				<Option compiler="gcc"/>
 				<Compiler/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 request_reply.o/fast"/>
+					<Build command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 connection.o/fast"/>
 					<CompileFile command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
 					<Clean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 clean"/>
 					<DistClean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 clean"/>
@@ -101,29 +101,29 @@
 					<DistClean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
-			<Target title="connection.o">
-				<Option output="/home/christian/CLionProjects/RESTProxy/src/CMakeFiles/connection.o.dir/connection.o.objlib" prefix_auto="0" extension_auto="0"/>
+			<Target title="request_reply.o">
+				<Option output="/home/christian/CLionProjects/RESTProxy/src/CMakeFiles/request_reply.o.dir/request_reply.o.objlib" prefix_auto="0" extension_auto="0"/>
 				<Option working_dir="/home/christian/CLionProjects/RESTProxy/src"/>
 				<Option object_output="./"/>
 				<Option type="2"/>
 				<Option compiler="gcc"/>
 				<Compiler/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 connection.o"/>
+					<Build command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 request_reply.o"/>
 					<CompileFile command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
 					<Clean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 clean"/>
 					<DistClean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
-			<Target title="connection.o/fast">
-				<Option output="/home/christian/CLionProjects/RESTProxy/src/CMakeFiles/connection.o.dir/connection.o.objlib" prefix_auto="0" extension_auto="0"/>
+			<Target title="request_reply.o/fast">
+				<Option output="/home/christian/CLionProjects/RESTProxy/src/CMakeFiles/request_reply.o.dir/request_reply.o.objlib" prefix_auto="0" extension_auto="0"/>
 				<Option working_dir="/home/christian/CLionProjects/RESTProxy/src"/>
 				<Option object_output="./"/>
 				<Option type="2"/>
 				<Option compiler="gcc"/>
 				<Compiler/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 connection.o/fast"/>
+					<Build command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 request_reply.o/fast"/>
 					<CompileFile command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
 					<Clean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 clean"/>
 					<DistClean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 clean"/>
@@ -325,13 +325,47 @@
 					<DistClean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/http/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
+			<Target title="socket_wrap.o">
+				<Option output="/home/christian/CLionProjects/RESTProxy/src/socket/CMakeFiles/socket_wrap.o.dir/socket_wrap.o.objlib" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/christian/CLionProjects/RESTProxy/src/socket"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/christian/CLionProjects/RESTProxy/src/socket"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/socket/Makefile&quot;  VERBOSE=1 socket_wrap.o"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/socket/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/socket/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/socket/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="socket_wrap.o/fast">
+				<Option output="/home/christian/CLionProjects/RESTProxy/src/socket/CMakeFiles/socket_wrap.o.dir/socket_wrap.o.objlib" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/christian/CLionProjects/RESTProxy/src/socket"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/christian/CLionProjects/RESTProxy/src/socket"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/socket/Makefile&quot;  VERBOSE=1 socket_wrap.o/fast"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/socket/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/socket/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/socket/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
 			<Target title="socket_conn">
 				<Option output="/home/christian/CLionProjects/RESTProxy/lib/libsocket_conn.a" prefix_auto="0" extension_auto="0"/>
 				<Option working_dir="/home/christian/CLionProjects/RESTProxy/src/socket"/>
 				<Option object_output="./"/>
 				<Option type="2"/>
 				<Option compiler="gcc"/>
-				<Compiler/>
+				<Compiler>
+					<Add directory="/home/christian/CLionProjects/RESTProxy/src/socket"/>
+				</Compiler>
 				<MakeCommands>
 					<Build command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/socket/Makefile&quot;  VERBOSE=1 socket_conn"/>
 					<CompileFile command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/socket/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
@@ -345,7 +379,9 @@
 				<Option object_output="./"/>
 				<Option type="2"/>
 				<Option compiler="gcc"/>
-				<Compiler/>
+				<Compiler>
+					<Add directory="/home/christian/CLionProjects/RESTProxy/src/socket"/>
+				</Compiler>
 				<MakeCommands>
 					<Build command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/socket/Makefile&quot;  VERBOSE=1 socket_conn/fast"/>
 					<CompileFile command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/socket/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
@@ -359,7 +395,9 @@
 				<Option object_output="./"/>
 				<Option type="2"/>
 				<Option compiler="gcc"/>
-				<Compiler/>
+				<Compiler>
+					<Add directory="/home/christian/CLionProjects/RESTProxy/src/socket"/>
+				</Compiler>
 				<MakeCommands>
 					<Build command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/socket/Makefile&quot;  VERBOSE=1 socket_connector.o"/>
 					<CompileFile command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/socket/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
@@ -373,7 +411,9 @@
 				<Option object_output="./"/>
 				<Option type="2"/>
 				<Option compiler="gcc"/>
-				<Compiler/>
+				<Compiler>
+					<Add directory="/home/christian/CLionProjects/RESTProxy/src/socket"/>
+				</Compiler>
 				<MakeCommands>
 					<Build command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/socket/Makefile&quot;  VERBOSE=1 socket_connector.o/fast"/>
 					<CompileFile command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/socket/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
@@ -495,12 +535,12 @@
 			</Target>
 		</Build>
 		<Unit filename="/home/christian/CLionProjects/RESTProxy/src/connection.c">
-			<Option target="gateway"/>
 			<Option target="connection.o"/>
+			<Option target="gateway"/>
 		</Unit>
 		<Unit filename="/home/christian/CLionProjects/RESTProxy/src/connection.h">
-			<Option target="gateway"/>
 			<Option target="connection.o"/>
+			<Option target="gateway"/>
 		</Unit>
 		<Unit filename="/home/christian/CLionProjects/RESTProxy/src/file_connector.c">
 			<Option target="gateway"/>
@@ -570,12 +610,12 @@
 			<Option target="main"/>
 		</Unit>
 		<Unit filename="/home/christian/CLionProjects/RESTProxy/src/request_reply.c">
-			<Option target="request_reply.o"/>
 			<Option target="gateway"/>
+			<Option target="request_reply.o"/>
 		</Unit>
 		<Unit filename="/home/christian/CLionProjects/RESTProxy/src/request_reply.h">
-			<Option target="request_reply.o"/>
 			<Option target="gateway"/>
+			<Option target="request_reply.o"/>
 		</Unit>
 		<Unit filename="/home/christian/CLionProjects/RESTProxy/src/route_instance.c">
 			<Option target="gateway"/>
@@ -585,13 +625,25 @@
 			<Option target="gateway"/>
 			<Option target="route_instance.o"/>
 		</Unit>
+		<Unit filename="/home/christian/CLionProjects/RESTProxy/src/socket/CMakeFiles/socket_wrap.o.dir/socket_wrap.c.o">
+			<Option target="main"/>
+		</Unit>
+		<Unit filename="/home/christian/CLionProjects/RESTProxy/src/socket/socket_bindings.h">
+			<Option target="socket_conn"/>
+		</Unit>
 		<Unit filename="/home/christian/CLionProjects/RESTProxy/src/socket/socket_connector.c">
 			<Option target="socket_conn"/>
 			<Option target="socket_connector.o"/>
 		</Unit>
 		<Unit filename="/home/christian/CLionProjects/RESTProxy/src/socket/socket_connector.h">
 			<Option target="socket_conn"/>
-			<Option target="socket_connector.o"/>
+		</Unit>
+		<Unit filename="/home/christian/CLionProjects/RESTProxy/src/socket/socket_wrap.c">
+			<Option target="socket_wrap.o"/>
+			<Option target="socket_conn"/>
+		</Unit>
+		<Unit filename="/home/christian/CLionProjects/RESTProxy/src/socket/socket_wrap.h">
+			<Option target="socket_conn"/>
 		</Unit>
 		<Unit filename="/home/christian/CLionProjects/RESTProxy/src/workflow_handler.c">
 			<Option target="gateway"/>
@@ -614,6 +666,9 @@
 			<Option virtualFolder="CMake Files\src\http\"/>
 		</Unit>
 		<Unit filename="/home/christian/CLionProjects/RESTProxy/src/socket/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\src\socket\"/>
+		</Unit>
+		<Unit filename="/home/christian/CLionProjects/RESTProxy/src/socket/socket_bindings.h.in">
 			<Option virtualFolder="CMake Files\src\socket\"/>
 		</Unit>
 		<Unit filename="/home/christian/CLionProjects/RESTProxy/src/frame_buffers/CMakeLists.txt">

@@ -13,17 +13,17 @@ extern int function_called;
 #define MOCK_SOCKET_OPT		16
 #define MOCK_SOCKET_LISTEN	32
 
-int socket(int domain, int type, int protocol);
+int wrap_socket(int domain, int type, int protocol);
 
-int setsockopt(int socket, int level, int option_name, const void *option_value, socklen_t option_len);
+int wrap_setsockopt(int socket, int level, int option_name, const void *option_value, socklen_t option_len);
 
-int bind(int port, const struct sockaddr* sockaddr, socklen_t size);
+int wrap_bind(int port, const struct sockaddr* sockaddr, socklen_t size);
 
-int listen(int fd, int q);
+int wrap_listen(int fd, int q);
 
-int accept(int socket, struct sockaddr *address, socklen_t *address_len);
+int wrap_accept(int socket, struct sockaddr *address, socklen_t *address_len);
 
-int read(int, char *, int);
+int wrap_read(int, char *, int);
 
 void free_mock_sockets();
 

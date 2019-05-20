@@ -1,8 +1,7 @@
-#include <criterion/criterion.h>
 #include "../src/frame_buffers/shared_buffers.h"
+#include <criterion/criterion.h>
 
-Test(buffers, init)
-{
+Test(buffers, init2) {
 	int i = available_buffers();
 	cr_expect(i == 0, "Initial number of buffer should be 0, was:%d", i);
 	init_shared_buffers();

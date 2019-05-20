@@ -1,4 +1,11 @@
-#include <semaphore.h>
+
+
+typedef union
+{
+    char __size[1];
+    long int __align;
+} sem_t;
+
 int sem_unlink(const char* path)
 {
     return 1;

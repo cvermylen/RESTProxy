@@ -13,12 +13,17 @@ add_executable (mock_socket_connector_TEST mock_socket_connector_TEST.c $<TARGET
 #        $<TARGET_OBJECTS:mock_socket_connector.o>
 #        $<TARGET_OBJECTS:mock_socket.o>
 #        $<TARGET_OBJECTS:mock_circular_buffers.o>)
-add_executable (shared_buffers_TEST_test shared_buffers_TEST.c $<TARGET_OBJECTS:shared_buffers.o>
-        $<TARGET_OBJECTS:mock_pthread.o>)
-add_executable (socket_connector_TEST_test socket_connector_TEST.c $<TARGET_OBJECTS:socket_connector.o>
+
+#  $<TARGET_OBJECTS:mock_pthread.o>
+
+add_executable (shared_buffers_TEST_test shared_buffers_TEST.c $<TARGET_OBJECTS:shared_buffers.o>)
+# $<TARGET_OBJECTS:mock_socket.o>
+add_executable (socket_connector_TEST_test socket_connector_TEST.c $<TARGET_OBJECTS:socket_connector_ut.o>
         $<TARGET_OBJECTS:mock_socket.o>)
 #add_executable (route_instance_TEST_test route_instance_TEST.c $<TARGET_OBJECTS:route_instance.o>)
-add_executable (http_headers_TEST_test http_headers_TEST.c $<TARGET_OBJECTS:http_headers.o> $<TARGET_OBJECTS:mock_socket_connector.o> $<TARGET_OBJECTS:mock_shared_buffers.o>)
+add_executable (http_headers_TEST_test http_headers_TEST.c $<TARGET_OBJECTS:http_headers.o>
+        $<TARGET_OBJECTS:mock_socket_connector.o>
+        $<TARGET_OBJECTS:mock_shared_buffers.o>)
 add_executable (http_message_TEST_test http_message_TEST.c $<TARGET_OBJECTS:http_message.o>
         $<TARGET_OBJECTS:mock_first_line.o> $<TARGET_OBJECTS:mock_http_headers.o>
         $<TARGET_OBJECTS:mock_socket_connector.o>
@@ -28,7 +33,7 @@ add_executable (http_first_line_TEST_test http_first_line_TEST.c $<TARGET_OBJECT
 
 target_link_libraries (mock_socket_connector_TEST stack ${CRITERION_LIBRARIES})
 #target_link_libraries (connections_TEST stack ${CRITERION_LIBRARIES})
-target_link_libraries (shared_buffers_TEST_test ${CRITERION_LIBRARIES})
+target_link_libraries (shared_buffers_TEST_test pthread ${CRITERION_LIBRARIES})
 target_link_libraries (socket_connector_TEST_test stack ${CRITERION_LIBRARIES})
 #target_link_libraries (route_instance_TEST_test ${CRITERION_LIBRARIES})
 target_link_libraries (http_headers_TEST_test stack m ${CRITERION_LIBRARIES})
