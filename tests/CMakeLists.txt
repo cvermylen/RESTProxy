@@ -6,6 +6,8 @@ include_directories (SYSTEM /usr/local/include/)
 set (CMAKE_BUILD_TYPE "Debug")
 set (CMAKE_VERBOSE_MAKEFILE ON)
 
+add_subdirectory(shared_buffers)
+
 add_executable (mock_socket_connector_TEST mock_socket_connector_TEST.c $<TARGET_OBJECTS:mock_socket_connector.o>
         )
 #add_executable (connections_TEST connections_TEST.c $<TARGET_OBJECTS:connection.o>
@@ -29,7 +31,8 @@ add_executable (http_message_TEST_test http_message_TEST.c $<TARGET_OBJECTS:http
         $<TARGET_OBJECTS:mock_socket_connector.o>
         $<TARGET_OBJECTS:mock_circular_buffers.o>
         $<TARGET_OBJECTS:mock_shared_buffers.o>)
-add_executable (http_first_line_TEST_test http_first_line_TEST.c $<TARGET_OBJECTS:http_first_line.o> $<TARGET_OBJECTS:mock_shared_buffers.o>)
+add_executable (http_first_line_TEST_test http_first_line_TEST.c $<TARGET_OBJECTS:http_first_line.o>
+        $<TARGET_OBJECTS:mock_shared_buffers.o>)
 
 target_link_libraries (mock_socket_connector_TEST stack ${CRITERION_LIBRARIES})
 #target_link_libraries (connections_TEST stack ${CRITERION_LIBRARIES})

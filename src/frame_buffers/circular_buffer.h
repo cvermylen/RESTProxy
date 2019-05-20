@@ -37,7 +37,7 @@ int get_last_received_buffer (circular_buffer_t* buffer);
  */
 int get_last_received_size (circular_buffer_t* buffer);
 
-/*!
+/*! Initialize
  *
  * @param size Actual number of entries available = 2 ^ size
  * @return
@@ -72,8 +72,6 @@ void set_data_size_for_last_received_buffer (circular_buffer_t *buffer, int leng
  * @return a negative value if the circular buffer is empty, the entry just de-allocated otherwise.
  */
 int free_last_sent_in_circular_buffer(circular_buffer_t *buffer);
-
-unsigned int circular_decrement (int value, unsigned int mask);
 
 char* get_to_be_sent_buffer (circular_buffer_t* buffer);
 
