@@ -1,6 +1,6 @@
 #include "../src/http/http_message.h"
 #include "../src/http/http_first_line.h"
-#include "../src/frame_buffers/shared_buffers.h"
+#include "../src/buffers/shared_buffers.h"
 #include "mocks/mock_socket_connector.h"
 #include <str_stack.h>
 #include <criterion/criterion.h>

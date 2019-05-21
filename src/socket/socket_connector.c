@@ -6,7 +6,7 @@
 #include <strings.h>
 #include <stdio.h>
 #include "socket_connector.h"
-#include "../frame_buffers/shared_buffers.h"
+#include "../buffers/shared_buffers.h"
 #include "../route_def.h"
 #include "socket_wrap.h"
 

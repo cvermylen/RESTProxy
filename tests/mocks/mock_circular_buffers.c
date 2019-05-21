@@ -1,5 +1,5 @@
 
-#include "../../src/frame_buffers/circular_buffer.h"
+#include "../../src/buffers/circular_buffer.h"
 #include <stdlib.h>
 
 //Circular buffers

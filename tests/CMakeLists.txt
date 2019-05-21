@@ -6,7 +6,7 @@ include_directories (SYSTEM /usr/local/include/)
 set (CMAKE_BUILD_TYPE "Debug")
 set (CMAKE_VERBOSE_MAKEFILE ON)
 
-add_subdirectory(shared_buffers)
+add_subdirectory(buffers)
 
 add_executable (mock_socket_connector_TEST mock_socket_connector_TEST.c $<TARGET_OBJECTS:mock_socket_connector.o>
         )

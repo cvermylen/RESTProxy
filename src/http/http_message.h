@@ -2,7 +2,7 @@
 #define HTTP_MESSAGE_H
 
 //#include <stack.h>
-#include "../frame_buffers/circular_buffer.h"
+#include "../buffers/circular_buffer.h"
 #include "http_headers.h"
 
 #define HTTP_MSG_STATUS_INIT	0

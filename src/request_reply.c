@@ -3,12 +3,13 @@
 #include <string.h>
 
 #include "route_def.h"
-#include "frame_buffers/shared_buffers.h"
+#include "buffers/shared_buffers.h"
 #include "connection.h"
 #include "request_reply.h"
 #include "socket/socket_connector.h"
 #include "http/http_message.h"
 #include "http/http_first_line.h"
+#include "buffers/circular_buffer.h"
 
 void release_buffer_after_processing(request_t *request) {
     printf("Release_buffer_after_processing\n");

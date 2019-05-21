@@ -1,5 +1,5 @@
 #include <criterion/criterion.h>
-#include "../../src/frame_buffers/circular_buffer.h"
+#include "../../src/buffers/circular_buffer.h"
 #include <math.h>
 #include <signal.h>
 

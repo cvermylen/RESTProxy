@@ -5,7 +5,7 @@
 		<Option title="RESTProxy"/>
 		<Option makefile_is_custom="1"/>
 		<Option compiler="gcc"/>
-		<Option virtualFolders="CMake Files\;CMake Files\cmake\;CMake Files\src\;CMake Files\src\http\;CMake Files\src\socket\;CMake Files\src\frame_buffers\;CMake Files\src\logs\;CMake Files\tests\;CMake Files\tests\mocks\;CMake Files\tests\shared_buffers\;"/>
+		<Option virtualFolders="CMake Files\;CMake Files\cmake\;CMake Files\src\;CMake Files\src\http\;CMake Files\src\socket\;CMake Files\src\buffers\;CMake Files\src\logs\;CMake Files\tests\;CMake Files\tests\mocks\;CMake Files\tests\buffers\;"/>
 		<Build>
 			<Target title="all">
 				<Option working_dir="/home/christian/CLionProjects/RESTProxy/src"/>
@@ -422,87 +422,87 @@
 				</MakeCommands>
 			</Target>
 			<Target title="circular_buffer.o">
-				<Option output="/home/christian/CLionProjects/RESTProxy/src/frame_buffers/CMakeFiles/circular_buffer.o.dir/circular_buffer.o.objlib" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/christian/CLionProjects/RESTProxy/src/frame_buffers"/>
+				<Option output="/home/christian/CLionProjects/RESTProxy/src/buffers/CMakeFiles/circular_buffer.o.dir/circular_buffer.o.objlib" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/christian/CLionProjects/RESTProxy/src/buffers"/>
 				<Option object_output="./"/>
 				<Option type="2"/>
 				<Option compiler="gcc"/>
 				<Compiler/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/frame_buffers/Makefile&quot;  VERBOSE=1 circular_buffer.o"/>
-					<CompileFile command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/frame_buffers/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/frame_buffers/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/frame_buffers/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/buffers/Makefile&quot;  VERBOSE=1 circular_buffer.o"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/buffers/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/buffers/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/buffers/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="circular_buffer.o/fast">
-				<Option output="/home/christian/CLionProjects/RESTProxy/src/frame_buffers/CMakeFiles/circular_buffer.o.dir/circular_buffer.o.objlib" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/christian/CLionProjects/RESTProxy/src/frame_buffers"/>
+				<Option output="/home/christian/CLionProjects/RESTProxy/src/buffers/CMakeFiles/circular_buffer.o.dir/circular_buffer.o.objlib" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/christian/CLionProjects/RESTProxy/src/buffers"/>
 				<Option object_output="./"/>
 				<Option type="2"/>
 				<Option compiler="gcc"/>
 				<Compiler/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/frame_buffers/Makefile&quot;  VERBOSE=1 circular_buffer.o/fast"/>
-					<CompileFile command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/frame_buffers/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/frame_buffers/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/frame_buffers/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/buffers/Makefile&quot;  VERBOSE=1 circular_buffer.o/fast"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/buffers/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/buffers/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/buffers/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="buffers">
 				<Option output="/home/christian/CLionProjects/RESTProxy/lib/libbuffers.a" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/christian/CLionProjects/RESTProxy/src/frame_buffers"/>
+				<Option working_dir="/home/christian/CLionProjects/RESTProxy/src/buffers"/>
 				<Option object_output="./"/>
 				<Option type="2"/>
 				<Option compiler="gcc"/>
 				<Compiler/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/frame_buffers/Makefile&quot;  VERBOSE=1 buffers"/>
-					<CompileFile command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/frame_buffers/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/frame_buffers/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/frame_buffers/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/buffers/Makefile&quot;  VERBOSE=1 buffers"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/buffers/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/buffers/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/buffers/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="buffers/fast">
 				<Option output="/home/christian/CLionProjects/RESTProxy/lib/libbuffers.a" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/christian/CLionProjects/RESTProxy/src/frame_buffers"/>
+				<Option working_dir="/home/christian/CLionProjects/RESTProxy/src/buffers"/>
 				<Option object_output="./"/>
 				<Option type="2"/>
 				<Option compiler="gcc"/>
 				<Compiler/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/frame_buffers/Makefile&quot;  VERBOSE=1 buffers/fast"/>
-					<CompileFile command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/frame_buffers/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/frame_buffers/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/frame_buffers/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/buffers/Makefile&quot;  VERBOSE=1 buffers/fast"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/buffers/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/buffers/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/buffers/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="shared_buffers.o">
-				<Option output="/home/christian/CLionProjects/RESTProxy/src/frame_buffers/CMakeFiles/shared_buffers.o.dir/shared_buffers.o.objlib" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/christian/CLionProjects/RESTProxy/src/frame_buffers"/>
+				<Option output="/home/christian/CLionProjects/RESTProxy/src/buffers/CMakeFiles/shared_buffers.o.dir/shared_buffers.o.objlib" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/christian/CLionProjects/RESTProxy/src/buffers"/>
 				<Option object_output="./"/>
 				<Option type="2"/>
 				<Option compiler="gcc"/>
 				<Compiler/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/frame_buffers/Makefile&quot;  VERBOSE=1 shared_buffers.o"/>
-					<CompileFile command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/frame_buffers/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/frame_buffers/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/frame_buffers/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/buffers/Makefile&quot;  VERBOSE=1 shared_buffers.o"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/buffers/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/buffers/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/buffers/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="shared_buffers.o/fast">
-				<Option output="/home/christian/CLionProjects/RESTProxy/src/frame_buffers/CMakeFiles/shared_buffers.o.dir/shared_buffers.o.objlib" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/christian/CLionProjects/RESTProxy/src/frame_buffers"/>
+				<Option output="/home/christian/CLionProjects/RESTProxy/src/buffers/CMakeFiles/shared_buffers.o.dir/shared_buffers.o.objlib" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/christian/CLionProjects/RESTProxy/src/buffers"/>
 				<Option object_output="./"/>
 				<Option type="2"/>
 				<Option compiler="gcc"/>
 				<Compiler/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/frame_buffers/Makefile&quot;  VERBOSE=1 shared_buffers.o/fast"/>
-					<CompileFile command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/frame_buffers/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/frame_buffers/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/frame_buffers/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/buffers/Makefile&quot;  VERBOSE=1 shared_buffers.o/fast"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/buffers/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/buffers/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/buffers/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="rest_logs">
@@ -534,6 +534,22 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/home/christian/CLionProjects/RESTProxy/src/buffers/circular_buffer.c">
+			<Option target="circular_buffer.o"/>
+			<Option target="buffers"/>
+		</Unit>
+		<Unit filename="/home/christian/CLionProjects/RESTProxy/src/buffers/circular_buffer.h">
+			<Option target="circular_buffer.o"/>
+			<Option target="buffers"/>
+		</Unit>
+		<Unit filename="/home/christian/CLionProjects/RESTProxy/src/buffers/shared_buffers.c">
+			<Option target="buffers"/>
+			<Option target="shared_buffers.o"/>
+		</Unit>
+		<Unit filename="/home/christian/CLionProjects/RESTProxy/src/buffers/shared_buffers.h">
+			<Option target="buffers"/>
+			<Option target="shared_buffers.o"/>
+		</Unit>
 		<Unit filename="/home/christian/CLionProjects/RESTProxy/src/connection.c">
 			<Option target="connection.o"/>
 			<Option target="gateway"/>
@@ -549,22 +565,6 @@
 		<Unit filename="/home/christian/CLionProjects/RESTProxy/src/file_connector.h">
 			<Option target="gateway"/>
 			<Option target="file_connector.o"/>
-		</Unit>
-		<Unit filename="/home/christian/CLionProjects/RESTProxy/src/frame_buffers/circular_buffer.c">
-			<Option target="circular_buffer.o"/>
-			<Option target="buffers"/>
-		</Unit>
-		<Unit filename="/home/christian/CLionProjects/RESTProxy/src/frame_buffers/circular_buffer.h">
-			<Option target="circular_buffer.o"/>
-			<Option target="buffers"/>
-		</Unit>
-		<Unit filename="/home/christian/CLionProjects/RESTProxy/src/frame_buffers/shared_buffers.c">
-			<Option target="buffers"/>
-			<Option target="shared_buffers.o"/>
-		</Unit>
-		<Unit filename="/home/christian/CLionProjects/RESTProxy/src/frame_buffers/shared_buffers.h">
-			<Option target="buffers"/>
-			<Option target="shared_buffers.o"/>
 		</Unit>
 		<Unit filename="/home/christian/CLionProjects/RESTProxy/src/http/http_first_line.c">
 			<Option target="http"/>
@@ -664,8 +664,8 @@
 		<Unit filename="/home/christian/CLionProjects/RESTProxy/src/socket/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\src\socket\"/>
 		</Unit>
-		<Unit filename="/home/christian/CLionProjects/RESTProxy/src/frame_buffers/CMakeLists.txt">
-			<Option virtualFolder="CMake Files\src\frame_buffers\"/>
+		<Unit filename="/home/christian/CLionProjects/RESTProxy/src/buffers/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\src\buffers\"/>
 		</Unit>
 		<Unit filename="/home/christian/CLionProjects/RESTProxy/src/logs/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\src\logs\"/>
@@ -676,8 +676,8 @@
 		<Unit filename="/home/christian/CLionProjects/RESTProxy/tests/mocks/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\tests\mocks\"/>
 		</Unit>
-		<Unit filename="/home/christian/CLionProjects/RESTProxy/tests/shared_buffers/CMakeLists.txt">
-			<Option virtualFolder="CMake Files\tests\shared_buffers\"/>
+		<Unit filename="/home/christian/CLionProjects/RESTProxy/tests/buffers/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\tests\buffers\"/>
 		</Unit>
 	</Project>
 </CodeBlocks_project_file>

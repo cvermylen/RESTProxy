@@ -7,7 +7,7 @@ link_directories(/usr/local/lib)
 
 add_subdirectory(http)
 add_subdirectory(socket)
-add_subdirectory(frame_buffers)
+add_subdirectory(buffers)
 add_subdirectory(logs)
 
 set(SOURCE_FILES

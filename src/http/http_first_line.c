@@ -1,5 +1,5 @@
 #include "http_first_line.h"
-#include "../frame_buffers/shared_buffers.h"
+#include "../buffers/shared_buffers.h"
 #include <string.h>
 #include <stdio.h>
 

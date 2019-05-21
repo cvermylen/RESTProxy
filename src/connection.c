@@ -7,7 +7,7 @@
 #include <stdio.h>
 
 #include "route_def.h"
-#include "frame_buffers/shared_buffers.h"
+#include "buffers/shared_buffers.h"
 #include "connection.h"
 #include "socket/socket_connector.h"
 #include "request_reply.h"
