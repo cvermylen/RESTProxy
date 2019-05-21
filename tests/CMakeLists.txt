@@ -6,8 +6,8 @@ include_directories (SYSTEM /usr/local/include/)
 set (CMAKE_BUILD_TYPE "Debug")
 set (CMAKE_VERBOSE_MAKEFILE ON)
 
-add_subdirectory(buffers)
-
+add_subdirectory (buffers)
+add_subdirectory (http)
 add_executable (mock_socket_connector_TEST mock_socket_connector_TEST.c $<TARGET_OBJECTS:mock_socket_connector.o>
         )
 #add_executable (connections_TEST connections_TEST.c $<TARGET_OBJECTS:connection.o>
@@ -26,11 +26,6 @@ add_executable (socket_connector_TEST_test socket_connector_TEST.c $<TARGET_OBJE
 add_executable (http_headers_TEST_test http_headers_TEST.c $<TARGET_OBJECTS:http_headers.o>
         $<TARGET_OBJECTS:mock_socket_connector.o>
         $<TARGET_OBJECTS:mock_shared_buffers.o>)
-add_executable (http_message_TEST_test http_message_TEST.c $<TARGET_OBJECTS:http_message.o>
-        $<TARGET_OBJECTS:mock_first_line.o> $<TARGET_OBJECTS:mock_http_headers.o>
-        $<TARGET_OBJECTS:mock_socket_connector.o>
-        $<TARGET_OBJECTS:mock_circular_buffers.o>
-        $<TARGET_OBJECTS:mock_shared_buffers.o>)
 add_executable (http_first_line_TEST_test http_first_line_TEST.c $<TARGET_OBJECTS:http_first_line.o>
         $<TARGET_OBJECTS:mock_shared_buffers.o>)
 
@@ -41,7 +36,7 @@ target_link_libraries (socket_connector_TEST_test stack ${CRITERION_LIBRARIES})
 #target_link_libraries (route_instance_TEST_test ${CRITERION_LIBRARIES})
 target_link_libraries (http_headers_TEST_test stack m ${CRITERION_LIBRARIES})
 target_link_libraries (http_first_line_TEST_test ${CRITERION_LIBRARIES})
-target_link_libraries (http_message_TEST_test stack ${CRITERION_LIBRARIES})
+
 
 set_property (TARGET mock_socket_connector_TEST PROPERTY C_STANDARD 99)
 #set_property (TARGET connections_TEST PROPERTY C_STANDARD 99)
@@ -49,7 +44,6 @@ set_property (TARGET shared_buffers_TEST_test PROPERTY C_STANDARD 99)
 set_property (TARGET socket_connector_TEST_test PROPERTY C_STANDARD 99)
 #set_property (TARGET route_instance_TEST_test PROPERTY C_STANDARD 99)
 set_property (TARGET http_headers_TEST_test PROPERTY C_STANDARD 99)
-set_property (TARGET http_message_TEST_test PROPERTY C_STANDARD 99)
 set_property (TARGET http_first_line_TEST_test PROPERTY C_STANDARD 99)
 
 add_test (mock_socket_connector_TEST bin/mock_socket_connector_TEST)
@@ -58,5 +52,4 @@ add_test (shared_buffers_TEST_test bin/shared_buffers_TEST_test)
 add_test (socket_connector_TEST_test bin/socket_connector_TEST_test)
 #add_test (route_instance_TEST_test bin/route_instance_TEST_test)
 add_test (http_headers_TEST_test bin/http_headers_TEST_test)
-add_test (http_message_TEST_test bin/http_message_TEST_test)
 add_test (http_first_line_TEST_test bin/http_first_line_TEST_test)
