@@ -5,6 +5,7 @@
 
 #include <stdio.h>
 
+extern void init_mock_shared_buffers_variables ();
 extern unsigned int circular_decrement (int value, unsigned int mask);
 Test (decrement, zero)
 {
@@ -289,4 +290,16 @@ Test (circular_buffer, one_sent)
     cr_assert(222 == s, "Nothing has been sent yet. Got:%d", s);
     cr_assert(1 == mock_called_free_buffer, "One shared buffer should have been freed:%d", mock_called_free_buffer);
     free_circular_buffer(cb);
+}
+
+extern int mock_result_alloc_buffer;
+Test(circular_buffer, out_of_shared_buffers)
+{
+    init_mock_shared_buffers_variables ();
+    mock_result_alloc_buffer = -4;
+    circular_buffer_t* cb = new_circular_buffer(3);
+
+    int r = alloc_entry_in_circular_buffer (cb);
+
+    cr_assert(-4 == r, "function should return 'alloc_buffer' result when no shared buffer is available, not:%d", r);
 }
