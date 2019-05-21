@@ -5,7 +5,7 @@
 		<Option title="RESTProxy"/>
 		<Option makefile_is_custom="1"/>
 		<Option compiler="gcc"/>
-		<Option virtualFolders="CMake Files\;CMake Files\cmake\;CMake Files\src\;CMake Files\src\http\;CMake Files\src\socket\;CMake Files\src\frame_buffers\;CMake Files\src\logs\;CMake Files\tests\;CMake Files\tests\mocks\;"/>
+		<Option virtualFolders="CMake Files\;CMake Files\cmake\;CMake Files\src\;CMake Files\src\http\;CMake Files\src\socket\;CMake Files\src\frame_buffers\;CMake Files\src\logs\;CMake Files\tests\;CMake Files\tests\mocks\;CMake Files\tests\shared_buffers\;"/>
 		<Build>
 			<Target title="all">
 				<Option working_dir="/home/christian/CLionProjects/RESTProxy/src"/>
@@ -675,6 +675,9 @@
 		</Unit>
 		<Unit filename="/home/christian/CLionProjects/RESTProxy/tests/mocks/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\tests\mocks\"/>
+		</Unit>
+		<Unit filename="/home/christian/CLionProjects/RESTProxy/tests/shared_buffers/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\tests\shared_buffers\"/>
 		</Unit>
 	</Project>
 </CodeBlocks_project_file>

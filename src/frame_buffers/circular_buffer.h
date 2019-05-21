@@ -3,6 +3,8 @@
 #define GATEWAY_CIRCULAR_BUFFER_H
 
 /*!
+ *  If n is the number of entries in the circular buffer, n - 1 is the maximum capacity.
+ *  Example, let the size = 3, the buffer size is (2 ^ 3) = 8, minus one = 7 entries that can be used.
  *   Empty:
  *         |   |   |   |   |
  *               ^
@@ -75,9 +77,16 @@ int free_last_sent_in_circular_buffer(circular_buffer_t *buffer);
 
 char* get_to_be_sent_buffer (circular_buffer_t* buffer);
 
+/*! The size of the actual data in the next buffer on the list to be sent.
+ * @param buffer
+ * @return
+ */
 int get_to_be_sent_size (circular_buffer_t* buffer);
 
-void buffer_has_been_sent (circular_buffer_t* buffer);
+/*! Mark the 'last_send' buffer as 'sent', freeing the entry and moving as well to the next buffer for sending.
+ * @param buffer
+ */
+int buffer_has_been_sent (circular_buffer_t* buffer);
 
 void free_circular_buffer (circular_buffer_t* buffer);
 

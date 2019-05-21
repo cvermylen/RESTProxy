@@ -59,14 +59,20 @@ char* get_to_be_sent_buffer (circular_buffer_t* buffer)
 
 int get_to_be_sent_size (circular_buffer_t* buffer)
 {
-    return buffer->buffers[buffer->last_sent];
+    return buffer->data_sizes[buffer->last_sent];
 }
 
-void buffer_has_been_sent (circular_buffer_t* buffer)
+int buffer_has_been_sent (circular_buffer_t* buffer)
 {
-    buffer->buffers[buffer->last_sent] = 0;
-    buffer->data_sizes[buffer->last_sent] = -1;
-    buffer->last_sent = circular_increment (buffer->last_sent, buffer->size);
+    int result = -2;
+    if (!is_empty_circular_buffer (buffer)) {
+        free_buffer(buffer->buffers[buffer->last_sent]);
+        result = buffer->last_sent;
+        buffer->buffers[buffer->last_sent] = 0;
+        buffer->data_sizes[buffer->last_sent] = -1;
+        buffer->last_sent = circular_increment(buffer->last_sent, buffer->size);
+    }
+    return result;
 }
 
 char is_full_circular_buffer (circular_buffer_t* buffer)
@@ -98,18 +104,6 @@ int alloc_entry_in_circular_buffer (circular_buffer_t *buffer)
 void set_data_size_for_last_received_buffer (circular_buffer_t *buffer, int length)
 {
     buffer->data_sizes[circular_decrement(buffer->next_to_be_received, buffer->size)] = length;
-}
-
-int free_last_sent_in_circular_buffer(circular_buffer_t *buffer)
-{
-    int result = -2;
-    if (!is_empty_circular_buffer (buffer)) {
-        free_buffer (buffer->buffers[buffer->last_sent]);
-        buffer->data_sizes[buffer->last_sent] = -1;
-        result = buffer->last_sent;
-        buffer->last_sent = circular_increment(buffer->last_sent, buffer->size);
-    }
-    return result;
 }
 
 void free_circular_buffer (circular_buffer_t* buffer)

@@ -12,7 +12,9 @@ char* get_buffer(int buff_no)
     return internal_mock_buffer;
 }
 
+int mock_called_free_buffer;
 void free_buffer(const int key)
 {
+    mock_called_free_buffer += 1;
 }
 

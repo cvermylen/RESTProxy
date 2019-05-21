@@ -20,7 +20,7 @@ void release_buffer_after_processing(request_t *request) {
             }
             //No break here
         case FORWARD_MODE_SEQ:
-            http_message_free_buffer(request->http_message);
+            buffer_has_been_sent(request->http_message);
             //close_in_connector(re);
             break;
         case FORWARD_MODE_ASYNC:
@@ -149,7 +149,7 @@ void *async_join_threads(void *params) {
     }
     printf("...joined\n");
     release_request(request);
-    http_message_free_buffer(request->http_message);
+    buffer_has_been_sent(request->http_message);
     //close(at->route->in_connector->content.sock->fd);
     return NULL;
 }

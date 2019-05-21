@@ -62,9 +62,10 @@ void http_message_decode_response_type(http_message_t* msg){
     msg->function = code;
 }
 
+//TODO remvove the method as replaced by buffer_has_been_sent
 void http_message_free_buffer (http_message_t* msg)
 {
-    free_last_sent_in_circular_buffer (msg->buffers);
+    //free_last_sent_in_circular_buffer (msg->buffers);
 }
 
 int decode_http_message_header(int fd, http_message_t *msg) {

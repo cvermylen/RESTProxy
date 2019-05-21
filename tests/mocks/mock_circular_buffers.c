@@ -62,9 +62,10 @@ int get_to_be_sent_size (circular_buffer_t* buffer)
 }
 
 int mock_called_buffer_has_been_sent;
-void buffer_has_been_sent (circular_buffer_t* buffer)
+int buffer_has_been_sent (circular_buffer_t* buffer)
 {
     mock_called_buffer_has_been_sent += 1;
+    return 0;
 }
 
 
