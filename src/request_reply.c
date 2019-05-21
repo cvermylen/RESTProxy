@@ -34,7 +34,7 @@ void release_buffer_after_processing(request_t *request) {
 void *push_data_2_destination(void *params) {
     reply_t *reply = (reply_t *) params;
     //printf("BUFFER:%s\n", reply->request->http_message->buffers[reply->request->http_message->last_sent]);
-    switch (reply->type) {
+    switch (reply->transmission_type) {
         case TYPE_SOCKET:
             reply->content.sock->consumer_callback(reply);
             break;
@@ -51,8 +51,8 @@ void *push_data_2_destination(void *params) {
 reply_t *create_reply(const ri_connection_t *conn, ri_out_connector_t *out_conn) {
     reply_t *reply = (reply_t *) malloc(sizeof(reply_t));
     reply->flow = out_conn->flow;
-    reply->type = out_conn->type;
-    switch (reply->type) {
+    reply->transmission_type = out_conn->type;
+    switch (reply->transmission_type) {
         case TYPE_SOCKET:
             reply->content.sock = out_conn->content.sock;
             break;
@@ -83,14 +83,14 @@ request_t* receive_new_request (const ri_connection_t *conn)
 {
     request_t* request = request_init(conn);
     request->http_message = receive_new_http_message(conn->fd);
-    http_message_decode_request_type (request->http_message);
+    request->type = http_message_decode_request_type (request->http_message);
     read_next_buffer_from_source(request->http_message);
     decode_http_message_header(conn->fd, request->http_message);
 }
 
 void accept_reply_from_server(reply_t *reply) {
     reply->response_message = receive_new_http_message(reply->content.sock->fd);
-    http_message_decode_response_type(reply->response_message);
+    reply->type = http_message_decode_response_type(reply->response_message);
 }
 
 void receive_reply(reply_t *reply) {
@@ -106,7 +106,7 @@ request_t *accept_opening_request_from_client(const ri_connection_t *conn) {
     request_t* request = receive_new_request(conn);;
 
     if (request != NULL) {
-        switch (request->http_message->function) {
+        switch (request->type) {
             case HTTP_REQUEST_GET:
                 break;
             case HTTP_REQUEST_POST:
@@ -178,7 +178,7 @@ void decode_request_message_header(request_t *request) {
 }
 
 void process_request_message_body(request_t *request) {
-    switch (request->http_message->function) {
+    switch (request->type) {
         case HTTP_REQUEST_GET:
             break;
         case HTTP_REQUEST_POST:
@@ -203,7 +203,7 @@ char resp[] = "HTTP/1.1 200 OK\nDate: Mon, 23 May 2005 22:38:34 GMT\nContent-Typ
 reply_t* create_response(reply_t* data){
     int buff_no = alloc_buffer();
     char* buffer = get_buffer(buff_no);
-    http_message_t* msg = http_message_init(data->content.file->file);
+    http_message_t* msg = new_http_message(data->content.file->file);
     data->response_message = msg;
     // TODO: must be refactoredstrcpy(msg->buffer, resp);
     msg->raw_message_length = strlen(resp);

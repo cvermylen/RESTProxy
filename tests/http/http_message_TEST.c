@@ -11,7 +11,7 @@ Test(http_message, init)
 {
 	char* buff = (char*)malloc(sizeof(char));
 
-    http_message_t* msg = http_message_init(0);
+    http_message_t* msg = new_http_message(0);
 
     cr_assert(msg != NULL, "init expected to return a non-NULL value");
 
@@ -22,7 +22,7 @@ Test(http_message, init)
 Test(http_message, init2)
 {
     http_message_buffer_size = 0;  //Expect to have only one buffer
-    http_message_t* msg = http_message_init(0);
+    http_message_t* msg = new_http_message(0);
 
     cr_assert(msg != NULL, "init expected to return a non-NULL value");
     cr_assert(msg->buffers != NULL, "Need a circular buffer");
@@ -38,7 +38,7 @@ extern int mock_called_alloc_entry_in_circular_buffer;
 Test(read_from_source, read_in_one_buffer)
 {
     http_message_buffer_size = 1;  // 2 ^ 1 = 2 buffers
-    http_message_t* msg = http_message_init(0);
+    http_message_t* msg = new_http_message(0);
     mock_socket_connect_stack_to_fd(0);
     char buff[] = "dummy";
     mock_socket_push_buffer(0, buff);
@@ -55,7 +55,7 @@ Test(read_from_source, read_in_one_buffer)
 Test(http_message, 2_read_should_block)
 {
     http_message_buffer_size = 1;  // 2 ^ 1 = 2 buffers
-    http_message_t* msg = http_message_init(0);
+    http_message_t* msg = new_http_message(0);
     mock_socket_connect_stack_to_fd(0);
     char buff2[] = "Second Line";
     mock_socket_push_buffer(0, buff2);
@@ -77,7 +77,7 @@ extern int mock_http_headers_free;
 Test(free_buffer, free_1)
 {
     http_message_buffer_size = 1;  // 2 ^ 1 = 2 buffers
-    http_message_t* msg = http_message_init(0);
+    http_message_t* msg = new_http_message(0);
     mock_called_free_circular_buffer = 0;
     mock_http_headers_free = 0;
     http_message_free_buffer(msg);

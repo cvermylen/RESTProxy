@@ -9,10 +9,11 @@
 typedef struct request request_t;
 
 typedef struct {
+    int type;       //200, 40x...
     request_t *request;
     pthread_t pthread;
     int flow;
-    int type;
+    int transmission_type;  //TYPE_SOCKET, TYPE_FILE
     union {
         ri_sock_connector_t *sock;
         ri_file_connector_t *file;
@@ -24,6 +25,7 @@ typedef struct {
 } reply_t;
 
 struct request {
+    int type;       //GET, POST...
     int forward_mode;
     int buffer_size;
     http_message_t *http_message;

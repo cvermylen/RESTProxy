@@ -5,6 +5,7 @@
 #include "../buffers/circular_buffer.h"
 #include "http_headers.h"
 
+
 #define HTTP_MSG_STATUS_INIT	0
 #define HTTP_MSG_STATUS_HEADER	1              //Message cannot be re released to destination until header has been fully received
 #define HTTP_MSG_STATUS_HEADER_COMPLETE	2      //Now message can be released
@@ -14,14 +15,20 @@
 #define BUFFER_SIZE         4
 typedef struct {
     int fd; //Message coming from, maybe could be replaced with a callback that would take as parameter the buffer and the max size.
-	int function;	//GET, POST  or 3 digit for response. TODO: REFACTOR and include this in either request for get/post or reply.
 	char status;
 	circular_buffer_t* buffers;
 	int raw_message_length;
 	http_header_t* header;
 	int body_length;
-	char* body; // Messages can be > 4Gb...
+	char* body; // Messages can be > 4Gb...   TODO REFACTOR this should be REMOVED as we now have the circular buffers
 } http_message_t;
+
+/*!
+ * Called from receive_new_http_message.
+ * @param fd
+ * @return
+ */
+http_message_t* new_http_message(int fd);
 
 /*! Next refactoring: replace the 'fd' parameter by a callback function
  *
@@ -29,22 +36,18 @@ typedef struct {
  */
 http_message_t* receive_new_http_message(int fd);
 
-void http_message_decode_request_type (http_message_t* msg);
+/*!
+ * @param msg
+ * @return  GET or POST ...
+ */
+int http_message_decode_request_type (http_message_t* msg);
 
 /*! Read the response code (200, 40x...)
  * @param msg
  */
-void http_message_decode_response_type(http_message_t* msg);
-
-/*!
- * \private Called from receive_new_http_message.
- * @param fd
- * @return
- */
-http_message_t* http_message_init(int fd);
+int http_message_decode_response_type(http_message_t* msg);
 
 int read_next_buffer_from_source (http_message_t* msg);
-
 /*!
  * Liberates the buffer pointed by 'last_sent', supposedly it has been sent.
  * @param msg

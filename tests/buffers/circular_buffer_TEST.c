@@ -301,5 +301,5 @@ Test(circular_buffer, out_of_shared_buffers)
 
     int r = alloc_entry_in_circular_buffer (cb);
 
-    cr_assert(-4 == r, "function should return 'alloc_buffer' result when no shared buffer is available, not:%d", r);
+    cr_assert(-4 == r, "request_type should return 'alloc_buffer' result when no shared buffer is available, not:%d", r);
 }
