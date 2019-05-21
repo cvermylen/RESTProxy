@@ -15,12 +15,11 @@
 #define BUFFER_SIZE         4
 typedef struct {
     int fd; //Message coming from, maybe could be replaced with a callback that would take as parameter the buffer and the max size.
-	char status;
+	char status;  //See #defines above
 	circular_buffer_t* buffers;
 	int raw_message_length;
 	http_header_t* header;
 	int body_length;
-	char* body; // Messages can be > 4Gb...   TODO REFACTOR this should be REMOVED as we now have the circular buffers
 } http_message_t;
 
 /*!
