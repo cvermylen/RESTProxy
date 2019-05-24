@@ -22,6 +22,7 @@ void *socket_connector(void *param) {
         if (cli->fd > 0) {
 //            stack_push(connections_stack, cli);
             printf("%d\n", cli->fd);
+            cli->feeder = read_from_socket;
             int rc = pthread_create(&thread, NULL, receive_and_process_data_from_client, (void *) cli);
         }
     } while (program_should_continue);

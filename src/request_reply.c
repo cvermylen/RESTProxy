@@ -21,7 +21,7 @@ void release_buffer_after_processing(request_t *request) {
             }
             //No break here
         case FORWARD_MODE_SEQ:
-            buffer_has_been_sent(request->http_message);
+            buffer_has_been_sent(request->http_message->buffers);
             //close_in_connector(re);
             break;
         case FORWARD_MODE_ASYNC:
@@ -82,28 +82,28 @@ request_t* request_init(const ri_connection_t *conn) {
 request_t* receive_new_request (const ri_connection_t *conn)
 {
     request_t* request = request_init(conn);
-    request->http_message = receive_new_http_message(conn->fd);
+    request->http_message = receive_new_http_message(conn->fd, conn->feeder, TX_BUFFER_SIZE);
     request->type = http_message_decode_request_type (request->http_message);
     read_next_buffer_from_source(request->http_message);
     decode_http_message_header(conn->fd, request->http_message);
 }
 
-void accept_reply_from_server(reply_t *reply) {
-    reply->response_message = receive_new_http_message(reply->content.sock->fd);
+void accept_reply_from_server(reply_t *reply, int (*feeder)(int fd, char* buffer, int buffer_size)) {
+    reply->response_message = receive_new_http_message(reply->content.sock->fd, feeder, TX_BUFFER_SIZE);
     reply->type = http_message_decode_response_type(reply->response_message);
 }
 
-void receive_reply(reply_t *reply) {
-    accept_reply_from_server(reply);
-    int start_of_body = decode_http_message_header(reply->content.sock->fd, reply->response_message);
+void receive_reply(reply_t *reply, int (*feeder)(int fd, char* buffer, int buffer_size)) {
+    accept_reply_from_server(reply, feeder);
+    decode_http_message_header(reply->content.sock->fd, reply->response_message);
     printf("Body length:%d\n", reply->response_message->body_length);
-    receive_body(reply->content.sock->fd, reply->response_message, start_of_body);
+    http_message_receive_body(reply->response_message);
     printf("Body received\n");
 }
 
 request_t *accept_opening_request_from_client(const ri_connection_t *conn) {
     printf("accept_opening_request_from_client\n");
-    request_t* request = receive_new_request(conn);;
+    request_t* request = receive_new_request(conn);
 
     if (request != NULL) {
         switch (request->type) {
@@ -150,7 +150,7 @@ void *async_join_threads(void *params) {
     }
     printf("...joined\n");
     release_request(request);
-    buffer_has_been_sent(request->http_message);
+    buffer_has_been_sent(request->http_message->buffers);
     //close(at->route->in_connector->content.sock->fd);
     return NULL;
 }
@@ -194,7 +194,7 @@ void *sync_request_reply_to_server(reply_t *reply) {
     reply->content.sock->fd = socket;
     send_next_buffer_to_destination (reply->request->http_message, 1, socket);
     printf("$$$Message sent:\n");
-    receive_reply(reply);
+    receive_reply(reply, read_from_socket);
     reply->response_callback(reply);
 }
 //char resp[] = "HTTP/1.1 200 OK\nDate: Mon, 23 May 2005 22:38:34 GMT\nContent-Type: text/html; charset=UTF-8\nContent-Length: 138\nLast-Modified: Wed, 08 Jan 2003 23:11:55 GMT\nServer: Apache/1.3.3.7 (Unix) (Red-Hat/Linux)\nETag: \"3f80f-1b6-3e1cb03b\"\nAccept-Ranges: bytes\n\n<html>\n<head>\n <title>An Example Page</title>\n</head>\n<body>\n Hello World, this is a very simple HTML document.\n</body>\n</html>";
@@ -203,7 +203,7 @@ char resp[] = "HTTP/1.1 200 OK\nDate: Mon, 23 May 2005 22:38:34 GMT\nContent-Typ
 reply_t* create_response(reply_t* data){
     int buff_no = alloc_buffer();
     char* buffer = get_buffer(buff_no);
-    http_message_t* msg = new_http_message(data->content.file->file);
+    http_message_t* msg = new_http_message(0, NULL, 0);  //TODO parameters 2 & 3 are wrong
     data->response_message = msg;
     // TODO: must be refactoredstrcpy(msg->buffer, resp);
     msg->raw_message_length = strlen(resp);

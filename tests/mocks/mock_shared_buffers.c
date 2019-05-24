@@ -11,11 +11,13 @@ int alloc_buffer()
 }
 
 int mock_called_get_buffer;
-char* mock_result_get_buffer;
+char* mock_result_get_buffer[500];
+int mock_param1_get_buffer;
 char* get_buffer(int buff_no)
 {
     mock_called_get_buffer += 1;
-    return mock_result_get_buffer;
+    mock_param1_get_buffer = buff_no;
+    return mock_result_get_buffer[buff_no];
 }
 
 int mock_called_free_buffer;

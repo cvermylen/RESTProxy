@@ -1,6 +1,6 @@
-#include "../src/http/http_headers.h"
+#include "../../src/http/http_headers.h"
 #include <stdio.h>
-#include "mocks/mock_socket_connector.h"
+#include "../mocks/mock_socket_connector.h"
 
 #include <criterion/criterion.h>
 
@@ -21,7 +21,7 @@ Test(strmncpy, happy) {
 }
 
 Test(http_headers_init, should_create_entries) {
-    http_header_t *header = http_headers_init(0, NULL, 0);
+    http_header_t *header = http_headers_init(NULL);
 
     cr_assert(NULL != header, "Is expected to return a non null value");
     for (int i = 0; i < NUM_HTTP_HEADERS; i++) {
@@ -31,142 +31,382 @@ Test(http_headers_init, should_create_entries) {
     }
 }
 
+extern int is_eol (char *ptr, int size);
+Test(is_eol, empty) {
+    char str[] = "";
+
+    int res = is_eol(str, 0);
+
+    cr_assert(-1 == res, "expected:true, found:%d", res);
+}
+
+Test(is_eol, true_1) {
+    char str[] = "\n";
+
+    int res = is_eol(str, 1);
+
+    cr_assert(0 != res, "expected:true, found:%d", res);
+}
+
+Test(is_eol, true_2) {
+    char str[] = {0x0A, 0x0D};
+
+    int res = is_eol(str, 2);
+
+    cr_assert(0 != res, "expected:true, found:%d", res);
+}
+
+/*! This test should be modified once we can expand the test accross the buffer boundary
+ *
+ */
+Test(is_eol, A_NULL) {
+    char str[] = {0x0A};
+
+    int res = is_eol(str, 1);
+
+    cr_assert(1 == res, "expected:false, found:%d", res);
+}
+
+Test(is_eol, true_2_reverse) {
+    char str[] = {0x0D, 0x0A};
+
+    int res = is_eol(str, 2);
+
+    cr_assert(0 != res, "expected:true, found:%d", res);
+}
+
+Test(is_eol, false_1) {
+    char str[] = " \n";
+
+    int res = is_eol(str, 2);
+
+    cr_assert(0 == res, "expected:false, found:%d", res);
+}
+
+Test(is_eol, false_2) {
+    char str[] = {0x0D, 0x020};
+
+    int res = is_eol(str, 2);
+
+    cr_assert(0 == res, "expected:false, found:%d", res);
+}
+
+extern char* mock_result_get_buffer[];
+extern void skip_eol_if_present (http_header_t *header);
+Test(skip_eol_if_present, empty_string) {
+    char buf[] = "";
+    mock_result_get_buffer[0] = buf;
+    circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 1024);
+    cb->buffers[0] = 0;
+    cb->data_sizes[0] = 0;
+    http_header_t *header = http_headers_init(cb);
+
+    skip_eol_if_present(header);
+
+    cr_assert(0 == header->start_of_line.circ_index, "'start_of_line.circ_index' should not have been updated");
+    cr_assert(0 == header->start_of_line.buff_pos, "'start_of_line.buff_pos' should not have been updated");
+    cr_assert(0 == header->cur_loc.circ_index, "'cur_loc.circ_index' should not have been updated");
+    cr_assert(0 == header->cur_loc.buff_pos, "'max_len.buff_pos' should not have been updated");
+}
+
+Test(skip_eol_if_present, unix_1) {
+    char buf[] = "\n";
+    mock_result_get_buffer[0] = buf;
+    circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 1024);
+    cb->buffers[0] = 0;
+    cb->data_sizes[0] = 1;
+    http_header_t *header = http_headers_init(cb);
+
+    skip_eol_if_present(header);
+
+    cr_assert(0 == header->start_of_line.circ_index, "'start_of_line.circ_index' expected:0, found:%d", header->start_of_line.circ_index);
+    cr_assert(1 == header->start_of_line.buff_pos, "'start_of_line.circ_index' expected:1, found:%d", header->start_of_line.buff_pos);
+    cr_assert(0 == header->cur_loc.circ_index, "'cur_loc.circ_index' should not have been updated");
+    cr_assert(1 == header->cur_loc.buff_pos, "cur_loc expected:1, found: %d", header->cur_loc.buff_pos);
+}
+
+Test(skip_eol_if_present, ms_1) {
+    char str[] = "\x0A""\x0D";
+    mock_result_get_buffer[0] = str;
+    circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 1024);
+    cb->buffers[0] = 0;
+    cb->data_sizes[0] = 2;
+    http_header_t *header = http_headers_init(cb);
+
+    skip_eol_if_present(header);
+
+    cr_assert(0 == header->start_of_line.circ_index, "'start_of_line.circ_index' expected:0, found:%d", header->start_of_line.circ_index);
+    cr_assert(2 == header->start_of_line.buff_pos, "start_of_line expected:2, found:%d", header->start_of_line.buff_pos);
+    cr_assert(0 == header->cur_loc.circ_index, "cur_loc expected:2, found: %d", header->cur_loc.circ_index);
+    cr_assert(2 == header->cur_loc.buff_pos, "cur_loc expected:2, found: %d", header->cur_loc.buff_pos);
+}
+
+Test(skip_eol_if_present, ms_2) {
+    char str[] = {"\x0D""\x0A"};
+    mock_result_get_buffer[0] = str;
+    circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 1024);
+    cb->buffers[0] = 0;
+    cb->data_sizes[0] = 2;
+    http_header_t *header = http_headers_init(cb);
+
+    skip_eol_if_present(header);
+
+    cr_assert(0 == header->start_of_line.circ_index, "'start_of_line.circ_index' expected:0, found:%d", header->start_of_line.circ_index);
+    cr_assert(2 == header->start_of_line.buff_pos, "start_of_line expected:2, found:%d", header->start_of_line.buff_pos);
+    cr_assert(0 == header->cur_loc.circ_index, "cur_loc expected:2, found: %d", header->cur_loc.circ_index);
+    cr_assert(2 == header->cur_loc.buff_pos, "cur_loc expected:2, found: %d", header->cur_loc.buff_pos);
+}
+
+Test(skip_eol_if_present, ms_3) {
+    char str[] = {"\x0A""\x20""\x0D"};
+    mock_result_get_buffer[0] = str;
+    circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 1024);
+    cb->buffers[0] = 0;
+    cb->data_sizes[0] = 3;
+    http_header_t *header = http_headers_init(cb);
+
+    skip_eol_if_present(header);
+
+    cr_assert(0 == header->start_of_line.circ_index, "'start_of_line.circ_index' should not have been updated");
+    cr_assert(1 == header->start_of_line.buff_pos, "'start_of_line.buff_pos' should not have been updated:%d", header->start_of_line.buff_pos);
+    cr_assert(0 == header->cur_loc.circ_index, "'cur_loc.circ_index' should not have been updated");
+    cr_assert(1 == header->cur_loc.buff_pos, "'max_len.buff_pos' should not have been updated");
+}
+
+Test(skip_eol_if_present, ms_4) {
+    char str[] = {"\x0D""\x20""\x0A"};
+    mock_result_get_buffer[0] = str;
+    circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 1024);
+    cb->buffers[0] = 0;
+    cb->data_sizes[0] = 3;
+    http_header_t *header = http_headers_init(cb);
+
+    skip_eol_if_present(header);
+
+    cr_assert(0 == header->start_of_line.circ_index, "'start_of_line.circ_index' should not have been updated");
+    cr_assert(0 == header->start_of_line.buff_pos, "'start_of_line.buff_pos' should not have been updated:%d", header->start_of_line.buff_pos);
+    cr_assert(0 == header->cur_loc.circ_index, "'cur_loc.circ_index' should not have been updated");
+    cr_assert(0 == header->cur_loc.buff_pos, "'max_len.buff_pos' should not have been updated");
+}
+
+Test(skip_eol_if_present, unix_2) {
+    char str[] = "  \n";
+    mock_result_get_buffer[0] = str;
+    circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 1024);
+    cb->buffers[0] = 0;
+    cb->data_sizes[0] = 2;
+    http_header_t *header = http_headers_init(cb);
+
+    skip_eol_if_present(header);
+
+    cr_assert(0 == header->start_of_line.circ_index, "'start_of_line.circ_index' should not have been updated");
+    cr_assert(0 == header->start_of_line.buff_pos, "'start_of_line.buff_pos' should not have been updated");
+    cr_assert(0 == header->cur_loc.circ_index, "'cur_loc.circ_index' should not have been updated");
+    cr_assert(0 == header->cur_loc.buff_pos, "'max_len.buff_pos' should not have been updated");
+}
+extern circular_buffer_t* mock_create_circular_buffer (char** data, int size);
 Test(http_headers_add, happy) {
-    http_header_t *header = http_headers_init(0, "Server:value\n", strlen(header->buff));
-    header->last_semicolon = 6;
-    header->cur_loc = 12;
+    char data[] = {"Server:value\n"};
+    mock_result_get_buffer[0] = data;
+    circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 1024);
+    cb->buffers[0] = 0;
+    cb->data_sizes[0] = strlen(data);
+    http_header_t *header = http_headers_init(cb);
+
+    header->last_semicolon.circ_index = 0;
+    header->last_semicolon.buff_pos = 6;
+    header->cur_loc.circ_index = 0;
+    header->cur_loc.buff_pos = 12;
+
     http_headers_add(header);
-    str_stack_2_formatted_line(header->headers[HTTP_SERVER]);
+
+    char* v = str_stack_2_formatted_line(header->headers[HTTP_SERVER]); //NOTE: returns single-quoted elements
     int size = stack_depth(header->headers[HTTP_SERVER]);
     cr_assert(1 == size, "expected 1 element at HTTP_SERVER(57), not:%d", size);
+    cr_assert(strcmp("'value'", v) == 0, "Expected 'value', not:%s", v);
 }
 
 Test(http_headers_add, non_existing) {
-    http_header_t *header = http_headers_init(0, "funny:value", strlen(header->buff));
-    header->last_semicolon = 5;
-    header->cur_loc = 11;
+    char data[] = {"funny:value"};
+    mock_result_get_buffer[0] = data;
+    circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 1024);
+    cb->buffers[0] = 0;
+    cb->data_sizes[0] = strlen(data);
+    http_header_t *header = http_headers_init(cb);
+
+    header->last_semicolon.circ_index = 0;
+    header->last_semicolon.buff_pos = 5;
+    header->cur_loc.circ_index = 0;
+    header->cur_loc.buff_pos = 11;
+
     http_headers_add(header);
+
 }
 
-Test(eol, empty_string) {
-    http_header_t *header = http_headers_init(0, "", 0);
+int mock_called_feeder;
+int mock_result_feeder;
+int mock_feeder(int fd, char* buffer, int size)
+{
+    mock_called_feeder += 1;
+    return mock_result_feeder;
+}
+extern int is_ptr_pointing_to_eol_or_eos (circular_buffer_t* cb, circular_ptr_t* ptr, circular_ptr_t* max_len);
+Test (is_ptr_pointing_to_eol_or_eos, empty_buffer)
+{
+    char data[] = "";
+    mock_result_get_buffer[0] = data;
+    circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 1024);
+    cb->buffers[0] = 0;
+    cb->data_sizes[0] = 0;
+    cb->feeder = mock_feeder;
+    mock_result_feeder = 0;
 
-    skip_eol(header);
+    circular_ptr_t from;
+    from.circ_index = 0;
+    from.buff_pos = 0;
 
-    cr_assert(0 == header->start_of_line, "should not have been updated");
-    cr_assert(0 == header->cur_loc, "should not have been updated");
-    cr_assert(0 == header->max_len, "should not have been updated");
+    circular_ptr_t to;
+    to.circ_index = 0;
+    to.buff_pos = 0;
+
+    int is_eol = is_ptr_pointing_to_eol_or_eos (cb, &from, &to);
+
+    cr_assert (is_eol, "An empty string and no next one is an EOL. Result was:%d", is_eol);
 }
 
-Test(eol, unix_1) {
-    http_header_t *header = http_headers_init(0, "\n", 1);
+Test (is_ptr_pointing_to_eol_or_eos, big_buffer_full_of_spaces)
+{
+    char data[] = "     ";
+    mock_result_get_buffer[0] = data;
+    circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 1024);
+    cb->buffers[0] = 0;
+    cb->data_sizes[0] = strlen(data);
+    cb->feeder = mock_feeder;
+    mock_result_feeder = 0;
 
-    skip_eol(header);
+    circular_ptr_t from;
+    from.circ_index = 0;
+    from.buff_pos = 0;
 
-    cr_assert(1 == header->start_of_line, "start_of_line expected:1, found:%d", header->start_of_line);
-    cr_assert(1 == header->cur_loc, "cur_loc expected:1, found: %d", header->cur_loc);
-    cr_assert(1 == header->max_len, "max_len should not have been updated");
+    circular_ptr_t to;
+    to.circ_index = 0;
+    to.buff_pos = strlen(data);
+
+    int is_eol = is_ptr_pointing_to_eol_or_eos (cb, &from, &to);
+
+    cr_assert (!is_eol, "An empty string and no next one is an EOL. Result was:%d", is_eol);
 }
 
-Test(eol, ms_1) {
-    char str[] = {0x0A, 0x0D};
-    http_header_t *header = http_headers_init(0, str, 2);
+Test (is_ptr_pointing_to_eol_or_eos, big_buffer_with_eol)
+{
+    char data[] = "   \n";
+    mock_result_get_buffer[0] = data;
+    circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 1024);
+    cb->buffers[0] = 0;
+    cb->data_sizes[0] = strlen(data);
+    cb->feeder = mock_feeder;
+    mock_result_feeder = 0;
 
-    skip_eol(header);
+    circular_ptr_t from;
+    from.circ_index = 0;
+    from.buff_pos = 0;
 
-    cr_assert(2 == header->start_of_line, "start_of_line expected:2, found:%d", header->start_of_line);
-    cr_assert(2 == header->cur_loc, "cur_loc expected:2, found: %d", header->cur_loc);
-    cr_assert(2 == header->max_len, "max_len should not have been updated");
+    circular_ptr_t to;
+    to.circ_index = 0;
+    to.buff_pos = strlen(data);
+
+    int is_eol = is_ptr_pointing_to_eol_or_eos (cb, &from, &to);
+
+    cr_assert (!is_eol, "An empty string and no next one is an EOL. Result was:%d", is_eol);
 }
 
-Test(eol, ms_2) {
-    char str[] = {0x0D, 0x0A};
-    http_header_t *header = http_headers_init(0, str, 2);
+Test (is_ptr_pointing_to_eol_or_eos, buffer_size_1_with_CR_no_next_line)
+{
+    char data[] = "\n";
+    mock_result_get_buffer[0] = data;
+    circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 1024);
+    cb->buffers[0] = 0;
+    cb->data_sizes[0] = strlen(data);
+    cb->feeder = mock_feeder;
+    mock_result_feeder = 0;
 
-    skip_eol(header);
+    circular_ptr_t from;
+    from.circ_index = 0;
+    from.buff_pos = 0;
 
-    cr_assert(2 == header->start_of_line, "start_of_line expected:2, found:%d", header->start_of_line);
-    cr_assert(2 == header->cur_loc, "cur_loc expected:2, found: %d", header->cur_loc);
-    cr_assert(2 == header->max_len, "max_len should not have been updated");
+    circular_ptr_t to;
+    to.circ_index = 0;
+    to.buff_pos = strlen(data);
+
+    int is_eol = is_ptr_pointing_to_eol_or_eos (cb, &from, &to);
+
+    cr_assert (is_eol, "An empty string and no next one is an EOL. Result was:%d", is_eol);
 }
 
-Test(eol, ms_3) {
-    char str[] = {0x0A, 0x20, 0x0D};
-    http_header_t *header = http_headers_init(0, str, 3);
+int mock_result_alloc_buffer;
+Test (is_ptr_pointing_to_eol_or_eos, buffer_size_1_with_CR_and_next_line)
+{
+    char line1[] = "\n";
+    char line2[] = " ";
+    mock_result_get_buffer[0] = line1;
+    mock_result_get_buffer[1] = line2;
+    circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 1024);
+    cb->buffers[0] = 0;
+    cb->data_sizes[0] = strlen(line1);
+    cb->next_to_be_received = 1;
+    cb->feeder = mock_feeder;
+    mock_result_alloc_buffer = 1;
+    mock_result_feeder = 0;
+    mock_called_feeder = 0;
 
-    skip_eol(header);
+    circular_ptr_t from;
+    from.circ_index = 0;
+    from.buff_pos = 0;
 
-    cr_assert(1 == header->start_of_line, "start_of_line expected:0, found:%d", header->start_of_line);
-    cr_assert(1 == header->cur_loc, "cur_loc expected:0, found: %d", header->cur_loc);
-    cr_assert(3 == header->max_len, "max_len should not have been updated");
+    circular_ptr_t to;
+    to.circ_index = 0;
+    to.buff_pos = strlen(line1);
+
+    int is_eol = is_ptr_pointing_to_eol_or_eos (cb, &from, &to);
+
+    cr_assert (is_eol, "An empty string and no next one is an EOL. Result was:%d", is_eol);
+    cr_assert (1 == mock_called_feeder, "feeder should not have been called (done pre-emptively)");
 }
 
-Test(eol, unix_2) {
-    char str[] = "  \n";
-    http_header_t *header = http_headers_init(0, str, 3);
+Test (is_ptr_pointing_to_eol_or_eos, buffer_size_2_with_NL_CR)
+{
 
-    skip_eol(header);
-
-    cr_assert(0 == header->start_of_line, "start_of_line expected:2, found:%d", header->start_of_line);
-    cr_assert(0 == header->cur_loc, "cur_loc expected:2, found: %d", header->cur_loc);
-    cr_assert(3 == header->max_len, "max_len should not have been updated");
 }
 
-Test(is_eol_reached, empty) {
-    char str[] = "";
-    http_header_t *header = http_headers_init(0, str, 0);
-    \
-    int res = is_eol_reached(header);
+Test (is_ptr_pointing_to_eol_or_eos, buffer_size_1_with_NL_and_CR_on_next_buffer)
+{
 
-    cr_assert(0 != res, "expected:true, found:%d", res);
 }
 
-Test(is_eol_reached, true_1) {
-    char str[] = "\n";
-    http_header_t *header = http_headers_init(0, str, 1);
+Test (is_ptr_pointing_to_eol_or_eos, buffer_size_1_with_NL_and_no_next_buffer)
+{
 
-    int res = is_eol_reached(header);
-
-    cr_assert(0 != res, "expected:true, found:%d", res);
-}
-
-Test(is_eol_reached, true_2) {
-    char str[] = {0x0A, 0x0D};;
-    http_header_t *header = http_headers_init(0, str, 2);
-
-    int res = is_eol_reached(header);
-
-    cr_assert(0 != res, "expected:true, found:%d", res);
-}
-
-Test(is_eol_reached, false_1) {
-    char str[] = " \n";
-    http_header_t *header = http_headers_init(0, str, 2);
-
-    int res = is_eol_reached(header);
-
-    cr_assert(0 == res, "expected:false, found:%d", res);
-}
-
-Test(is_eol_reached, false_2) {
-    char str[] = {0x0D, 0x020};
-    http_header_t *header = http_headers_init(0, str, 2);
-
-    int res = is_eol_reached(header);
-
-    cr_assert(0 == res, "expected:false, found:%d", res);
 }
 
 Test(get_next_line, semicolon_true) {
     char str[] = "key:value";
-    http_header_t *header = http_headers_init(0, str, strlen(str));
+    mock_result_get_buffer[0] = str;
+    circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 1024);
+    cb->buffers[0] = 0;
+    cb->data_sizes[0] = strlen(str);
+    http_header_t *header = http_headers_init(cb);
 
+    header->last_semicolon.circ_index = 0;
+    header->last_semicolon.buff_pos = 0;
+    header->cur_loc.circ_index = 0;
+    header->cur_loc.buff_pos = 0;
     get_next_line(header);
 
-    cr_assert(3 == header->last_semicolon, "not the expected position for semicolon: %d", header->last_semicolon);
+    cr_assert(3 == header->last_semicolon.buff_pos, "not the expected position for semicolon(buf_pos): %d", header->last_semicolon.buff_pos);
+    cr_assert(0 == header->last_semicolon.circ_index, "not the expected position for semicolon(circ_index: %d", header->last_semicolon.circ_index);
 }
 
-Test(get_next_line, semicolon_false) {
+/*Test(get_next_line, semicolon_false) {
     char str[] = "keyvalue";
     http_header_t *header = http_headers_init(0, str, strlen(str));
 
@@ -436,7 +676,7 @@ Test(decode_http_header, parse_retrieve)
               value);
     free(value);
     http_headers_free(header);
-}
+}*/
 
 Test(http_headers, constants_sorted) {
     for (int i = 0; i < 80; i++) {

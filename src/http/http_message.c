@@ -8,15 +8,16 @@
 
 unsigned int http_message_buffer_size = BUFFER_SIZE;
 
-http_message_t* new_http_message(int fd)
+http_message_t* new_http_message(int fd, int (*feeder)(int fd, char* buffer, int buffer_size), int buffer_size)
 {
     http_message_t* http_message = NULL;
     if (http_message_buffer_size > 0) {
         http_message = (http_message_t *) malloc(sizeof(http_message_t));
         http_message->fd = fd;
-        http_message->status = HTTP_MSG_STATUS_HEADER;
-        http_message->header = NULL;
-        http_message->buffers = new_circular_buffer(http_message_buffer_size);
+        http_message->feeder = feeder;
+        http_message->status = HTTP_MSG_STATUS_INIT;
+        http_message->buffers = new_circular_buffer(http_message_buffer_size, fd, feeder, buffer_size);
+        http_message->header = http_headers_init(http_message->buffers);
         http_message->raw_message_length = -1;
     } else {
         printf("ERROR: Messages should be allocated more than 1 buffer\n");
@@ -34,16 +35,16 @@ int read_next_buffer_from_source (http_message_t* msg)
     int buffer_no = alloc_entry_in_circular_buffer (msg->buffers);
     int r = 0;
     if (buffer_no >= 0) {
-        r = read_from_socket(msg->fd, get_buffer(buffer_no), TX_BUFFER_SIZE);
+        r = (msg->feeder)(msg->fd, get_buffer(buffer_no), TX_BUFFER_SIZE);
         set_data_size_for_last_received_buffer (msg->buffers, r);
     }
     return r;
 }
 
 //TODO REFACTOR. This method should be moved to the caller
-http_message_t* receive_new_http_message(int fd)
+http_message_t* receive_new_http_message(int fd, int (*feeder)(int fd, char* buffer, int buffer_size), int buffer_size)
 {
-    http_message_t* result = new_http_message(fd);
+    http_message_t* result = new_http_message(fd, feeder, buffer_size);
     if(result != NULL) {
         int r = read_next_buffer_from_source (result);
     }
@@ -60,35 +61,29 @@ int http_message_decode_response_type(http_message_t* msg)
     return http_decode_response_type(get_last_received_buffer(msg->buffers), get_last_received_size(msg->buffers));
 }
 
-//TODO remvove the method as replaced by buffer_has_been_sent
-void http_message_free_buffer (http_message_t* msg)
-{
-    //free_last_sent_in_circular_buffer (msg->buffers);
-}
-
-int decode_http_message_header(int fd, http_message_t *msg) {
-    //decode_http_headers_init(&(msg->header), fd, msg->buffer, msg->raw_message_length);
-    int end_of_header = decode_http_headers(msg->header);
-    msg->raw_message_length = msg->header->max_len;
+void decode_http_message_header(int fd, http_message_t *msg) {
+    msg->status = HTTP_MSG_STATUS_HEADER;
+    decode_http_headers(msg->header);
+    msg->raw_message_length = msg->header->header_size;
     msg->body_length = decode_body_length(msg->header);
-    return end_of_header;
+    msg->status = HTTP_MSG_STATUS_HEADER_COMPLETE;
 }
 
 /*!
  * Read as much data as we can fit in the available buffers, otherwise go to sleep until some are freed.
+ * Operation will start at 'cur_loc' until no data is available on the stream
  * @param fd
  * @param msg
  * @param start_pos
  */
-void receive_body(int fd, http_message_t *msg, int start_pos) {
-    int remain = (start_pos + msg->body_length + 1) - msg->raw_message_length;
-    printf("receive body: raw length:%d, start_pos:%d, remainder:%d\n", msg->raw_message_length, start_pos, remain);
-    while (remain > 0) {
-        int n = read_next_buffer_from_source(msg);
-        if (n == 0)exit(0);
-        remain -= n;
+void http_message_receive_body(http_message_t *msg) {
+    msg->status = HTTP_MSG_STATUS_BODY_INCOMPLETE;
+    int n = 0;
+    do {
         msg->raw_message_length += n;
-    }
+        n = read_next_buffer_from_source(msg);
+    } while (n > 0);
+    msg->status = HTTP_MSG_STATUS_BODY_COMPLETE;
 }
 
 /*!

@@ -1,13 +1,12 @@
 #include "http_headers.h"
 #include "../buffers/shared_buffers.h"
 #include "../socket/socket_connector.h"
+#include "../buffers/circular_buffer.h"
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 #include <math.h>
 #include <stdio.h>
-
-//#include <str_stack.h>
 
 int str2int(char *value, int field_length) {
     int res = 0;
@@ -30,87 +29,118 @@ int decode_body_length(http_header_t *header) {
 // BUT we want to avoid a circular dependency. Callbacks is not the nicest way, as there is no reason
 // for genericity.
 //
-http_header_t* http_headers_init(int fd, char *buffer, int data_len) {
+http_header_t* http_headers_init(circular_buffer_t* buffers) {
     http_header_t* header = (http_header_t*)malloc(sizeof(http_header_t));
     for (int i = 0; i < NUM_HTTP_HEADERS; i++) {
         header->headers[i] = stack_init();
     }
-    header->fd = fd;
-    header->buff = buffer;
-    header->cur_loc = 0;
-    header->last_semicolon = -1;
-    header->max_len = data_len;
-    header->start_of_line = 0;
+    header->buffers = buffers;
+
+    header->cur_loc.circ_index = 0;
+    header->cur_loc.buff_pos = 0;
+//    header->last_semicolon = -1;
+//    header->max_len = data_len;
+    header->start_of_line.circ_index = 0;
+    header->start_of_line.buff_pos = 0;
     return header;
 }
 
+
+int is_two_bytes_eol (char *ptr) {
+    return ((ptr[0] == 0x0A && ptr[1] == 0x0D) || (ptr[0] == 0x0D && ptr[1] == 0x0A));
+}
+
+int is_one_byte_eol(char ptr) {
+    return (ptr == '\n');
+}
+
+int is_eol (char *ptr, int size)
+{
+    int result = 0;
+    if (size > 0) {
+        if (size >= 2 && is_two_bytes_eol(ptr)) {
+            result = 2;
+        }
+        if (!result && is_one_byte_eol(ptr[0])) {
+            result = 1;
+        }
+    } else {
+        result = -1;
+    }
+    return result;
+}
+
+int is_ptr_pointing_to_eol_or_eos (circular_buffer_t* cb, circular_ptr_t* ptr, circular_ptr_t* max_len)
+{
+    char* ptr_to_data = get_char_ptr_from_buffer(cb, ptr);
+    int distance_to_end_of_buffer =  cb->data_sizes[ptr->circ_index] - ptr->buff_pos;
+    int de_alloc = 0;
+    int result;
+    if (distance_to_end_of_buffer < 2) {
+        int bytes_read = feed_next_buffer(cb, max_len);
+        if (bytes_read > 0) {
+            char first = ptr_to_data[0];
+            ptr_to_data = (char *) malloc(sizeof(char) * 3);
+            ptr_to_data[0] = first;
+            circular_ptr_t *next = (circular_ptr_t *) malloc(sizeof(circular_ptr_t));
+            copy_circ_pointers(next, ptr);
+            op_add_circ_pointers(cb, next, 1);
+            char *second_part = get_char_ptr_from_buffer(cb, next);
+            free(next);
+            ptr_to_data[1] = second_part[0];
+            ptr_to_data[2] = '\0';
+            distance_to_end_of_buffer = 2;
+            de_alloc = 1;
+        }
+    }
+    result = is_eol(ptr_to_data, distance_to_end_of_buffer);
+    if (de_alloc) {
+        free (ptr_to_data);
+    }
+    return result;
+}
 /*
  \pre buff is not NULL
  \pre start_of_line <= cur_loc <= max_len
 */
-void skip_eol (http_header_t *header) {
-    if (header->cur_loc < header->max_len &&
-        (header->buff[header->cur_loc] == 0x0A && header->buff[header->cur_loc + 1] == 0x0D)
-        || (header->buff[header->cur_loc] == 0x0D && header->buff[header->cur_loc + 1] == 0x0A)){
-        header->cur_loc += 2;
-    } else if (header->buff[header->cur_loc] == '\n') {
-        header->cur_loc += 1;
+void skip_eol_if_present (http_header_t *header) {
+
+    int offset = is_eol(get_char_ptr_from_buffer(header->buffers, &(header->cur_loc)), header->buffers->data_sizes[header->cur_loc.circ_index] - header->cur_loc.buff_pos);
+    if (offset > 0) {
+        op_add_circ_pointers(header->buffers, &(header->cur_loc), offset);
+        copy_circ_pointers(&(header->start_of_line), &(header->cur_loc));
     }
-    header->start_of_line = header->cur_loc;
 }
 
-int is_eol_reached (http_header_t *header) {
-    return (header->cur_loc == header->max_len) ||
-           (((header->cur_loc < header->max_len) &&
-             (header->cur_loc < header->max_len &&
-              header->buff[header->cur_loc] == 0x0A &&
-              header->buff[header->cur_loc + 1] == 0x0D)) ||
-            (header->buff[header->cur_loc] == '\n'));
-}
+http_header_t* get_next_line (http_header_t* header)
+{
 
-http_header_t* get_next_line(http_header_t* header) {
-
-    printf("get_next_line1, cur_loc:%d, max_len:%d\n", header->cur_loc, header->max_len);
-    skip_eol(header);
-    printf("get_next_line2, cur_loc:%d, max_len:%d\n", header->cur_loc, header->max_len);
-    if (header->cur_loc >= header->max_len) {
+    printf("get_next_line1, cur_loc:[%d-%d], max_len:[%d-%d]\n", header->cur_loc.circ_index, header->cur_loc.buff_pos, header->max_len.circ_index, header->max_len.buff_pos);
+    skip_eol_if_present(header);
+    printf("get_next_line2, cur_loc:[%d-%d], max_len:[%d-%d]\n", header->cur_loc.circ_index, header->cur_loc.buff_pos, header->max_len.circ_index, header->max_len.buff_pos);
+    if (cmp_ptr_to_last_received(header->buffers, &(header->cur_loc)) >= 0) {
         printf("Read from socket\n");
-        int sz = read_from_socket(header->fd, &(header->buff[header->max_len]), TX_BUFFER_SIZE);
-        header->max_len += (sz > 0) ? (sz) : (0);
-        printf("New max_len:%d\n", header->max_len);
+        feed_next_buffer(header->buffers, &(header->max_len));
+//        int sz = read_from_socket(header->fd, &(header->buff[header->max_len]), TX_BUFFER_SIZE);
+        printf("New max_len:[%d-%d]\n", header->max_len.circ_index, header->max_len.buff_pos);
     }
-    while (!is_eol_reached(header)) {
-        if (header->buff[header->cur_loc] == ':')
-            header->last_semicolon = header->cur_loc;
-        header->cur_loc += 1;
+    while (is_ptr_pointing_to_eol_or_eos (header->buffers, &(header->cur_loc), &(header->max_len))) {
+        if (get_char_ptr_from_buffer(header->buffers, &(header->cur_loc))[0] == ':')
+            copy_circ_pointers (&(header->last_semicolon), &(header->cur_loc));
+        op_add_circ_pointers(header->buffers, &(header->cur_loc), 1);
     }
-    printf("cur_loc:%d, last_semicolon:%d\n", header->cur_loc, header->last_semicolon);
+    printf("cur_loc:[%d-%d], last_semicolon:[%d-%d]\n", header->cur_loc.circ_index, header->cur_loc.buff_pos,
+            header->last_semicolon.circ_index, header->last_semicolon.buff_pos);
     return header;
 }
 
 int header_strlen (http_header_t *header) {
-    return header->cur_loc - header->start_of_line;
+    return op_distance_circ_pointers(header->buffers, &(header->start_of_line), &(header->cur_loc));
 }
 
-int is_two_bytes_eol (char *ptr) {
-    return ((*ptr == 0x0A && ptr[1] == 0x0D) || (*ptr == 0x0D && ptr[1] == 0x0A));
-}
 
-int is_one_byte_eol(char *ptr) {
-    return (*ptr == '\n');
-}
-
-int is_eol(char *ptr) {
-    if (*ptr != 0x00 && ptr[1] != 0x00 && ptr[2] != 0x00) {
-        if (is_two_bytes_eol(ptr)) return 2;
-        else if (is_one_byte_eol(ptr)) return 1;
-        else return 0;
-    } else return 0;
-}
-
-//TODO generalize the use of these methods & avoid spreading 0x0A all way around
 int is_eof(char *ptr) {
-    return (*ptr == 0x00);
+    return (ptr[0] == 0x00);
 }
 
 char *strmncpy(char *buffer, int start, int end) {
@@ -121,68 +151,74 @@ char *strmncpy(char *buffer, int start, int end) {
     return result;
 }
 
+
 char *http_headers_get_header_value(http_header_t *header) {
-    int start_value_pos = header->last_semicolon + 1;
-    while (header->buff[start_value_pos] == 0x20) start_value_pos++;
-    int offset = is_eof(&header->buff[header->cur_loc]) ? is_eol(&header->buff[header->cur_loc]) : 0;
+    do {
+        op_add_circ_pointers(header->buffers, &(header->last_semicolon), 1);
+    } while(get_char_ptr_from_buffer(header->buffers, &(header->last_semicolon))[0] == 0x20);
+    int offset = is_eof(get_char_ptr_from_buffer(header->buffers, &(header->cur_loc))) ?
+            is_eol(get_char_ptr_from_buffer(header->buffers, &(header->cur_loc)), header->buffers->data_sizes[header->cur_loc.circ_index] - header->cur_loc.buff_pos) : 0;
     printf("Offset:%d\n", offset);
-    char *value = strmncpy(header->buff, start_value_pos, header->cur_loc - offset);
-    printf("Length:%d\n", header->cur_loc - offset);
+    circular_ptr_t* end_ptr = op_sub_circ_pointer(header->buffers, &(header->cur_loc), offset);
+    char* value = buffer_2_str_copy(header->buffers, &(header->last_semicolon), end_ptr);
+    free(end_ptr);
     printf("value:[%s]\n", value);
     return value;
 }
 
-void http_headers_add(http_header_t *header) {
-    char *key = strmncpy(header->buff, header->start_of_line, header->last_semicolon);
+void http_headers_add(http_header_t* hdr)
+{
+    char *key = buffer_2_str_copy(hdr->buffers, &(hdr->start_of_line), &(hdr->last_semicolon));
     int index = find_header_index(key);
     char *value = NULL;
     if (index >= 0) {
-        value = http_headers_get_header_value(header);
-        str_stack_push(header->headers[index], value);
+        value = http_headers_get_header_value(hdr);
+        str_stack_push(hdr->headers[index], value);
         printf("pushing:%d---%s\n", index, value);
         printf("========\n");
-        printf("------------------\n%s===============\n", http_headers_to_string(header));
+        printf("------------------\n%s===============\n", http_headers_to_string(hdr));
         free(value);
-        printf("------------------\n%s===============\n", http_headers_to_string(header));
+        printf("------------------\n%s===============\n", http_headers_to_string(hdr));
     }
     free(key);
 
 }
 
-
-stack_head_t *http_headers_get(http_header_t *header, const int prop_key) {
+stack_head_t *http_headers_get(http_header_t* hdr, const int prop_key)
+{
     stack_head_t *result = NULL;
     if (prop_key >= 0 && prop_key < NUM_HTTP_HEADERS) {
-        result = header->headers[prop_key];
+        result = hdr->headers[prop_key];
     }
     return result;
 }
 
-int decode_http_headers(http_header_t *header) {
+void decode_http_headers(http_header_t* hdr)
+{
     printf("decode_http_headers\n");
     int cont = 1;
-    get_next_line(header);
-    while (cont && header_strlen(get_next_line(header)) > 0) {
-        if (header->last_semicolon > header->start_of_line) {
-            http_headers_add(header);
+    get_next_line (hdr);
+    while (cont && header_strlen(get_next_line(hdr)) > 0) {
+        if (cmp_circular_ptr(hdr->buffers, &(hdr->last_semicolon), &(hdr->start_of_line))) { //last_semicolon > start_of_line
+            http_headers_add(hdr);
         } else {
             cont = 0;
         }
     }
-    return header->cur_loc;
 }
 
-void http_headers_free(http_header_t *header) {
+void http_headers_free(http_header_t* hdr)
+{
     for (int i = 0; i < NUM_HTTP_HEADERS; i++) {
-		str_stack_free(header->headers[i]);
+		str_stack_free(hdr->headers[i]);
     }
 }
 
-int find_header_index(const char *header) {
+int find_header_index(const char* key) {
     size_t i = NUM_HTTP_HEADERS / 2;
     int length = NUM_HTTP_HEADERS;
     while (i < length) {
-        int comparison = strcmp(HTTP_HEADER_STRINGS[i], header);
+        int comparison = strcmp(HTTP_HEADER_STRINGS[i], key);
         if (comparison == 0) {
             return i;
         }
@@ -196,14 +232,14 @@ int find_header_index(const char *header) {
     return -1;
 }
 
-char* http_headers_to_string(http_header_t* header)
+char* http_headers_to_string(http_header_t* hdr)
 {
     char* result = (char*) malloc(sizeof(char) * 1);
     result[0] = '\0';
     for (int i = 0; i < NUM_HTTP_HEADERS; i++) {
-        if (header->headers[i]->num_elems > 0) {
+        if (hdr->headers[i]->num_elems > 0) {
             char* tmp = result;
-            char* line = str_stack_2_formatted_line(header->headers[i]);
+            char* line = str_stack_2_formatted_line(hdr->headers[i]);
             int extension = strlen(line) + 2 + strlen(HTTP_HEADER_STRINGS[i]) + 3;
             result = (char*) malloc ((sizeof(char) * (extension + strlen(tmp))));
             strcpy(result, tmp);

@@ -8,6 +8,7 @@
 
 typedef struct {
     int fd;
+    int (*feeder)(int fd, char* buffer, int buffer_size);
     int total_messages;
     long total_bytes;
     int last_result;

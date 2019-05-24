@@ -2,17 +2,22 @@
 #define HTTP_HEADERS_H
 
 #include <str_stack.h>
+#include "../buffers/circular_buffer.h"
 
 #define NUM_HTTP_HEADERS			81
 
 typedef struct {
 	stack_head_t* headers[NUM_HTTP_HEADERS];
-	int fd;
+
+    circular_buffer_t* buffers;
+
 	char* buff; //TODO should be eliminated and replaced by a pointer to the message
-	int start_of_line;
-	int last_semicolon;
-	int cur_loc;
-	int max_len;
+    circular_ptr_t start_of_line;
+    circular_ptr_t last_semicolon;
+    circular_ptr_t cur_loc;
+    circular_ptr_t max_len;
+
+    unsigned int header_size;
 } http_header_t;
 
 /*!
@@ -20,7 +25,7 @@ typedef struct {
  * DOES NOT initialize the values to start the parsing though. (maybe change that ...)
  * @return
  */
-http_header_t* http_headers_init(int fd, char *buffer, int data_len);
+http_header_t* http_headers_init(circular_buffer_t* buffers);
 
 char* strmncpy(char* buffer, int start, int end);
 
@@ -43,27 +48,23 @@ int decode_body_length(http_header_t* header);
  */
 http_header_t* get_next_line(http_header_t* header);
 
-void http_headers_free(http_header_t* header);
+void http_headers_free(http_header_t* hdr);
 
-stack_head_t* http_headers_get(http_header_t* header, const int prop_key);
+stack_head_t* http_headers_get(http_header_t* hdr, const int prop_key);
 
-void http_headers_add(http_header_t* header);
+void http_headers_add(http_header_t* hdr);
 
 void decode_http_headers_init(http_header_t* header, int fd, char* buffer, int sata_len);
 
-int decode_http_headers(http_header_t* header);
+void decode_http_headers(http_header_t* hdr);
 
-int find_header_index(const char* header);
-
-int is_eol_reached(http_header_t* header);
-
-void skip_eol (http_header_t* header);
+int find_header_index(const char* key);
 
 int header_strlen(http_header_t* header);
 
 int str2int(char* value, int field_length);
 
-char* http_headers_to_string(http_header_t* header);
+char* http_headers_to_string(http_header_t* hdr);
 
 extern char* HTTP_HEADER_STRINGS[];
 

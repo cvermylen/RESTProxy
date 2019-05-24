@@ -14,7 +14,8 @@
 
 #define BUFFER_SIZE         4
 typedef struct {
-    int fd; //Message coming from, maybe could be replaced with a callback that would take as parameter the buffer and the max size.
+    int fd; //Used by the feeder function
+    int (*feeder)(int fd, char* buffer, int buffer_size); //Message coming from, maybe could be replaced with a callback that would take as parameter the buffer and the max size.
 	char status;  //See #defines above
 	circular_buffer_t* buffers;
 	int raw_message_length;
@@ -27,13 +28,13 @@ typedef struct {
  * @param fd
  * @return
  */
-http_message_t* new_http_message(int fd);
+http_message_t* new_http_message(int fd, int (*feeder)(int fd, char* buffer, int buffer_size), int buffer_size);
 
 /*! Next refactoring: replace the 'fd' parameter by a callback function
  *
  * @param fd
  */
-http_message_t* receive_new_http_message(int fd);
+http_message_t* receive_new_http_message(int fd, int (*feeder)(int fd, char* buffer, int buffer_size), int buffer_size);
 
 /*!
  * @param msg
@@ -47,12 +48,6 @@ int http_message_decode_request_type (http_message_t* msg);
 int http_message_decode_response_type(http_message_t* msg);
 
 int read_next_buffer_from_source (http_message_t* msg);
-/*!
- * Liberates the buffer pointed by 'last_sent', supposedly it has been sent.
- * @param msg
- * @param buffno
- */
-void http_message_free_buffer (http_message_t* msg);
 
 int get_line_length(char* buffer);
 
@@ -60,9 +55,9 @@ int read_from_buffer(int fd, http_message_t* msg, int start_index);
 
 void http_message_free(http_message_t* msg);
 
-int decode_http_message_header(int fd, http_message_t* msg);
+void decode_http_message_header(int fd, http_message_t* msg);
 
-void receive_body(int fd, http_message_t* msg, int start_pos);
+void http_message_receive_body(http_message_t *msg);
 
 void decode_http_message(http_message_t* msg);
 
