@@ -56,6 +56,8 @@ int is_one_byte_eol(char ptr) {
 
 int is_eol (char *ptr, int size)
 {
+    printf("Size:%d\n", size);
+    printf("First:%x second:%x\n", ptr[0], ptr[1]);
     int result = 0;
     if (size > 0) {
         if (size >= 2 && is_two_bytes_eol(ptr)) {
@@ -64,6 +66,7 @@ int is_eol (char *ptr, int size)
         if (!result && is_one_byte_eol(ptr[0])) {
             result = 1;
         }
+        printf("Intermediary result:%d\n", result);
     } else {
         result = -1;
     }
@@ -74,10 +77,13 @@ int is_ptr_pointing_to_eol_or_eos (circular_buffer_t* cb, circular_ptr_t* ptr, c
 {
     char* ptr_to_data = get_char_ptr_from_buffer(cb, ptr);
     int distance_to_end_of_buffer =  cb->data_sizes[ptr->circ_index] - ptr->buff_pos;
+    printf("Distance:%d\n", distance_to_end_of_buffer);
     int de_alloc = 0;
     int result;
+    -- int bytes_read = 1;
     if (distance_to_end_of_buffer < 2) {
         int bytes_read = feed_next_buffer(cb, max_len);
+        printf("Size of data read:%d\n", bytes_read);
         if (bytes_read > 0) {
             char first = ptr_to_data[0];
             ptr_to_data = (char *) malloc(sizeof(char) * 3);
@@ -94,6 +100,7 @@ int is_ptr_pointing_to_eol_or_eos (circular_buffer_t* cb, circular_ptr_t* ptr, c
         }
     }
     result = is_eol(ptr_to_data, distance_to_end_of_buffer);
+   -- result |= (bytes_read == 0); //EOF
     if (de_alloc) {
         free (ptr_to_data);
     }
@@ -124,10 +131,11 @@ http_header_t* get_next_line (http_header_t* header)
 //        int sz = read_from_socket(header->fd, &(header->buff[header->max_len]), TX_BUFFER_SIZE);
         printf("New max_len:[%d-%d]\n", header->max_len.circ_index, header->max_len.buff_pos);
     }
-    while (is_ptr_pointing_to_eol_or_eos (header->buffers, &(header->cur_loc), &(header->max_len))) {
+    while (!is_ptr_pointing_to_eol_or_eos (header->buffers, &(header->cur_loc), &(header->max_len))) {
         if (get_char_ptr_from_buffer(header->buffers, &(header->cur_loc))[0] == ':')
             copy_circ_pointers (&(header->last_semicolon), &(header->cur_loc));
         op_add_circ_pointers(header->buffers, &(header->cur_loc), 1);
+        printf("curr_loc.circ_index:%d curr_loc.buff_pos:%d\n", header->cur_loc.circ_index, header->cur_loc.buff_pos);
     }
     printf("cur_loc:[%d-%d], last_semicolon:[%d-%d]\n", header->cur_loc.circ_index, header->cur_loc.buff_pos,
             header->last_semicolon.circ_index, header->last_semicolon.buff_pos);

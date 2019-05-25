@@ -126,7 +126,7 @@ Test(skip_eol_if_present, unix_1) {
 }
 
 Test(skip_eol_if_present, ms_1) {
-    char str[] = "\x0A""\x0D";
+    char str[] = {0x0A, 0x0D};
     mock_result_get_buffer[0] = str;
     circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 1024);
     cb->buffers[0] = 0;
@@ -142,7 +142,7 @@ Test(skip_eol_if_present, ms_1) {
 }
 
 Test(skip_eol_if_present, ms_2) {
-    char str[] = {"\x0D""\x0A"};
+    char str[] = {0x0D, 0x0A};
     mock_result_get_buffer[0] = str;
     circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 1024);
     cb->buffers[0] = 0;
@@ -158,7 +158,7 @@ Test(skip_eol_if_present, ms_2) {
 }
 
 Test(skip_eol_if_present, ms_3) {
-    char str[] = {"\x0A""\x20""\x0D"};
+    char str[] = {0x0A, 0x20, 0x0D};
     mock_result_get_buffer[0] = str;
     circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 1024);
     cb->buffers[0] = 0;
@@ -174,7 +174,7 @@ Test(skip_eol_if_present, ms_3) {
 }
 
 Test(skip_eol_if_present, ms_4) {
-    char str[] = {"\x0D""\x20""\x0A"};
+    char str[] = {0x0D, 0x20, 0x0A};
     mock_result_get_buffer[0] = str;
     circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 1024);
     cb->buffers[0] = 0;
@@ -373,19 +373,86 @@ Test (is_ptr_pointing_to_eol_or_eos, buffer_size_1_with_CR_and_next_line)
     cr_assert (1 == mock_called_feeder, "feeder should not have been called (done pre-emptively)");
 }
 
+extern int mock_called_get_buffer;
 Test (is_ptr_pointing_to_eol_or_eos, buffer_size_2_with_NL_CR)
 {
+    char data[] = {0x0A, 0x0D};
+    mock_result_get_buffer[0] = data;
+    circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 1024);
+    cb->buffers[0] = 0;
+    cb->data_sizes[0] = 2;
+    cb->feeder = mock_feeder;
+    mock_result_feeder = 0;
+    mock_called_get_buffer = 0;
 
+    circular_ptr_t from;
+    from.circ_index = 0;
+    from.buff_pos = 0;
+
+    circular_ptr_t to;
+    to.circ_index = 0;
+    to.buff_pos = strlen(data);
+
+    int is_eol = is_ptr_pointing_to_eol_or_eos (cb, &from, &to);
+
+    cr_assert(1 == mock_called_get_buffer, "Should have get data from mocked shared buffer");
+    cr_assert (is_eol, "A 2-bytes eol. Result was:%d", is_eol);
 }
 
 Test (is_ptr_pointing_to_eol_or_eos, buffer_size_1_with_NL_and_CR_on_next_buffer)
 {
+    char line1[] = {0x0A};
+    char line2[] = {0x0D};
+    mock_result_get_buffer[0] = line1;
+    mock_result_get_buffer[1] = line2;
+    circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 1024);
+    cb->buffers[0] = 0;
+    cb->data_sizes[0] = 1;
+    cb->next_to_be_received = 1;
+    cb->feeder = mock_feeder;
+    mock_result_alloc_buffer = 1;
+    mock_result_feeder = 1;
+    mock_called_feeder = 0;
 
+    circular_ptr_t from;
+    from.circ_index = 0;
+    from.buff_pos = 0;
+
+    circular_ptr_t to;
+    to.circ_index = 0;
+    to.buff_pos = strlen(line1);
+
+    int is_eol = is_ptr_pointing_to_eol_or_eos (cb, &from, &to);
+
+    cr_assert (is_eol, "a 2-butes eol split between 2 buffers. Result was:%d", is_eol);
+    cr_assert (1 == mock_called_feeder, "feeder should have been called");
 }
 
 Test (is_ptr_pointing_to_eol_or_eos, buffer_size_1_with_NL_and_no_next_buffer)
 {
+    char line1[] = {0x0D};
+    mock_result_get_buffer[0] = line1;
+    circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 1024);
+    cb->buffers[0] = 0;
+    cb->data_sizes[0] = 1;
+    cb->next_to_be_received = 1;
+    cb->feeder = mock_feeder;
+    mock_result_alloc_buffer = 1;
+    mock_result_feeder = 0;
+    mock_called_feeder = 0;
 
+    circular_ptr_t from;
+    from.circ_index = 0;
+    from.buff_pos = 0;
+
+    circular_ptr_t to;
+    to.circ_index = 0;
+    to.buff_pos = strlen(line1);
+
+    int is_eol = is_ptr_pointing_to_eol_or_eos (cb, &from, &to);
+
+    cr_assert (!is_eol, "an incomplete 2-butes eol . Result was:%d", is_eol);
+    cr_assert (1 == mock_called_feeder, "feeder should have been called");
 }
 
 Test(get_next_line, semicolon_true) {
@@ -394,12 +461,16 @@ Test(get_next_line, semicolon_true) {
     circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 1024);
     cb->buffers[0] = 0;
     cb->data_sizes[0] = strlen(str);
+
     http_header_t *header = http_headers_init(cb);
 
     header->last_semicolon.circ_index = 0;
     header->last_semicolon.buff_pos = 0;
     header->cur_loc.circ_index = 0;
     header->cur_loc.buff_pos = 0;
+    header->max_len.circ_index = 0;
+    header->max_len.buff_pos = strlen(str);
+
     get_next_line(header);
 
     cr_assert(3 == header->last_semicolon.buff_pos, "not the expected position for semicolon(buf_pos): %d", header->last_semicolon.buff_pos);
