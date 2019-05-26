@@ -36,6 +36,8 @@ typedef  struct {
     int buff_pos;   //position into the buffer pointed to by circ_index
 } circular_ptr_t;
 
+unsigned int circular_increment (unsigned int value, unsigned int mask);
+
 /*!
  *
  * @param buffer

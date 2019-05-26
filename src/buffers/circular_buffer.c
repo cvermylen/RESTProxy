@@ -33,8 +33,11 @@ circular_buffer_t* new_circular_buffer(unsigned int size, int fd, int (*feeder)(
     buf->size = size;
     buf->last_sent = 0;
     buf->next_to_be_received = 0;
-    buf->buffers = (int *) malloc(sizeof(int) * (pow(2, size)));
-    buf->data_sizes = (int *) malloc(sizeof(int) * (pow(2, size)));
+    buf->buffers = (int *) malloc(sizeof(int) * (int)(pow(2, size)));
+    buf->data_sizes = (int *) malloc(sizeof(int) * (int)(pow(2, size)));
+    for (int i=0; i < (int)(pow(2, size)); i++) {
+        buf->data_sizes[i] = -1;
+    }
     buf->fd = fd;
     buf->feeder = feeder;
     buf->max_size = max_size;
@@ -127,8 +130,10 @@ int feed_next_buffer (circular_buffer_t* cb, circular_ptr_t* to_last_char)
     if (result >= 0) {
         result = read_into_next_buffer (cb);
         set_data_size_for_last_received_buffer (cb, result);
-        to_last_char->circ_index = circular_decrement(cb->next_to_be_received, cb->size);
-        to_last_char->buff_pos = cb->data_sizes[to_last_char->circ_index];
+        if (result > 0) {
+            to_last_char->circ_index = circular_decrement(cb->next_to_be_received, cb->size);
+            to_last_char->buff_pos = cb->data_sizes[to_last_char->circ_index];
+        }
     }
     return result;
 }
@@ -180,7 +185,7 @@ circular_ptr_t* op_add_circ_pointers (circular_buffer_t* cb, circular_ptr_t* lhs
             curr_circ = circular_increment(curr_circ, cb->size);
             if (t_ask < cb->data_sizes[curr_circ]) {
                 lhs->circ_index = curr_circ;
-                lhs->buff_pos = t_ask;
+                lhs->buff_pos = t_ask - 1;
             }
             t_ask = t_ask - cb->data_sizes[curr_circ];
         }

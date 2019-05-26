@@ -13,9 +13,9 @@ typedef struct {
 
 	char* buff; //TODO should be eliminated and replaced by a pointer to the message
     circular_ptr_t start_of_line;
-    circular_ptr_t last_semicolon;
+    circular_ptr_t last_semicolon; // Initial value of [-1, -1], re-initialized after a new header has been processed
     circular_ptr_t cur_loc;
-    circular_ptr_t max_len;
+    circular_ptr_t max_len;  // Initial value of [-1, -1]
 
     unsigned int header_size;
 } http_header_t;

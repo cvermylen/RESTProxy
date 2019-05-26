@@ -51,7 +51,7 @@ Test (decrement, 8_to_7)
     cr_assert(7 == r, "Out of bound value should be constrained, expecting 7, not:%u", r);
 }
 
-extern unsigned int circular_increment (int value, unsigned int mask);
+extern unsigned int circular_increment (unsigned int value, unsigned int mask);
 Test (increment, zero)
 {
     unsigned int r = circular_decrement (0, 0);

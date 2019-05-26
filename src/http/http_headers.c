@@ -38,8 +38,10 @@ http_header_t* http_headers_init(circular_buffer_t* buffers) {
 
     header->cur_loc.circ_index = 0;
     header->cur_loc.buff_pos = 0;
-//    header->last_semicolon = -1;
-//    header->max_len = data_len;
+    header->last_semicolon.buff_pos = -1;
+    header->last_semicolon.circ_index = -1;
+    header->max_len.buff_pos = -1;
+    header->max_len.circ_index = -1;
     header->start_of_line.circ_index = 0;
     header->start_of_line.buff_pos = 0;
     return header;
@@ -78,32 +80,37 @@ int is_ptr_pointing_to_eol_or_eos (circular_buffer_t* cb, circular_ptr_t* ptr, c
     char* ptr_to_data = get_char_ptr_from_buffer(cb, ptr);
     int distance_to_end_of_buffer =  cb->data_sizes[ptr->circ_index] - ptr->buff_pos;
     printf("Distance:%d\n", distance_to_end_of_buffer);
-    int de_alloc = 0;
     int result;
-    -- int bytes_read = 1;
+    int eof = 0;
     if (distance_to_end_of_buffer < 2) {
-        int bytes_read = feed_next_buffer(cb, max_len);
+        int bytes_read = cb->data_sizes[circular_increment(ptr->circ_index, cb->size)];
+        if (bytes_read < 0)
+            bytes_read = feed_next_buffer(cb, max_len);
         printf("Size of data read:%d\n", bytes_read);
         if (bytes_read > 0) {
-            char first = ptr_to_data[0];
-            ptr_to_data = (char *) malloc(sizeof(char) * 3);
-            ptr_to_data[0] = first;
             circular_ptr_t *next = (circular_ptr_t *) malloc(sizeof(circular_ptr_t));
             copy_circ_pointers(next, ptr);
             op_add_circ_pointers(cb, next, 1);
-            char *second_part = get_char_ptr_from_buffer(cb, next);
+            if (distance_to_end_of_buffer == 1) {
+                char first = ptr_to_data[0];
+                char* tmp_str = (char *) malloc(sizeof(char) * 3);
+                tmp_str[0] = first;
+                char *second_part = get_char_ptr_from_buffer(cb, next);
+                tmp_str[1] = second_part[0];
+                tmp_str[2] = '\0';
+                distance_to_end_of_buffer = 2;
+                free(tmp_str);
+            } else {
+                ptr_to_data = get_char_ptr_from_buffer(cb, next);
+                distance_to_end_of_buffer = cb->data_sizes[next->circ_index] - next->buff_pos;
+            }
             free(next);
-            ptr_to_data[1] = second_part[0];
-            ptr_to_data[2] = '\0';
-            distance_to_end_of_buffer = 2;
-            de_alloc = 1;
+        } else {
+            eof = 1;
         }
     }
     result = is_eol(ptr_to_data, distance_to_end_of_buffer);
-   -- result |= (bytes_read == 0); //EOF
-    if (de_alloc) {
-        free (ptr_to_data);
-    }
+    result |= ( eof && (distance_to_end_of_buffer == 0));
     return result;
 }
 /*

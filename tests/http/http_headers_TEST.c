@@ -244,11 +244,11 @@ Test(http_headers_add, non_existing) {
 }
 
 int mock_called_feeder;
-int mock_result_feeder;
+int mock_result_feeder[100];
 int mock_feeder(int fd, char* buffer, int size)
 {
     mock_called_feeder += 1;
-    return mock_result_feeder;
+    return mock_result_feeder[mock_called_feeder-1];
 }
 extern int is_ptr_pointing_to_eol_or_eos (circular_buffer_t* cb, circular_ptr_t* ptr, circular_ptr_t* max_len);
 Test (is_ptr_pointing_to_eol_or_eos, empty_buffer)
@@ -258,8 +258,10 @@ Test (is_ptr_pointing_to_eol_or_eos, empty_buffer)
     circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 1024);
     cb->buffers[0] = 0;
     cb->data_sizes[0] = 0;
+    cb->next_to_be_received = 1;
     cb->feeder = mock_feeder;
-    mock_result_feeder = 0;
+    mock_result_feeder[0] = 0;
+    mock_called_feeder = 0;
 
     circular_ptr_t from;
     from.circ_index = 0;
@@ -272,6 +274,7 @@ Test (is_ptr_pointing_to_eol_or_eos, empty_buffer)
     int is_eol = is_ptr_pointing_to_eol_or_eos (cb, &from, &to);
 
     cr_assert (is_eol, "An empty string and no next one is an EOL. Result was:%d", is_eol);
+    cr_assert (mock_called_feeder == 1, "Feeder should have been called once, not:%d", mock_called_feeder);
 }
 
 Test (is_ptr_pointing_to_eol_or_eos, big_buffer_full_of_spaces)
@@ -281,8 +284,10 @@ Test (is_ptr_pointing_to_eol_or_eos, big_buffer_full_of_spaces)
     circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 1024);
     cb->buffers[0] = 0;
     cb->data_sizes[0] = strlen(data);
+    cb->next_to_be_received = 1;
     cb->feeder = mock_feeder;
-    mock_result_feeder = 0;
+    mock_result_feeder[0] = 0;
+    mock_called_feeder = 0;
 
     circular_ptr_t from;
     from.circ_index = 0;
@@ -295,6 +300,7 @@ Test (is_ptr_pointing_to_eol_or_eos, big_buffer_full_of_spaces)
     int is_eol = is_ptr_pointing_to_eol_or_eos (cb, &from, &to);
 
     cr_assert (!is_eol, "An empty string and no next one is an EOL. Result was:%d", is_eol);
+    cr_assert (mock_called_feeder == 0, "Feeder should should have been called, not:%d", mock_called_feeder);
 }
 
 Test (is_ptr_pointing_to_eol_or_eos, big_buffer_with_eol)
@@ -304,8 +310,10 @@ Test (is_ptr_pointing_to_eol_or_eos, big_buffer_with_eol)
     circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 1024);
     cb->buffers[0] = 0;
     cb->data_sizes[0] = strlen(data);
+    cb->next_to_be_received = 1;
     cb->feeder = mock_feeder;
-    mock_result_feeder = 0;
+    mock_result_feeder[0] = 0;
+    mock_called_feeder = 0;
 
     circular_ptr_t from;
     from.circ_index = 0;
@@ -318,6 +326,7 @@ Test (is_ptr_pointing_to_eol_or_eos, big_buffer_with_eol)
     int is_eol = is_ptr_pointing_to_eol_or_eos (cb, &from, &to);
 
     cr_assert (!is_eol, "An empty string and no next one is an EOL. Result was:%d", is_eol);
+    cr_assert (mock_called_feeder == 0, "Feeder should should have been called, not:%d", mock_called_feeder);
 }
 
 Test (is_ptr_pointing_to_eol_or_eos, buffer_size_1_with_CR_no_next_line)
@@ -327,8 +336,10 @@ Test (is_ptr_pointing_to_eol_or_eos, buffer_size_1_with_CR_no_next_line)
     circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 1024);
     cb->buffers[0] = 0;
     cb->data_sizes[0] = strlen(data);
+    cb->next_to_be_received = 1;
     cb->feeder = mock_feeder;
-    mock_result_feeder = 0;
+    mock_result_feeder[0] = 0;
+    mock_called_feeder = 0;
 
     circular_ptr_t from;
     from.circ_index = 0;
@@ -341,6 +352,7 @@ Test (is_ptr_pointing_to_eol_or_eos, buffer_size_1_with_CR_no_next_line)
     int is_eol = is_ptr_pointing_to_eol_or_eos (cb, &from, &to);
 
     cr_assert (is_eol, "An empty string and no next one is an EOL. Result was:%d", is_eol);
+    cr_assert (mock_called_feeder == 1, "Feeder should have been called once, not:%d", mock_called_feeder);
 }
 
 int mock_result_alloc_buffer;
@@ -356,7 +368,7 @@ Test (is_ptr_pointing_to_eol_or_eos, buffer_size_1_with_CR_and_next_line)
     cb->next_to_be_received = 1;
     cb->feeder = mock_feeder;
     mock_result_alloc_buffer = 1;
-    mock_result_feeder = 0;
+    mock_result_feeder[0] = 0;
     mock_called_feeder = 0;
 
     circular_ptr_t from;
@@ -381,8 +393,10 @@ Test (is_ptr_pointing_to_eol_or_eos, buffer_size_2_with_NL_CR)
     circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 1024);
     cb->buffers[0] = 0;
     cb->data_sizes[0] = 2;
+    cb->next_to_be_received = 1;
     cb->feeder = mock_feeder;
-    mock_result_feeder = 0;
+    mock_result_feeder[0] = 0;
+    mock_called_feeder = 0;
     mock_called_get_buffer = 0;
 
     circular_ptr_t from;
@@ -411,7 +425,8 @@ Test (is_ptr_pointing_to_eol_or_eos, buffer_size_1_with_NL_and_CR_on_next_buffer
     cb->next_to_be_received = 1;
     cb->feeder = mock_feeder;
     mock_result_alloc_buffer = 1;
-    mock_result_feeder = 1;
+    mock_result_feeder[0] = 1;
+    mock_result_feeder[1] = 0;
     mock_called_feeder = 0;
 
     circular_ptr_t from;
@@ -438,7 +453,7 @@ Test (is_ptr_pointing_to_eol_or_eos, buffer_size_1_with_NL_and_no_next_buffer)
     cb->next_to_be_received = 1;
     cb->feeder = mock_feeder;
     mock_result_alloc_buffer = 1;
-    mock_result_feeder = 0;
+    mock_result_feeder[0] = 0;
     mock_called_feeder = 0;
 
     circular_ptr_t from;
@@ -455,45 +470,176 @@ Test (is_ptr_pointing_to_eol_or_eos, buffer_size_1_with_NL_and_no_next_buffer)
     cr_assert (1 == mock_called_feeder, "feeder should have been called");
 }
 
+extern int mock_called_alloc_buffer;
 Test(get_next_line, semicolon_true) {
     char str[] = "key:value";
     mock_result_get_buffer[0] = str;
     circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 1024);
     cb->buffers[0] = 0;
     cb->data_sizes[0] = strlen(str);
+    cb->next_to_be_received = 1;
+    cb->feeder = mock_feeder;
+    mock_result_feeder[0] = 0;
+    mock_called_feeder = 0;
 
     http_header_t *header = http_headers_init(cb);
 
-    header->last_semicolon.circ_index = 0;
-    header->last_semicolon.buff_pos = 0;
-    header->cur_loc.circ_index = 0;
-    header->cur_loc.buff_pos = 0;
     header->max_len.circ_index = 0;
     header->max_len.buff_pos = strlen(str);
+
+    mock_called_alloc_buffer = 0;
+    mock_result_alloc_buffer = 1;
 
     get_next_line(header);
 
     cr_assert(3 == header->last_semicolon.buff_pos, "not the expected position for semicolon(buf_pos): %d", header->last_semicolon.buff_pos);
     cr_assert(0 == header->last_semicolon.circ_index, "not the expected position for semicolon(circ_index: %d", header->last_semicolon.circ_index);
+    cr_assert(1 <= mock_called_alloc_buffer, "'alloc_buffer' should have been called");
+    cr_assert (1 <= mock_called_feeder, "feeder should have been called");
 }
 
-/*Test(get_next_line, semicolon_false) {
+Test(get_next_line, semicolon_false) {
     char str[] = "keyvalue";
-    http_header_t *header = http_headers_init(0, str, strlen(str));
+    mock_result_get_buffer[0] = str;
+    circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 1024);
+    cb->buffers[0] = 0;
+    cb->data_sizes[0] = strlen(str);
+    cb->next_to_be_received = 1;
+    cb->feeder = mock_feeder;
+    mock_result_feeder[0] = 0;
+    mock_called_feeder = 0;
+
+    http_header_t *header = http_headers_init(cb);
+
+    header->max_len.circ_index = 0;
+    header->max_len.buff_pos = strlen(str);
+
+    mock_called_alloc_buffer = 0;
+    mock_result_alloc_buffer = 1;
 
     get_next_line(header);
 
-    cr_assert(-1 == header->last_semicolon, "not the expected position for semicolon: %d", header->last_semicolon);
+    cr_assert(-1 == header->last_semicolon.buff_pos, "not the expected position for semicolon: %d", header->last_semicolon.buff_pos);
+    cr_assert(-1 == header->last_semicolon.circ_index, "not the expected position for semicolon: %d", header->last_semicolon.circ_index);
+    cr_assert(1 <= mock_called_alloc_buffer, "'alloc_buffer' should have been called");
+    cr_assert (1 <= mock_called_feeder, "feeder should have been called");
+    cr_assert(0 == header->start_of_line.circ_index, "start_of_line should not have changed(circ_index): %d", header->start_of_line.circ_index);
+    cr_assert(0 == header->start_of_line.buff_pos, "start_of_line should not have changed(buff_pos): %d", header->start_of_line.buff_pos);
+    cr_assert(0 == header->cur_loc.circ_index, "end of line not as expected(circ_index): %d", header->cur_loc.circ_index);
+    cr_assert(8 == header->cur_loc.buff_pos, "end of line not as expected(buff_pos): %d", header->cur_loc.buff_pos);
+}
+
+Test(get_next_line, 2_lines_1_buffer) {
+    char str[] = "line1\nline2";
+    mock_result_get_buffer[0] = str;
+    circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 1024);
+    cb->buffers[0] = 0;
+    cb->data_sizes[0] = 11;
+    cb->next_to_be_received = 1;
+    cb->feeder = mock_feeder;
+    mock_result_feeder[0] = 0;
+    mock_called_feeder = 0;
+
+    http_header_t *header = http_headers_init(cb);
+
+    header->max_len.circ_index = 0;
+    header->max_len.buff_pos = 11;
+
+    mock_called_alloc_buffer = 0;
+    mock_result_alloc_buffer = 1;
+
+    get_next_line(header);
+    get_next_line(header);
+
+    cr_assert(0 == header->start_of_line.circ_index, "start_of_line should not have changed(circ_index): %d", header->start_of_line.circ_index);
+    cr_assert(6 == header->start_of_line.buff_pos, "start_of_line should not have changed(buff_pos): %d", header->start_of_line.buff_pos);
+    cr_assert(0 == header->cur_loc.circ_index, "end of line not as expected: %d", header->cur_loc.circ_index);
+    cr_assert(11 == header->cur_loc.buff_pos, "end of line not as expected: %d", header->cur_loc.buff_pos);
+}
+
+Test(get_next_line, 3_lines_1_buffer) {
+    char str[] = "first line\nsecond line\nthird line";
+    mock_result_get_buffer[0] = str;
+    circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 1024);
+    cb->buffers[0] = 0;
+    cb->data_sizes[0] = 33;
+    cb->next_to_be_received = 1;
+    cb->feeder = mock_feeder;
+    mock_result_feeder[0] = 0;
+    mock_called_feeder = 0;
+
+    http_header_t *header = http_headers_init(cb);
+
+    header->max_len.circ_index = 0;
+    header->max_len.buff_pos = 33;
+
+    mock_called_alloc_buffer = 0;
+    mock_result_alloc_buffer = 1;
+
+    get_next_line(header);
+    get_next_line(header);
+    get_next_line(header);
+
+    cr_assert(0 == header->start_of_line.circ_index, "start_of_line should not have changed(circ_index): %d", header->start_of_line.circ_index);
+    cr_assert(23 == header->start_of_line.buff_pos, "start_of_line should not have changed(buff_pos): %d", header->start_of_line.buff_pos);
+    cr_assert(0 == header->cur_loc.circ_index, "end of line not as expected: %d", header->cur_loc.circ_index);
+    cr_assert(33 == header->cur_loc.buff_pos, "end of line not as expected: %d", header->cur_loc.buff_pos);
+}
+
+Test(get_next_line, 2_CR_1_buffer) {
+    char str[] = "\n\nthird line";
+    mock_result_get_buffer[0] = str;
+    circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 1024);
+    cb->buffers[0] = 0;
+    cb->data_sizes[0] = 12;
+    cb->next_to_be_received = 1;
+    cb->feeder = mock_feeder;
+    mock_result_feeder[0] = 0;
+    mock_called_feeder = 0;
+
+    http_header_t *header = http_headers_init(cb);
+
+    header->max_len.circ_index = 0;
+    header->max_len.buff_pos = 12;
+
+    mock_called_alloc_buffer = 0;
+    mock_result_alloc_buffer = 1;
+
+    get_next_line(header);
+    get_next_line(header);
+    get_next_line(header);
+
+    cr_assert(0 == header->start_of_line.circ_index, "start_of_line should not have changed(circ_index): %d", header->start_of_line.circ_index);
+    cr_assert(2 == header->start_of_line.buff_pos, "start_of_line should not have changed(buff_pos): %d", header->start_of_line.buff_pos);
+    cr_assert(0 == header->cur_loc.circ_index, "end of line not as expected: %d", header->cur_loc.circ_index);
+    cr_assert(12 == header->cur_loc.buff_pos, "end of line not as expected: %d", header->cur_loc.buff_pos);
 }
 
 Test(get_next_line, special_char) {
     char str[] = "Content-Type: text/html; charset=UTF-8";
-    http_header_t *header = http_headers_init(0, str, strlen(str));
+    mock_result_get_buffer[0] = str;
+    circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 1024);
+    cb->buffers[0] = 0;
+    cb->data_sizes[0] = strlen(str);
+    cb->next_to_be_received = 1;
+    cb->feeder = mock_feeder;
+    mock_result_feeder[0] = 0;
+    mock_called_feeder = 0;
+
+    http_header_t *header = http_headers_init(cb);
+
+    header->max_len.circ_index = 0;
+    header->max_len.buff_pos = strlen(str);
+
+    mock_called_alloc_buffer = 0;
+    mock_result_alloc_buffer = 1;
 
     get_next_line(header);
-    http_headers_add(header);
 
-    cr_assert(12 == header->last_semicolon, "not the expected position for semicolon: %d", header->last_semicolon);
+    cr_assert(12 == header->last_semicolon.buff_pos, "not the expected position for semicolon: %d", header->last_semicolon.buff_pos);
+    cr_assert(0 == header->last_semicolon.circ_index, "not the expected position for semicolon: %d", header->last_semicolon.circ_index);
+    cr_assert(1 <= mock_called_alloc_buffer, "'alloc_buffer' should have been called");
+    cr_assert (1 <= mock_called_feeder, "feeder should have been called");
 }
 
 //TODO write get_next_line with line split over 2, 3 reads from socket
@@ -501,18 +647,230 @@ Test(get_next_line, read_from_socket)
 {
     char str1[] = " charset=UTF-8";
     char str2[] = "Content-Type: text/html;";
-    mock_socket_connect_stack_to_fd(1);
-    mock_socket_push_buffer(1, str1);
-    http_header_t *header = http_headers_init(0, str2, strlen(str2));
+    mock_result_get_buffer[0] = str2;
+    mock_result_get_buffer[1] = str1;
+    circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 1024);
+    cb->buffers[0] = 0;
+    cb->data_sizes[0] = strlen(str2);
+    cb->next_to_be_received = 1;
+    cb->feeder = mock_feeder;
+    mock_result_alloc_buffer = 1;
+    mock_result_feeder[0] = strlen(str1);
+    mock_result_feeder[1] = 0;
+    mock_called_feeder = 0;
+    http_header_t *header = http_headers_init(cb);
+
+    header->max_len.circ_index = 0;
+    header->max_len.buff_pos = strlen(str2);
+
+    mock_called_alloc_buffer = 0;
 
     get_next_line(header);
 
-    cr_assert(0, "FAIL");
+    cr_assert(12 == header->last_semicolon.buff_pos, "not the expected position for semicolon: %d", header->last_semicolon.buff_pos);
+    cr_assert(0 == header->last_semicolon.circ_index, "not the expected position for semicolon: %d", header->last_semicolon.circ_index);
+    cr_assert(1 <= mock_called_alloc_buffer, "'alloc_buffer' should have been called");
+    cr_assert (1 <= mock_called_feeder, "feeder should have been called");
 }
 
-Test(get_next_line, line_spread_over_3_reads)
+Test(get_next_line, split_header)
 {
-    cr_assert(0, "FAIL");
+    char str1[] = "ype: text/html; charset=UTF-8";
+    char str2[] = "Content-T";
+    mock_result_get_buffer[0] = str2;
+    mock_result_get_buffer[1] = str1;
+    circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 1024);
+    cb->buffers[0] = 0;
+    cb->data_sizes[0] = strlen(str2);
+    cb->next_to_be_received = 1;
+    cb->feeder = mock_feeder;
+
+    mock_result_feeder[0] = strlen(str1);
+    mock_result_feeder[1] = 0;
+    mock_called_feeder = 0;
+    http_header_t *header = http_headers_init(cb);
+
+    header->max_len.circ_index = 0;
+    header->max_len.buff_pos = strlen(str2);
+
+    mock_called_alloc_buffer = 0;
+
+    get_next_line(header);
+
+    cr_assert(3 == header->last_semicolon.buff_pos, "not the expected position for semicolon.buff_pos: %d", header->last_semicolon.buff_pos);
+    cr_assert(1 == header->last_semicolon.circ_index, "not the expected position for semicolon.circ_index: %d", header->last_semicolon.circ_index);
+    cr_assert(1 <= mock_called_alloc_buffer, "'alloc_buffer' should have been called");
+    cr_assert (1 <= mock_called_feeder, "feeder should have been called");
+}
+
+Test(get_next_line, 3_lines_read)
+{
+    char str1[] = " charset=UTF-8\nAccept-Language:value1";
+    char str2[] = "ype: text/html;";
+    char str3[] = "Content-T";
+    mock_result_get_buffer[0] = str3;
+    mock_result_get_buffer[1] = str2;
+    mock_result_get_buffer[2] = str1;
+    circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 1024);
+    cb->buffers[0] = 0;
+    cb->data_sizes[0] = strlen(str3);
+    cb->next_to_be_received = 1;
+    cb->feeder = mock_feeder;
+
+    mock_result_feeder[0] = strlen(str2);
+    mock_result_feeder[1] = strlen(str1);
+    mock_result_feeder[2] = 0;
+    mock_called_feeder = 0;
+    http_header_t *header = http_headers_init(cb);
+
+    header->max_len.circ_index = 0;
+    header->max_len.buff_pos = strlen(str3);
+
+    mock_called_alloc_buffer = 0;
+
+    get_next_line(header);
+
+    cr_assert(3 == header->last_semicolon.buff_pos, "not the expected position for semicolon.buff_pos: %d", header->last_semicolon.buff_pos);
+    cr_assert(1 == header->last_semicolon.circ_index, "not the expected position for semicolon.circ_index: %d", header->last_semicolon.circ_index);
+    cr_assert(1 <= mock_called_alloc_buffer, "'alloc_buffer' should have been called");
+    cr_assert (1 <= mock_called_feeder, "feeder should have been called");
+    cr_assert(2 == header->cur_loc.circ_index, "Expected 'curr_loc.circ_index' to be 2, not:%d", header->cur_loc.circ_index);
+    cr_assert(14 == header->cur_loc.buff_pos, "Expected 'curr_loc.buff_pos' to be 14, not:%d", header->cur_loc.buff_pos);
+}
+
+Test(header_strlen, 1_line) {
+    char str[] = "a line";
+    mock_result_get_buffer[0] = str;
+    circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 1024);
+    cb->buffers[0] = 0;
+    cb->data_sizes[0] = strlen(str);
+    cb->next_to_be_received = 1;
+    cb->feeder = mock_feeder;
+    mock_result_feeder[0] = 0;
+    mock_called_feeder = 0;
+
+    http_header_t *header = http_headers_init(cb);
+
+    mock_called_alloc_buffer = 0;
+    mock_result_alloc_buffer = 1;
+
+    get_next_line(header);
+
+    int i = header_strlen(header);
+    cr_assert(6 == i, "Not the expected length: %d", i);
+}
+
+Test(header_strlen, 1_line_cr) {
+    char str[] = "a line\n";
+    mock_result_get_buffer[0] = str;
+    circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 1024);
+    cb->buffers[0] = 0;
+    cb->data_sizes[0] = 7;
+    cb->next_to_be_received = 1;
+    cb->feeder = mock_feeder;
+    mock_result_feeder[0] = 0;
+    mock_called_feeder = 0;
+
+    http_header_t *header = http_headers_init(cb);
+
+    mock_called_alloc_buffer = 0;
+    mock_result_alloc_buffer = 1;
+
+    get_next_line(header);
+
+    int i = header_strlen(header);
+    cr_assert(6 == i, "Not the expected length: %d", i);
+}
+
+Test(header_strlen, 1_line_cr_2) {
+    char str[] = {'a', ' ', 'l', 'i', 'n', 'e', 0x0A, 0x0D};
+    mock_result_get_buffer[0] = str;
+    circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 1024);
+    cb->buffers[0] = 0;
+    cb->data_sizes[0] = 7;
+    cb->next_to_be_received = 1;
+    cb->feeder = mock_feeder;
+    mock_result_feeder[0] = 0;
+    mock_called_feeder = 0;
+
+    http_header_t *header = http_headers_init(cb);
+
+    mock_called_alloc_buffer = 0;
+    mock_result_alloc_buffer = 1;
+
+    get_next_line(header);
+
+    int i = header_strlen(header);
+    cr_assert(6 == i, "Not the expected length: %d", i);
+}
+
+Test(header_strlen, 2_line_cr) {
+    char str[] = "a line\nsecond line";
+    mock_result_get_buffer[0] = str;
+    circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 1024);
+    cb->buffers[0] = 0;
+    cb->data_sizes[0] = 18;
+    cb->next_to_be_received = 1;
+    cb->feeder = mock_feeder;
+    mock_result_feeder[0] = 0;
+    mock_called_feeder = 0;
+
+    http_header_t *header = http_headers_init(cb);
+
+    mock_called_alloc_buffer = 0;
+    mock_result_alloc_buffer = 1;
+
+    get_next_line(header);
+    get_next_line(header);
+
+    int i = header_strlen(header);
+    cr_assert(11 == i, "Not the expected length: %d", i);
+}
+
+Test(header_strlen, 2_line_cr_2) {
+    char str[] = {'a', ' ', 'l', 'i', 'n', 'e', 0x0A, 0x0D, 's', 'e', 'c', 'o', 'n', 'd', ' ', 'l', 'i', 'n', 'e'};
+    mock_result_get_buffer[0] = str;
+    circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 1024);
+    cb->buffers[0] = 0;
+    cb->data_sizes[0] = 19;
+    cb->next_to_be_received = 1;
+    cb->feeder = mock_feeder;
+    mock_result_feeder[0] = 0;
+    mock_called_feeder = 0;
+
+    http_header_t *header = http_headers_init(cb);
+
+    mock_called_alloc_buffer = 0;
+    mock_result_alloc_buffer = 1;
+
+    get_next_line(header);
+    get_next_line(header);
+
+    int i = header_strlen(header);
+    cr_assert(11 == i, "Not the expected length: %d", i);
+}
+
+/*Test(header_strlen, empty) {
+    char str[] = "a line\n\nsecond line";
+    http_header_t *header = http_headers_init(0, str, strlen(str));
+
+    get_next_line(header);
+    get_next_line(header);
+
+    int i = header_strlen(header);
+    cr_assert(0 == i, "Not the expected length: %d", i);
+}
+
+Test(header_strlen, empty_2) {
+    char str[] = {'a', ' ', 'l', 'i', 'n', 'e', 0x0A, 0x0D, 0x0A, 0x0D, 's', 'e', 'c', 'o', 'n', 'd', ' ', 'l', 'i',
+                  'n', 'e'};
+    http_header_t *header = http_headers_init(0, str, strlen(str));
+
+    get_next_line(header);
+    get_next_line(header);
+
+    int i = header_strlen(header);
+    cr_assert(0 == i, "Not the expected length: %d", i);
 }
 
 Test(str2int, happy) {
@@ -573,122 +931,6 @@ Test(decode_http_headers, happy_1) {
     size = stack_depth(header->headers[57]);
     cr_assert(1 == size, "expected 'Server' in headers");
 }
-
-Test(get_next_line, 1_line) {
-    http_header_t *header = http_headers_init(0, "1_line, a single line", strlen("1_line, a single line"));
-
-    get_next_line(header);
-
-    cr_assert(0 == header->start_of_line, "start_of_line should not have changed: %d", header->start_of_line);
-    cr_assert(21 == header->cur_loc, "end of line not as expected: %d", header->cur_loc);
-}
-
-Test(get_next_line, 2_line) {
-    http_header_t *header = http_headers_init(0, "line1\nline2", strlen("line1\nline2"));
-
-    get_next_line(header);
-    get_next_line(header);
-
-    cr_assert(6 == header->start_of_line, "start_of_line should not have changed: %d", header->start_of_line);
-    cr_assert(11 == header->cur_loc, "end of line not as expected: %d", header->cur_loc);
-}
-
-Test(get_next_line, last_line) {
-    http_header_t *header = http_headers_init(0, "a single line", strlen("a single line"));
-
-    get_next_line(header);
-    get_next_line(header);
-
-    cr_assert(13 == header->cur_loc, "cur_loc should point after the last caracter, not:%d", header->cur_loc);
-    cr_assert(13 == header->start_of_line, "start_of_line should point after the last caracter, not:%d",
-              header->start_of_line);
-
-}
-
-Test(get_next_line, 3_lines) {
-    http_header_t *header = http_headers_init(0, "first line\nsecond line\nthird line",
-                                              strlen("first line\nsecond line\nthird line"));
-
-    get_next_line(header);
-    get_next_line(header);
-    get_next_line(header);
-
-    cr_assert(33 == header->cur_loc, "expcted end of third line at 33, not %d", header->cur_loc);
-    cr_assert(23 == header->start_of_line, "expcted end of third line at 33, not %d", header->start_of_line);
-}
-
-Test(strlen, 1_line) {
-    http_header_t *header = http_headers_init(0, "a line", strlen("a line"));
-
-    get_next_line(header);
-
-    int i = header_strlen(header);
-    cr_assert(6 == i, "Not the expected length: %d", i);
-}
-
-Test(strlen, 1_line_cr) {
-    http_header_t *header = http_headers_init(0, "a line\n", strlen("a line\n"));
-
-    get_next_line(header);
-
-    int i = header_strlen(header);
-    cr_assert(6 == i, "Not the expected length: %d", i);
-}
-
-Test(strlen, 1_line_cr_2) {
-    char str[] = {'a', ' ', 'l', 'i', 'n', 'e', 0x0A, 0x0D};
-    http_header_t *header = http_headers_init(0, str, strlen(str));
-
-    get_next_line(header);
-
-    int i = header_strlen(header);
-    cr_assert(6 == i, "Not the expected length: %d", i);
-}
-
-Test(strlen, 2_line_cr) {
-    http_header_t *header = http_headers_init(0, "a line\nsecond line", strlen("a line\nsecond line"));
-
-    get_next_line(header);
-    get_next_line(header);
-
-    int i = header_strlen(header);
-    cr_assert(11 == i, "Not the expected length: %d", i);
-}
-
-Test(strlen, 2_line_cr_2) {
-    char str[] = {'a', ' ', 'l', 'i', 'n', 'e', 0x0A, 0x0D, 's', 'e', 'c', 'o', 'n', 'd', ' ', 'l', 'i', 'n', 'e'};
-    http_header_t *header = http_headers_init(0, str, strlen(str));
-
-    get_next_line(header);
-    get_next_line(header);
-
-    int i = header_strlen(header);
-    cr_assert(11 == i, "Not the expected length: %d", i);
-}
-
-Test(strlen, empty) {
-    char str[] = "a line\n\nsecond line";
-    http_header_t *header = http_headers_init(0, str, strlen(str));
-
-    get_next_line(header);
-    get_next_line(header);
-
-    int i = header_strlen(header);
-    cr_assert(0 == i, "Not the expected length: %d", i);
-}
-
-Test(strlen, empty_2) {
-    char str[] = {'a', ' ', 'l', 'i', 'n', 'e', 0x0A, 0x0D, 0x0A, 0x0D, 's', 'e', 'c', 'o', 'n', 'd', ' ', 'l', 'i',
-                  'n', 'e'};
-    http_header_t *header = http_headers_init(0, str, strlen(str));
-
-    get_next_line(header);
-    get_next_line(header);
-
-    int i = header_strlen(header);
-    cr_assert(0 == i, "Not the expected length: %d", i);
-}
-
 Test(http_headers, get_empty) {
     http_header_t *header = http_headers_init(0, NULL, 0);
 
