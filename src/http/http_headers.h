@@ -62,7 +62,7 @@ int find_header_index(const char* key);
 
 int header_strlen(http_header_t* header);
 
-int str2int(char* value, int field_length);
+int str2int(const char* value, int field_length);
 
 char* http_headers_to_string(http_header_t* hdr);
 

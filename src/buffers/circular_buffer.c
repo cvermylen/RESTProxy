@@ -34,6 +34,9 @@ circular_buffer_t* new_circular_buffer(unsigned int size, int fd, int (*feeder)(
     buf->last_sent = 0;
     buf->next_to_be_received = 0;
     buf->buffers = (int *) malloc(sizeof(int) * (int)(pow(2, size)));
+    for (int i=0; i < (int)(pow(2, size)); i++) {
+        buf->buffers[i] = -1;
+    }
     buf->data_sizes = (int *) malloc(sizeof(int) * (int)(pow(2, size)));
     for (int i=0; i < (int)(pow(2, size)); i++) {
         buf->data_sizes[i] = -1;
@@ -240,8 +243,10 @@ int cmp_circular_ptr (circular_buffer_t* cb, circular_ptr_t* lhs, circular_ptr_t
     return result;
 }
 
+static int starcount =0;
 char* buffer_2_str_copy (circular_buffer_t* cb, circular_ptr_t* start, circular_ptr_t* end)
 {
+    printf("###DEBUG###  %d", starcount++);
     int length = op_distance_circ_pointers(cb, start, end);
     char* result = (char*) malloc(sizeof (char) * (length +1));
     int dest_start = 0;
@@ -251,7 +256,7 @@ char* buffer_2_str_copy (circular_buffer_t* cb, circular_ptr_t* start, circular_
         dest_start += cb->data_sizes[i] - src_start;
         src_start = 0;
     }
-    strncpy(&(result[dest_start]), &(get_buffer(cb->buffers[end->circ_index])[src_start]), end->buff_pos);
+    strncpy(&(result[dest_start]), &(get_buffer(cb->buffers[end->circ_index])[src_start]), end->buff_pos- src_start);
     result[length] = '\0';
     return result;
 }

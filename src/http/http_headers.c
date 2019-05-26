@@ -8,10 +8,10 @@
 #include <math.h>
 #include <stdio.h>
 
-int str2int(char *value, int field_length) {
+int str2int(const char *value, int field_length) {
     int res = 0;
     int exp = field_length - 1;
-    for (int i = 0; i < field_length; res += (pow(10, exp--)) * (value[i] - 48), i++);
+    for (int i = 0; i < field_length; res += ((int)pow(10, exp--)) * (value[i] - 48), i++);
     return res;
 }
 
@@ -40,8 +40,8 @@ http_header_t* http_headers_init(circular_buffer_t* buffers) {
     header->cur_loc.buff_pos = 0;
     header->last_semicolon.buff_pos = -1;
     header->last_semicolon.circ_index = -1;
-    header->max_len.buff_pos = -1;
-    header->max_len.circ_index = -1;
+    header->max_len.buff_pos = 0;
+    header->max_len.circ_index = 0;
     header->start_of_line.circ_index = 0;
     header->start_of_line.buff_pos = 0;
     return header;
@@ -130,14 +130,14 @@ http_header_t* get_next_line (http_header_t* header)
 {
 
     printf("get_next_line1, cur_loc:[%d-%d], max_len:[%d-%d]\n", header->cur_loc.circ_index, header->cur_loc.buff_pos, header->max_len.circ_index, header->max_len.buff_pos);
-    skip_eol_if_present(header);
-    printf("get_next_line2, cur_loc:[%d-%d], max_len:[%d-%d]\n", header->cur_loc.circ_index, header->cur_loc.buff_pos, header->max_len.circ_index, header->max_len.buff_pos);
-    if (cmp_ptr_to_last_received(header->buffers, &(header->cur_loc)) >= 0) {
+    if (is_empty_circular_buffer(header->buffers) || (cmp_ptr_to_last_received(header->buffers, &(header->cur_loc)) >= 0)) {
         printf("Read from socket\n");
         feed_next_buffer(header->buffers, &(header->max_len));
 //        int sz = read_from_socket(header->fd, &(header->buff[header->max_len]), TX_BUFFER_SIZE);
         printf("New max_len:[%d-%d]\n", header->max_len.circ_index, header->max_len.buff_pos);
     }
+    skip_eol_if_present(header);
+    printf("get_next_line2, cur_loc:[%d-%d], max_len:[%d-%d]\n", header->cur_loc.circ_index, header->cur_loc.buff_pos, header->max_len.circ_index, header->max_len.buff_pos);
     while (!is_ptr_pointing_to_eol_or_eos (header->buffers, &(header->cur_loc), &(header->max_len))) {
         if (get_char_ptr_from_buffer(header->buffers, &(header->cur_loc))[0] == ':')
             copy_circ_pointers (&(header->last_semicolon), &(header->cur_loc));
@@ -188,6 +188,7 @@ void http_headers_add(http_header_t* hdr)
     char *value = NULL;
     if (index >= 0) {
         value = http_headers_get_header_value(hdr);
+        printf("Will push value:%s\n", value);
         str_stack_push(hdr->headers[index], value);
         printf("pushing:%d---%s\n", index, value);
         printf("========\n");
