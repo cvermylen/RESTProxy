@@ -7,6 +7,8 @@ int mock_called_alloc_buffer;
 int mock_result_alloc_buffer;
 int alloc_buffer()
 {
+    if (mock_result_alloc_buffer != 0)
+        return mock_result_alloc_buffer;
     mock_called_alloc_buffer += 1;
     return mock_called_alloc_buffer;
 }

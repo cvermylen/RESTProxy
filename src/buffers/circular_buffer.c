@@ -173,26 +173,19 @@ int op_distance_circ_pointers(circular_buffer_t *cb, circular_ptr_t *lhs, circul
 
 circular_ptr_t* op_add_circ_pointers (circular_buffer_t* cb, circular_ptr_t* lhs, int ask)
 {
-    if (lhs->buff_pos + ask <= cb->data_sizes[lhs->circ_index]) {
-        lhs->buff_pos += ask;
-    } else {
-        int curr_circ = lhs->circ_index;
-        int t_ask = ask - (cb->data_sizes[curr_circ] - lhs->buff_pos);
-        while (t_ask >= 0) {
-            if (circular_increment(curr_circ, cb->size) == cb->next_to_be_received) {
-                //TODO: REFACTOR, as we don't necessary need this pointer.
-                circular_ptr_t* raw_ptr = (circular_ptr_t*) malloc (sizeof(circular_ptr_t));
-                feed_next_buffer(cb, raw_ptr);
-                free (raw_ptr);
-            }
-            curr_circ = circular_increment(curr_circ, cb->size);
-            if (t_ask < cb->data_sizes[curr_circ]) {
-                lhs->circ_index = curr_circ;
-                lhs->buff_pos = t_ask - 1;
-            }
-            t_ask = t_ask - cb->data_sizes[curr_circ];
+    int remainder = ask + lhs->buff_pos;
+    int idx = lhs->circ_index;
+    while ((remainder = remainder - cb->data_sizes[idx]) > 0) {
+        if (circular_increment(idx, cb->size) == cb->next_to_be_received) {
+            //TODO: REFACTOR, as we don't necessary need this pointer.
+            circular_ptr_t* raw_ptr = (circular_ptr_t*) malloc (sizeof(circular_ptr_t));
+            feed_next_buffer(cb, raw_ptr);
+            free (raw_ptr);
         }
+        idx = circular_increment(idx, cb->size);
     }
+    lhs->buff_pos = remainder + cb->data_sizes[idx];
+    lhs->circ_index = idx;
     return lhs;
 }
 

@@ -441,14 +441,10 @@ Test(circular_ptr, add_inside_one_buffer_no_exceed_limit)
 
 Test(circular_ptr, add_overlap_one_buffer_no_load)
 {
-    circular_buffer_t* cb = (circular_buffer_t*) malloc (sizeof(circular_buffer_t));
-    cb->size = 3;
-    cb->data_sizes = (int*) malloc (sizeof(int) * 8);
-    cb->buffers = (int*) malloc (sizeof(int) * 8);
+    circular_buffer_t* cb = new_circular_buffer(3, 0, mock_feeder, 1024);
     cb->data_sizes[0] = 10;
     cb->data_sizes[1] = 20;
     cb->next_to_be_received = 2;
-    cb->feeder = mock_feeder;
     mock_called_feeder = 0;
     mock_result_feeder = 5;
     mock_result_alloc_buffer = 10;
@@ -493,12 +489,11 @@ Test(circular_ptr, add_overlap_one_buffer_load)
     cr_assert(1 == mock_called_feeder, "'feeder' supposed to be called once, %d", mock_called_feeder);
 }
 
-Test(circular_ptr, add_overlap_3_buffers_load)
-{
-    circular_buffer_t* cb = (circular_buffer_t*) malloc (sizeof(circular_buffer_t));
+Test(circular_ptr, add_overlap_3_buffers_load) {
+    circular_buffer_t *cb = (circular_buffer_t *) malloc(sizeof(circular_buffer_t));
     cb->size = 3;
-    cb->data_sizes = (int*) malloc (sizeof(int) * 8);
-    cb->buffers = (int*) malloc (sizeof(int) * 8);
+    cb->data_sizes = (int *) malloc(sizeof(int) * 8);
+    cb->buffers = (int *) malloc(sizeof(int) * 8);
     cb->data_sizes[0] = 6;
     cb->next_to_be_received = 1;
     cb->feeder = mock_feeder;
@@ -511,7 +506,7 @@ Test(circular_ptr, add_overlap_3_buffers_load)
     from.circ_index = 0;
     from.buff_pos = 5;
 
-    circular_ptr_t* result = op_add_circ_pointers(cb, &from, 18);
+    circular_ptr_t *result = op_add_circ_pointers(cb, &from, 18);
     cr_assert(4 == from.circ_index, "'circ_index' not supposed to have changed in 'from':%d", from.circ_index);
     cr_assert(from.circ_index == result->circ_index, "'circ_index' not supposed to be different:%d", from.circ_index);
     cr_assert(2 == from.buff_pos, "'buff_pos' not as expected (8) instead of:%d", result->buff_pos);
@@ -799,6 +794,7 @@ Test(cmp_ptr_to_last_received, less_with_rotation)
     cr_assert(0 > res, "ptr should point to the last character received, result is:%d", res);
 }
 
+extern int mock_called_get_buffer;
 Test(buffer_2_str_copy, empty)
 {
     circular_buffer_t* cb = (circular_buffer_t*) malloc (sizeof(circular_buffer_t));
@@ -806,6 +802,7 @@ Test(buffer_2_str_copy, empty)
 
     char empty_buffer[] = "     ";
     mock_result_get_buffer[2] = empty_buffer;
+    mock_called_get_buffer = 0;
 
     circular_ptr_t start;
     start.circ_index = 2;
@@ -818,6 +815,7 @@ Test(buffer_2_str_copy, empty)
     char* result = buffer_2_str_copy (cb, &start, &end);
 
     cr_assert(0L == strlen(result), "Empty string, not of size:%lu", strlen(result));
+    cr_assert(1 == mock_called_get_buffer, "'get_buffer' should have been called 1, not:%d", mock_called_get_buffer);
     cr_assert(2 == mock_param1_get_buffer, "Should have called on buffer 2, not:%d", mock_param1_get_buffer);
 }
 
