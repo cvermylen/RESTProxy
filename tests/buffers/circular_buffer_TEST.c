@@ -984,7 +984,6 @@ Test(feed_next_buffer, happy_path)
 
     int res = feed_next_buffer(cb, &ptr);
 
-    cr_assert(1 == mock_called_alloc_buffer, "'alloc_buffer' should have been called, calls:%d", mock_called_alloc_buffer);
     cr_assert(1 == mock_called_get_buffer, "'get_buffer' should have been called, calls:%d", mock_called_get_buffer);
     cr_assert(4 == ptr.circ_index, "new 'circ_index' expected to be 4, not:%d", ptr.circ_index);
     cr_assert(strlen("MyString") == ptr.buff_pos, "new 'buff_pos' expected to be %lu, not:%d", strlen("MyString"), ptr.buff_pos);
