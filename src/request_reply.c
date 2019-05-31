@@ -85,7 +85,7 @@ request_t* receive_new_request (const ri_connection_t *conn)
     request->http_message = receive_new_http_message(conn->fd, conn->feeder, TX_BUFFER_SIZE);
     request->type = http_message_decode_request_type (request->http_message);
     read_next_buffer_from_source(request->http_message);
-    decode_http_message_header(conn->fd, request->http_message);
+    decode_http_message_header(request->http_message);
 }
 
 void accept_reply_from_server(reply_t *reply, int (*feeder)(int fd, char* buffer, int buffer_size)) {
@@ -95,7 +95,7 @@ void accept_reply_from_server(reply_t *reply, int (*feeder)(int fd, char* buffer
 
 void receive_reply(reply_t *reply, int (*feeder)(int fd, char* buffer, int buffer_size)) {
     accept_reply_from_server(reply, feeder);
-    decode_http_message_header(reply->content.sock->fd, reply->response_message);
+    decode_http_message_header(reply->response_message);
     printf("Body length:%d\n", reply->response_message->body_length);
     http_message_receive_body(reply->response_message);
     printf("Body received\n");
@@ -174,7 +174,7 @@ void forward_message_to_all_servers(request_t *request) {
 }
 
 void decode_request_message_header(request_t *request) {
-    decode_http_message_header(request->in_response.sock_fd, request->http_message);
+    decode_http_message_header(request->http_message);
 }
 
 void process_request_message_body(request_t *request) {

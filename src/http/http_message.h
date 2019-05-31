@@ -49,19 +49,19 @@ int http_message_decode_response_type(http_message_t* msg);
 
 int read_next_buffer_from_source (http_message_t* msg);
 
-int get_line_length(char* buffer);
-
-int read_from_buffer(int fd, http_message_t* msg, int start_index);
-
+/*! Frees all resources allocated to this message
+ * @param msg
+ */
 void http_message_free(http_message_t* msg);
 
-void decode_http_message_header(int fd, http_message_t* msg);
+/*! Initiate the reading and decoding of the HTTP HEADERs.
+ * i.e. the message body length will be available after this call.
+ * @param fd
+ * @param msg
+ */
+void decode_http_message_header(http_message_t* msg);
 
 void http_message_receive_body(http_message_t *msg);
-
-void decode_http_message(http_message_t* msg);
-
-http_message_t* parse(char* raw_message, const int message_length);
 
 void send_next_buffer_to_destination (http_message_t* msg, char move_pointer, int destination_fd);
 #endif

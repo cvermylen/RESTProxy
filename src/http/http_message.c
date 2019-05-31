@@ -61,7 +61,7 @@ int http_message_decode_response_type(http_message_t* msg)
     return http_decode_response_type(get_last_received_buffer(msg->buffers), get_last_received_size(msg->buffers));
 }
 
-void decode_http_message_header(int fd, http_message_t *msg) {
+void decode_http_message_header(http_message_t *msg) {
     msg->status = HTTP_MSG_STATUS_HEADER;
     decode_http_headers(msg->header);
     msg->raw_message_length = msg->header->header_size;
