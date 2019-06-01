@@ -18,9 +18,9 @@ typedef struct {
     int (*feeder)(int fd, char* buffer, int buffer_size); //Message coming from, maybe could be replaced with a callback that would take as parameter the buffer and the max size.
 	char status;  //See #defines above
 	circular_buffer_t* buffers;
-	int raw_message_length;
+	int raw_message_length;  //Total size of the http message, including the first line, the header and the body
 	http_header_t* header;
-	int body_length;
+	int body_length;   //Size of the http body part, as indicated by the header field 'body-length'
 } http_message_t;
 
 /*!
