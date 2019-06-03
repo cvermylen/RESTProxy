@@ -27,7 +27,7 @@ unsigned int circular_decrement (int value, unsigned int mask)
     return (value -1) & (((int)pow(2, mask)) -1);
 }
 
-circular_buffer_t* new_circular_buffer(unsigned int size, int fd, int (*feeder)(int fd, char* buffer, int buffer_size), int max_size)
+circular_buffer_t* new_circular_buffer(unsigned int size, int (*feed_data) (void* conn_params, char* dest_buffer, int max_buffer_size), void* conn_params, int max_buffer_size)
 {
     circular_buffer_t* buf = (circular_buffer_t*) malloc (sizeof(circular_buffer_t));
     buf->size = size;
@@ -41,9 +41,9 @@ circular_buffer_t* new_circular_buffer(unsigned int size, int fd, int (*feeder)(
     for (int i=0; i < (int)(pow(2, size)); i++) {
         buf->data_sizes[i] = -1;
     }
-    buf->fd = fd;
-    buf->feeder = feeder;
-    buf->max_size = max_size;
+    buf->feed_data = feed_data;
+    buf->conn_params = conn_params;
+    buf->max_size = max_buffer_size;
     return buf;
 }
 
@@ -119,7 +119,7 @@ int alloc_entry_in_circular_buffer (circular_buffer_t* buffer)
 int read_into_next_buffer(circular_buffer_t *buffer)
 {
     char* dest = get_buffer(buffer->buffers[circular_decrement(buffer->next_to_be_received, buffer->size)]);
-    return buffer->feeder (buffer->fd, dest, buffer->max_size);
+    return buffer->feed_data (buffer->conn_params, dest, buffer->max_size);
 }
 
 void set_data_size_for_last_received_buffer (circular_buffer_t* buffer, int length)

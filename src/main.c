@@ -33,5 +33,5 @@ int main(int argc, char* argv[])
 	init_shared_buffers();
 	primary_route = create_default_route(8080, "router_test_file.txt", "router_test_file2.txt");
 	signal(SIGINT, close_route);
-	start_in_listener(primary_route);
+    start_route(primary_route);
 }

@@ -54,8 +54,6 @@ stack_head_t* http_headers_get(http_header_t* hdr, const int prop_key);
 
 void http_headers_add(http_header_t* hdr);
 
-void decode_http_headers_init(http_header_t* header, int fd, char* buffer, int sata_len);
-
 void decode_http_headers(http_header_t* hdr);
 
 int find_header_index(const char* key);

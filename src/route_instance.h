@@ -12,9 +12,14 @@ typedef struct {
 } ri_workflow_connector_t;
 
 typedef struct {
-        int type;
-	pthread_t pthread;
-        union {
+    int type;
+	pthread_t pthread;  // ?????????????
+	void* connection_params;
+    int (*open_connection) (ri_sock_connector_t* conn_params);
+    int (*feed_data) (ri_sock_connector_t* conn_params, char* dest_buffer, int max_buffer_size);
+    int (*close_connection) (ri_sock_connector_t* conn_params);
+    //REFACTOR: remove the union
+	        union {
                 ri_sock_connector_t *sock;
                 ri_file_connector_t *file;
         } content;
@@ -25,14 +30,25 @@ typedef struct {
 } ri_response_t;
 
 typedef struct {
-        int type;
-        int flow;
+    int type;
+    int flow;
+    void* connection_params;
+    int (*open_connection) (ri_sock_connector_t* conn_params);
+    int (*send_data) (ri_sock_connector_t* conn_params, char* dest_buffer, int max_buffer_size);
+    int (*receive_data) (ri_sock_connector_t* conn_params, char* dest_buffer, int max_buffer_size);
+    int (*close_connection) (ri_sock_connector_t* conn_params);
+
+    /////////////////////////////////////
+
+    //REFACTOR: remove
         union {
                 ri_sock_connector_t *sock;
                 ri_file_connector_t *file;
                 ri_workflow_connector_t *workflow;
         } content;
+        //REFACTOR: remove
 	void (*response_callback)(void* ri_response);
+	////////////////////////////////
 } ri_out_connector_t;
 
 typedef struct {
@@ -58,6 +74,6 @@ ri_out_connector_t *create_runtime_out_file_connector(const int flow, const char
  */
 void release_runtime_route(ri_route_t *route);
 
-void start_in_listener(ri_route_t* route);
+void start_route(ri_route_t *route);
 
 #endif

@@ -12,23 +12,6 @@
 
 int program_should_continue = 1;
 
-void *socket_connector(void *param) {
-    ri_route_t *route = (ri_route_t *) param;
-//    connections_stack = stack_init();
-    printf("socket_connector\n");
-    pthread_t thread;
-    do {
-        ri_connection_t *cli = wait_4_connection_request(route);
-        if (cli->fd > 0) {
-//            stack_push(connections_stack, cli);
-            printf("%d\n", cli->fd);
-            cli->feeder = read_from_socket;
-            int rc = pthread_create(&thread, NULL, receive_and_process_data_from_client, (void *) cli);
-        }
-    } while (program_should_continue);
-    printf("END SOCKET CONNECTOR\n");
-    return NULL;
-}
 
 void close_connections(ri_route_t *route) {
     printf("Close connection\n");
@@ -47,7 +30,11 @@ ri_out_connector_t* create_runtime_out_sock_connector(const int flow, const char
 	ri_out_connector_t* conn = (ri_out_connector_t*)malloc(sizeof(ri_out_connector_t));
 	conn->type = TYPE_SOCKET;
 	conn->flow = flow;
-	conn->content.sock = res;
+	conn->connection_params = res;
+	conn->open_connection = open_socket_connector;
+	conn->send_data = sock_write;
+    conn->receive_data = read_from_socket;
+    conn->close_connection = close_socket;
 	if(flow == FLOW_BIDIRECTIONAL) {
 		conn->response_callback = reply_to_client;
 	}
@@ -60,13 +47,18 @@ printf("create_runtime_file_connector\n");
 	ri_file_connector_t * res = (ri_file_connector_t*)malloc(sizeof(ri_file_connector_t));
 	res->filename = (char*)malloc((strlen(filename) + 1) * sizeof(char));
 	strcpy(res->filename, filename);
-	res->file = fopen(res->filename, "w");
+
 	res->output_callback = file_writer;
 
 	ri_out_connector_t* conn = (ri_out_connector_t*)malloc(sizeof(ri_out_connector_t));
+    conn->connection_params = res;
 	conn->type = TYPE_FILE;
 	conn->flow = flow;
-	conn->content.file = res;
+	conn->open_connection = open_file;
+	conn->send_data = file_writer;
+	conn->receive_data = file_reader;
+	conn->close_connection = close_file;
+	//REFACTOR: Handling of the strategy should not be handled here, but at the request/reply level
 	if(flow == FLOW_BIDIRECTIONAL){
 		conn->response_callback = reply_to_client;
 	}
@@ -93,7 +85,11 @@ printf("create_runtime_in_connector\n");
 	res->type = type;
 	switch(type){
 	case TYPE_SOCKET:
-		res->content.sock = create_runtime_sock_connector(port, socket_connector);
+		res->connection_params = create_runtime_sock_connector(port, socket_connector);
+		res->open_connection = open_socket_connector;
+		res->feed_data = read_from_socket;
+		res->send_data = reply_to_client;
+		res->close_connection = close_socket;
 		break;
 	case TYPE_FILE:
 		// res->content.file = create_runtime_file_connector(&(conn->content.file));
@@ -146,9 +142,11 @@ void release_runtime_route(ri_route_t *route)
 	free(route);
 }
 
-void start_in_listener(ri_route_t* route)
+void start_route(ri_route_t *route)
 {
 	pthread_t pthread;
+	ri_connection_t* conn = new_http_connection(route);
+	int i = pthread_create (&pthread, NULL, run_session, conn);
 	int i = pthread_create(&pthread, NULL, route->in_connector->content.sock->consumer_callback, (void*)route);
 	pthread_join(pthread, NULL);
 }

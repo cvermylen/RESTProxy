@@ -9,7 +9,11 @@ typedef struct {
     void (*output_callback)(void *parms);
 } ri_file_connector_t;
 
-int read_from_file(int fd, char* buffer, int max_size);
+void open_file (ri_file_connector_t *conn);
+
+void close_file (ri_file_connector_t *conn);
+
+int file_reader(ri_file_connector_t *conn, char* dest, int max_buffer_size);
 
 void file_writer(void* params);
 

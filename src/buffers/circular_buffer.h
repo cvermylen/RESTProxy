@@ -24,8 +24,8 @@ typedef struct {
     unsigned int last_sent;
     unsigned int next_to_be_received; // when last_received == last_sent -1, buffers are full
 
-    int fd;
-    int (*feeder)(int fd, char* buffer, int buffer_size);
+    int (*feed_data) (void* conn_params, char* dest_buffer, int max_buffer_size); //where void* is ri_sock_connector_t...
+    void* conn_params;
     int max_size;
 } circular_buffer_t;
 
@@ -57,7 +57,7 @@ int get_last_received_size (circular_buffer_t* buffer);
  * @param size Actual number of entries available = 2 ^ size
  * @return
  */
-circular_buffer_t* new_circular_buffer(unsigned int size, int fd, int (*feeder)(int fd, char* buffer, int buffer_size), int max_size);
+circular_buffer_t* new_circular_buffer(unsigned int size, int (*feed_data) (void* conn_params, char* dest_buffer, int max_buffer_size), void* conn_params, int max_buffer_size);
 
 /*!
  * @param buffer

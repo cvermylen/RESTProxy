@@ -8,15 +8,13 @@
 
 unsigned int http_message_buffer_size = BUFFER_SIZE;
 
-http_message_t* new_http_message(int fd, int (*feeder)(int fd, char* buffer, int buffer_size), int buffer_size)
+http_message_t* new_http_message ((*feeder)(), void* connection_params, int buffer_size)
 {
     http_message_t* http_message = NULL;
     if (http_message_buffer_size > 0) {
         http_message = (http_message_t *) malloc(sizeof(http_message_t));
-        http_message->fd = fd;
-        http_message->feeder = feeder;
         http_message->status = HTTP_MSG_STATUS_INIT;
-        http_message->buffers = new_circular_buffer(http_message_buffer_size, fd, feeder, buffer_size);
+        http_message->buffers = new_circular_buffer(http_message_buffer_size, feeder, connection_params, buffer_size);
         http_message->header = http_headers_init(http_message->buffers);
         http_message->raw_message_length = -1;
     } else {
@@ -35,20 +33,20 @@ int read_next_buffer_from_source (http_message_t* msg)
     int buffer_no = alloc_entry_in_circular_buffer (msg->buffers);
     int r = 0;
     if (buffer_no >= 0) {
-        r = (msg->feeder)(msg->fd, get_buffer(buffer_no), TX_BUFFER_SIZE);
+        r = read_into_next_buffer (msg->buffers);
         set_data_size_for_last_received_buffer (msg->buffers, r);
     }
     return r;
 }
 
-//TODO REFACTOR. This method should be moved to the caller
-http_message_t* receive_new_http_message(int fd, int (*feeder)(int fd, char* buffer, int buffer_size), int buffer_size)
+/*! REFACTOR: method could be useless
+ *
+ * @param msg
+ * @return
+ */
+http_message_t* receive_new_http_message (http_message_t* msg)
 {
-    http_message_t* result = new_http_message(fd, feeder, buffer_size);
-    if(result != NULL) {
-        int r = read_next_buffer_from_source (result);
-    }
-    return result;
+    int r = read_next_buffer_from_source (msg);
 }
 
 int http_message_decode_request_type (http_message_t* msg)
@@ -76,12 +74,13 @@ void decode_http_message_header(http_message_t *msg) {
  * @param msg
  * @param start_pos
  */
-void http_message_receive_body(http_message_t *msg) {
+void http_message_receive_body (http_message_t* msg)
+{
     msg->status = HTTP_MSG_STATUS_BODY_INCOMPLETE;
     int n = 0;
     do {
         msg->raw_message_length += n;
-        n = read_next_buffer_from_source(msg);
+        n = read_next_buffer_from_source (msg);
     } while (n > 0);
     msg->status = HTTP_MSG_STATUS_BODY_COMPLETE;
 }
@@ -90,11 +89,11 @@ void http_message_receive_body(http_message_t *msg) {
  * Send the next buffer to its destination, and possibly indicates the buffer as 'sent'.
  * @param msg
  */
-void send_next_buffer_to_destination (http_message_t* msg, char move_pointer, int destination_fd)
+void send_next_buffer_to_destination (int(*send_data)(), void* connection_params, http_message_t* msg, char move_pointer)
 {
     if (!is_empty_circular_buffer(msg->buffers)) {
         char* buffer = get_to_be_sent_buffer(msg->buffers);
-        sock_write(destination_fd, buffer, get_to_be_sent_size(msg->buffers));
+        send_data(connection_params, buffer, get_to_be_sent_size(msg->buffers));
         if (move_pointer) {
             buffer_has_been_sent (msg->buffers);
         }

@@ -1,10 +1,12 @@
-#ifndef CONNECTION_H
-#define CONNECTION_H
+#ifndef HTTP_CONNECTION_H
+#define HTTP_CONNECTION_H
 
-#include "route_instance.h"
+#include "../route_instance.h"
 
 #include <netinet/in.h>
-#include "socket/socket_connector.h"
+#include "../socket/socket_connector.h"
+#include "../request_reply.h"
+#include <stack.h>
 
 typedef struct {
     int fd;
@@ -13,8 +15,15 @@ typedef struct {
     long total_bytes;
     int last_result;
     int error;
+    stack_head_t* requestReplies;
     ri_route_t *route;
 } ri_connection_t;
+
+ri_connection_t* new_http_connection (ri_route_t* route);
+
+int open_connection(ri_connection_t *conn);
+
+void run_session (ri_connection_t* conn);
 
 ri_connection_t *wait_4_connection_request(ri_route_t *route);
 

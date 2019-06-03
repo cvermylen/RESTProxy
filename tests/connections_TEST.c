@@ -1,5 +1,5 @@
 #include "../src/route_def.h"
-#include "../src/connection.h"
+#include "../src/http/http_connection.h"
 #include "../src/route_instance.h"
 #include <criterion/criterion.h>
 #include <stdlib.h>

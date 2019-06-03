@@ -17,90 +17,6 @@
 					<DistClean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
-			<Target title="main">
-				<Option output="/home/christian/CLionProjects/RESTProxy/bin/main" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/christian/CLionProjects/RESTProxy/bin"/>
-				<Option object_output="./"/>
-				<Option type="1"/>
-				<Option compiler="gcc"/>
-				<Compiler/>
-				<MakeCommands>
-					<Build command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 main"/>
-					<CompileFile command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="main/fast">
-				<Option output="/home/christian/CLionProjects/RESTProxy/bin/main" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/christian/CLionProjects/RESTProxy/bin"/>
-				<Option object_output="./"/>
-				<Option type="1"/>
-				<Option compiler="gcc"/>
-				<Compiler/>
-				<MakeCommands>
-					<Build command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 main/fast"/>
-					<CompileFile command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="connection.o">
-				<Option output="/home/christian/CLionProjects/RESTProxy/src/CMakeFiles/connection.o.dir/connection.o.objlib" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/christian/CLionProjects/RESTProxy/src"/>
-				<Option object_output="./"/>
-				<Option type="2"/>
-				<Option compiler="gcc"/>
-				<Compiler/>
-				<MakeCommands>
-					<Build command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 connection.o"/>
-					<CompileFile command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="connection.o/fast">
-				<Option output="/home/christian/CLionProjects/RESTProxy/src/CMakeFiles/connection.o.dir/connection.o.objlib" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/christian/CLionProjects/RESTProxy/src"/>
-				<Option object_output="./"/>
-				<Option type="2"/>
-				<Option compiler="gcc"/>
-				<Compiler/>
-				<MakeCommands>
-					<Build command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 connection.o/fast"/>
-					<CompileFile command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="gateway">
-				<Option output="/home/christian/CLionProjects/RESTProxy/lib/libgateway.a" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/christian/CLionProjects/RESTProxy/src"/>
-				<Option object_output="./"/>
-				<Option type="2"/>
-				<Option compiler="gcc"/>
-				<Compiler/>
-				<MakeCommands>
-					<Build command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 gateway"/>
-					<CompileFile command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="gateway/fast">
-				<Option output="/home/christian/CLionProjects/RESTProxy/lib/libgateway.a" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/christian/CLionProjects/RESTProxy/src"/>
-				<Option object_output="./"/>
-				<Option type="2"/>
-				<Option compiler="gcc"/>
-				<Compiler/>
-				<MakeCommands>
-					<Build command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 gateway/fast"/>
-					<CompileFile command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
 			<Target title="request_reply.o">
 				<Option output="/home/christian/CLionProjects/RESTProxy/src/CMakeFiles/request_reply.o.dir/request_reply.o.objlib" prefix_auto="0" extension_auto="0"/>
 				<Option working_dir="/home/christian/CLionProjects/RESTProxy/src"/>
@@ -213,6 +129,90 @@
 					<DistClean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
+			<Target title="gateway">
+				<Option output="/home/christian/CLionProjects/RESTProxy/lib/libgateway.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/christian/CLionProjects/RESTProxy/src"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 gateway"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="gateway/fast">
+				<Option output="/home/christian/CLionProjects/RESTProxy/lib/libgateway.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/christian/CLionProjects/RESTProxy/src"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 gateway/fast"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="main">
+				<Option output="/home/christian/CLionProjects/RESTProxy/bin/main" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/christian/CLionProjects/RESTProxy/bin"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 main"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="main/fast">
+				<Option output="/home/christian/CLionProjects/RESTProxy/bin/main" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/christian/CLionProjects/RESTProxy/bin"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 main/fast"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="http_connection.o">
+				<Option output="/home/christian/CLionProjects/RESTProxy/src/http/CMakeFiles/http_connection.o.dir/http_connection.o.objlib" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/christian/CLionProjects/RESTProxy/src/http"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/http/Makefile&quot;  VERBOSE=1 http_connection.o"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/http/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/http/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/http/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="http_connection.o/fast">
+				<Option output="/home/christian/CLionProjects/RESTProxy/src/http/CMakeFiles/http_connection.o.dir/http_connection.o.objlib" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/christian/CLionProjects/RESTProxy/src/http"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/http/Makefile&quot;  VERBOSE=1 http_connection.o/fast"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/http/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/http/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/http/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
 			<Target title="http_message.o">
 				<Option output="/home/christian/CLionProjects/RESTProxy/src/http/CMakeFiles/http_message.o.dir/http_message.o.objlib" prefix_auto="0" extension_auto="0"/>
 				<Option working_dir="/home/christian/CLionProjects/RESTProxy/src/http"/>
@@ -320,6 +320,62 @@
 				<Compiler/>
 				<MakeCommands>
 					<Build command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/http/Makefile&quot;  VERBOSE=1 http_headers.o/fast"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/http/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/http/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/http/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="http_request.o">
+				<Option output="/home/christian/CLionProjects/RESTProxy/src/http/CMakeFiles/http_request.o.dir/http_request.o.objlib" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/christian/CLionProjects/RESTProxy/src/http"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/http/Makefile&quot;  VERBOSE=1 http_request.o"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/http/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/http/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/http/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="http_request.o/fast">
+				<Option output="/home/christian/CLionProjects/RESTProxy/src/http/CMakeFiles/http_request.o.dir/http_request.o.objlib" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/christian/CLionProjects/RESTProxy/src/http"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/http/Makefile&quot;  VERBOSE=1 http_request.o/fast"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/http/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/http/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/http/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="http_reply.o">
+				<Option output="/home/christian/CLionProjects/RESTProxy/src/http/CMakeFiles/http_reply.o.dir/http_reply.o.objlib" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/christian/CLionProjects/RESTProxy/src/http"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/http/Makefile&quot;  VERBOSE=1 http_reply.o"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/http/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/http/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/http/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="http_reply.o/fast">
+				<Option output="/home/christian/CLionProjects/RESTProxy/src/http/CMakeFiles/http_reply.o.dir/http_reply.o.objlib" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/christian/CLionProjects/RESTProxy/src/http"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/http/Makefile&quot;  VERBOSE=1 http_reply.o/fast"/>
 					<CompileFile command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/http/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
 					<Clean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/http/Makefile&quot;  VERBOSE=1 clean"/>
 					<DistClean command="/usr/bin/make -f &quot;/home/christian/CLionProjects/RESTProxy/src/http/Makefile&quot;  VERBOSE=1 clean"/>
@@ -550,21 +606,21 @@
 			<Option target="buffers"/>
 			<Option target="shared_buffers.o"/>
 		</Unit>
-		<Unit filename="/home/christian/CLionProjects/RESTProxy/src/connection.c">
-			<Option target="connection.o"/>
-			<Option target="gateway"/>
-		</Unit>
-		<Unit filename="/home/christian/CLionProjects/RESTProxy/src/connection.h">
-			<Option target="connection.o"/>
-			<Option target="gateway"/>
-		</Unit>
 		<Unit filename="/home/christian/CLionProjects/RESTProxy/src/file_connector.c">
-			<Option target="gateway"/>
 			<Option target="file_connector.o"/>
+			<Option target="gateway"/>
 		</Unit>
 		<Unit filename="/home/christian/CLionProjects/RESTProxy/src/file_connector.h">
-			<Option target="gateway"/>
 			<Option target="file_connector.o"/>
+			<Option target="gateway"/>
+		</Unit>
+		<Unit filename="/home/christian/CLionProjects/RESTProxy/src/http/http_connection.c">
+			<Option target="http_connection.o"/>
+			<Option target="http"/>
+		</Unit>
+		<Unit filename="/home/christian/CLionProjects/RESTProxy/src/http/http_connection.h">
+			<Option target="http_connection.o"/>
+			<Option target="http"/>
 		</Unit>
 		<Unit filename="/home/christian/CLionProjects/RESTProxy/src/http/http_first_line.c">
 			<Option target="http"/>
@@ -590,6 +646,22 @@
 			<Option target="http_message.o"/>
 			<Option target="http"/>
 		</Unit>
+		<Unit filename="/home/christian/CLionProjects/RESTProxy/src/http/http_reply.c">
+			<Option target="http"/>
+			<Option target="http_reply.o"/>
+		</Unit>
+		<Unit filename="/home/christian/CLionProjects/RESTProxy/src/http/http_reply.h">
+			<Option target="http"/>
+			<Option target="http_reply.o"/>
+		</Unit>
+		<Unit filename="/home/christian/CLionProjects/RESTProxy/src/http/http_request.c">
+			<Option target="http"/>
+			<Option target="http_request.o"/>
+		</Unit>
+		<Unit filename="/home/christian/CLionProjects/RESTProxy/src/http/http_request.h">
+			<Option target="http"/>
+			<Option target="http_request.o"/>
+		</Unit>
 		<Unit filename="/home/christian/CLionProjects/RESTProxy/src/logs/error_handler.c">
 			<Option target="gateway"/>
 			<Option target="rest_logs"/>
@@ -610,20 +682,20 @@
 			<Option target="main"/>
 		</Unit>
 		<Unit filename="/home/christian/CLionProjects/RESTProxy/src/request_reply.c">
-			<Option target="gateway"/>
 			<Option target="request_reply.o"/>
+			<Option target="gateway"/>
 		</Unit>
 		<Unit filename="/home/christian/CLionProjects/RESTProxy/src/request_reply.h">
-			<Option target="gateway"/>
 			<Option target="request_reply.o"/>
+			<Option target="gateway"/>
 		</Unit>
 		<Unit filename="/home/christian/CLionProjects/RESTProxy/src/route_instance.c">
-			<Option target="gateway"/>
 			<Option target="route_instance.o"/>
+			<Option target="gateway"/>
 		</Unit>
 		<Unit filename="/home/christian/CLionProjects/RESTProxy/src/route_instance.h">
-			<Option target="gateway"/>
 			<Option target="route_instance.o"/>
+			<Option target="gateway"/>
 		</Unit>
 		<Unit filename="/home/christian/CLionProjects/RESTProxy/src/socket/CMakeFiles/socket_wrap.o.dir/socket_wrap.c.o">
 			<Option target="main"/>
@@ -642,12 +714,12 @@
 			<Option target="socket_wrap.o"/>
 		</Unit>
 		<Unit filename="/home/christian/CLionProjects/RESTProxy/src/workflow_handler.c">
-			<Option target="gateway"/>
 			<Option target="workflow_handler.o"/>
+			<Option target="gateway"/>
 		</Unit>
 		<Unit filename="/home/christian/CLionProjects/RESTProxy/src/workflow_handler.h">
-			<Option target="gateway"/>
 			<Option target="workflow_handler.o"/>
+			<Option target="gateway"/>
 		</Unit>
 		<Unit filename="/home/christian/CLionProjects/RESTProxy/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>

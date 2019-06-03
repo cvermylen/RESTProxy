@@ -12,7 +12,6 @@ add_subdirectory(logs)
 
 set(SOURCE_FILES
         request_reply.c
-        connection.c
         logs/error_handler.c
         logs/log.c
         workflow_handler.c
@@ -26,7 +25,6 @@ set(CMAKE_BUILD_TYPE "Debug")
 add_library(request_reply.o OBJECT request_reply.c)
 add_dependencies(request_reply.o socket_connector.o)
 
-add_library(connection.o OBJECT connection.c)
 add_library(workflow_handler.o OBJECT workflow_handler.c)
 add_library(route_instance.o OBJECT route_instance.c)
 add_library(file_connector.o OBJECT file_connector.c)

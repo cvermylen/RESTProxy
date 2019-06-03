@@ -44,13 +44,17 @@ void release_runtime_sock_connector(ri_sock_connector_t *conn)
     free(conn);
 }
 
+void open_socket_connector (ri_sock_connector_t* connection_params)
+{
+    connection_params->fd = create_input_socket_connector(connection_params->port);
+}
+
 ri_sock_connector_t *create_runtime_sock_connector(const int port, void *socket_connector(void *param))
 {
     printf("create_runtime_sock_connector\n");
     ri_sock_connector_t *res = (ri_sock_connector_t*)malloc(sizeof(ri_sock_connector_t));
     res->port = port;
     res->mode = MODE_TCP;
-    res->fd = create_input_socket_connector(port);
     res->consumer_callback = socket_connector;
     return res;
 }
