@@ -4,13 +4,18 @@
 #include "http_request.h"
 #include "http_first_line.h"
 
-request_t* new_http_request (int(*open_connection) (ri_sock_connector_t* conn_params), int(*feeder)(), int(*close_connection) (ri_sock_connector_t* conn_params), void* connection_params)
+request_t* new_http_request (int(*open_connection) (void* conn_params),
+                             int(*feeder)(),
+                             int (*send_data) (void* conn_params, char* dest_buffer, int max_buffer_size),
+                             int(*close_connection) (void* conn_params),
+                             void* connection_params)
 {
     request_t *request = (request_t *) malloc(sizeof(request_t));
     request->buffer_size = TX_BUFFER_SIZE;
     request->http_message = new_http_message(feeder, connection_params, TX_BUFFER_SIZE);
     request->connection_params = connection_params;
     request->open_connection = open_connection;
+    request->send_data = send_data;
     request->close_connection = close_connection;
     return request;
 }

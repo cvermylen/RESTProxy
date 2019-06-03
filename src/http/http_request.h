@@ -10,8 +10,9 @@ typedef struct request {
     int buffer_size;
     http_message_t *http_message;
     void* connection_params; // ri_sock_connector_t, ri_file_connector_t
-    int (*open_connection) (ri_sock_connector_t* conn_params);
-    int (*close_connection) (ri_sock_connector_t* conn_params);
+    int (*open_connection) (void* conn_params);
+    int (*send_data) (void* conn_params, char* dest_buffer, int max_buffer_size);
+    int (*close_connection) (void* conn_params);
     //REFACTOR these 2 below can be removed
     int client_transmission_type;
     union {
@@ -24,7 +25,10 @@ typedef struct request {
  *
  * @return new malloc'd
  */
-request_t* new_http_request (int(*open_connection) (ri_sock_connector_t* conn_params), int(*feeder)(), int(*close_connection) (ri_sock_connector_t* conn_params), void* connection_params);
+request_t* new_http_request (int(*open_connection) (void* conn_params),
+        int(*feeder)(),
+        int (*send_data) (void* conn_params, char* dest_buffer, int max_buffer_size),
+        int(*close_connection) (void* conn_params), void* connection_params);
 
 void receive_new_request_from_client(request_t *request);
 

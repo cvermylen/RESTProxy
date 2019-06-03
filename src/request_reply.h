@@ -20,7 +20,7 @@ typedef struct {
     pthread_t async_replies_thread;
 } request_replies_t;
 
-request_replies_t* new_request_replies ((*client_feeder)(), void* client_connection_params);
+request_replies_t* new_request_replies (ri_in_connector_t* connector_def, int number_of_servers, ri_out_connector_t** server_conns);
 
 /*! Waits for a new request from the client and returns only after the header has been fully decoded
  */
@@ -47,9 +47,9 @@ void release_conn_runtime_thread_data(request_t *d);
 
 void reply_to_client(void *thread_data);
 
-void forward_message_to_all_servers(request_replies_t* rr);
+void forward_request_to_all_servers(request_replies_t *rr);
 
-void *push_data_2_destination(void *params);
+void *send_request(void *params);
 
 void wait_4_all_sender_to_complete(request_replies_t *request);
 

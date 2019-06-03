@@ -28,7 +28,7 @@ ri_connection_t* new_http_connection (ri_route_t* route)
 
 request_replies_t* prepare_for_next_request_replies (ri_connection_t* conn)
 {
-    request_replies_t* rr = new_request_replies(conn->route->in_connector->feed_data, conn->route->in_connector->connection_params);
+    request_replies_t* rr = new_request_replies(conn->route->in_connector, conn->route->out_connections, conn->route->out_connectors);
     return rr;
 }
 /*!
@@ -117,7 +117,7 @@ void *receive_and_process_data_from_client(void *params) {
             conn->total_bytes += rr->request->http_message->raw_message_length;
             decode_request_message_header(rr->request);
             process_request_message_body(rr->request);
-            forward_message_to_all_servers(rr);
+            forward_request_to_all_servers(rr);
             release_buffer_after_processing(rr);
         } else {
             conn->error = errno;

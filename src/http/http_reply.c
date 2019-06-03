@@ -10,7 +10,11 @@
  * @param forward_mode
  * @return
  */
-reply_t *create_reply(const ri_connection_t *conn, ri_out_connector_t *out_conn, int forward_mode) {
+reply_t *create_reply( int (*open_connection) (void* conn_params),
+                       int (*send_data) (void* conn_params, char* dest_buffer, int max_buffer_size),
+                       int (*receive_data) (void* conn_params, char* dest_buffer, int max_buffer_size),
+                       int (*close_connection) (void* conn_params),
+                       void* connection_params) {
     reply_t *reply = (reply_t *) malloc(sizeof(reply_t));
     reply->flow = out_conn->flow;
     reply->forward_mode = forward_mode;
@@ -33,15 +37,6 @@ reply_t *create_reply(const ri_connection_t *conn, ri_out_connector_t *out_conn,
     }
     reply->response_callback = out_conn->response_callback;
     return reply;
-}
-
-reply_t** new_replies_set(const ri_connection_t *conn)
-{
-    reply_t** replies_set = (reply_t **) malloc(sizeof(reply_t *) * conn->route->out_connections);
-    for (int i = 0; i < conn->route->out_connections; i++) {
-        replies_set[i] = create_reply(conn, conn->route->out_connectors[i], conn->route->forward_mode);
-    }
-    return replies_set;
 }
 
 /*! REFACTOR: should be agnostic of channel

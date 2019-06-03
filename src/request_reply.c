@@ -10,12 +10,16 @@
 #include "http/http_message.h"
 #include "http/http_first_line.h"
 #include "buffers/circular_buffer.h"
+#include "http/http_reply.h"
 
-request_replies_t* new_request_replies ((*client_feeder)(), void* client_connection_params)
+request_replies_t* new_request_replies (ri_in_connector_t* connector_def, int number_of_servers, ri_out_connector_t** server_conns)
 {
     request_replies_t* rr = (request_replies_t*) malloc (sizeof(request_replies_t));
-    rr->request = new_http_request(client_feeder, client_connection_params);
-    rr->replies = new_replies_set (conn);
+    rr->request = new_http_request((void*)connector_def->open_connection, connector_def->feed_data, connector_def->send_data, connector_def->close_connection, connector_def->connection_params);
+    rr->replies = (reply_t **) malloc(sizeof(reply_t *) * number_of_servers);
+    for (int i = 0; i < number_of_servers; i++) {
+        rr->replies[i] = create_reply(server_conns[i]->open_connection, server_conns[i]->send_data, server_conns[i]->receive_data, server_conns[i]->close_connection, server_conns[i]->connection_params);
+    }
     return rr;
 }
 
@@ -42,9 +46,10 @@ void release_buffer_after_processing(request_replies_t* rr) {
     printf("release_buffer_after_processing:END\n");
 }
 
-void *push_data_2_destination(void *params) {
+void *send_request(void *params) {
     reply_t *reply = (reply_t *) params;
     //printf("BUFFER:%s\n", reply->request->http_message->buffers[reply->request->http_message->last_sent]);
+
     switch (reply->server_transmission_type) {
         case TYPE_SOCKET:
             reply->server.sock->consumer_callback(reply);
@@ -85,17 +90,17 @@ void wait_4_all_sender_to_complete(request_replies_t *request) {
     int rc = pthread_create(&request->async_replies_thread, NULL, async_join_threads, request);
 }
 
-void forward_to_one_server(reply_t *reply) {
+void send_request_to_server(reply_t *reply) {
     if (reply->forward_mode != FORWARD_MODE_SEQ) {
-        int rc = pthread_create(&reply->pthread, NULL, push_data_2_destination, reply);
+        int rc = pthread_create(&reply->pthread, NULL, send_request, reply);
     } else {
-        push_data_2_destination(reply);
+        send_request(reply);
     }
 }
 
-void forward_message_to_all_servers(request_replies_t* rr) {
+void forward_request_to_all_servers(request_replies_t *rr) {
     for (int i = 0; i < rr->out_connections; i++) {
-        forward_to_one_server(rr->replies[i]);
+        send_request_to_server(rr->replies[i]);
     }
 }
 
@@ -107,7 +112,7 @@ void strategy_sequential_request_replies (request_replies_t* rr)
 {
     decode_request_message_header(rr->request);
     process_request_message_body(rr->request);
-    forward_message_to_all_servers(rr);
+    forward_request_to_all_servers(rr);
     release_buffer_after_processing(rr);
 }
 
