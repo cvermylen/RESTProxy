@@ -36,7 +36,9 @@ void sock_write(const int sockfd, char* buffer, const int length);
 
 int read_from_socket(int fd, char* buffer, int max_size);
 
-int connect_to_server(char* server_name, const int portno);
+int socket_connect(char* server_name, const int portno);
+
+void open_server_socket_connector (ri_sock_connector_t* connection_params);
 
 void release_runtime_sock_connector(ri_sock_connector_t *conn);
 

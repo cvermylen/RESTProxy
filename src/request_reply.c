@@ -23,8 +23,8 @@ request_replies_t* new_request_replies (ri_in_connector_t* connector_def, int nu
     return rr;
 }
 
-void release_buffer_after_processing(request_replies_t* rr) {
-    printf("Release_buffer_after_processing\n");
+void synchronize_all_senders (request_replies_t* rr)
+{
     int i;
     switch (rr->forward_mode) {
         case FORWARD_MODE_SYNC:
@@ -33,35 +33,20 @@ void release_buffer_after_processing(request_replies_t* rr) {
             }
             //No break here
         case FORWARD_MODE_SEQ:
-            release_request(rr->request);
-            for (i = 0; i < rr->out_connections; i++) {
-               release_reply(rr->replies[i]);
-            }
-            //close_in_connector(re);
             break;
         case FORWARD_MODE_ASYNC:
             wait_4_all_sender_to_complete(rr);
             break;
     }
-    printf("release_buffer_after_processing:END\n");
 }
 
-void *send_request(void *params) {
-    reply_t *reply = (reply_t *) params;
-    //printf("BUFFER:%s\n", reply->request->http_message->buffers[reply->request->http_message->last_sent]);
-
-    switch (reply->server_transmission_type) {
-        case TYPE_SOCKET:
-            reply->server.sock->consumer_callback(reply);
-            break;
-        case TYPE_FILE:
-            printf("callback is:%s\n", (reply->server.file->file == NULL) ? ("NULL") : ("NOT NULL"));
-            reply->server.file->output_callback(reply);
-            break;
-        default:
-            printf("Argl\n");
+void release_buffer_after_processing(request_replies_t* rr) {
+    printf("Release_buffer_after_processing\n");
+    release_request(rr->request);
+    for (int i = 0; i < rr->out_connections; i++) {
+        release_reply(rr->replies[i]);
     }
-    return NULL;
+    printf("release_buffer_after_processing:END\n");
 }
 
 void accept_opening_request_from_client (request_replies_t* rr)
@@ -81,7 +66,7 @@ void *async_join_threads(void *params) {
         //release_conn_runtime_thread_data(at->route->out_connectors[i]->data[at->dest_threads[i]    ]);
     }
     printf("...joined\n");
-    release_request(request->request);
+
     //close(at->route->in_connector->content.sock->fd);
     return NULL;
 }
@@ -90,17 +75,10 @@ void wait_4_all_sender_to_complete(request_replies_t *request) {
     int rc = pthread_create(&request->async_replies_thread, NULL, async_join_threads, request);
 }
 
-void send_request_to_server(reply_t *reply) {
-    if (reply->forward_mode != FORWARD_MODE_SEQ) {
-        int rc = pthread_create(&reply->pthread, NULL, send_request, reply);
-    } else {
-        send_request(reply);
-    }
-}
-
 void forward_request_to_all_servers(request_replies_t *rr) {
     for (int i = 0; i < rr->out_connections; i++) {
-        send_request_to_server(rr->replies[i]);
+        connect_to_server (rr->replies[i]);
+        send_request_to_server(rr->request->http_message, rr->replies[i], (i == rr->out_connections -1), rr->forward_mode);
     }
 }
 
@@ -113,13 +91,14 @@ void strategy_sequential_request_replies (request_replies_t* rr)
     decode_request_message_header(rr->request);
     process_request_message_body(rr->request);
     forward_request_to_all_servers(rr);
+    synchronize_all_senders (rr);
     release_buffer_after_processing(rr);
 }
 
 //TODO REFACTOR: the following 3 methods are symetric: same functionality, one foe socket, the other one for file. Reafctor to make generic
 // at this level and push down what is specific
 void *sync_request_reply_to_server(reply_t *reply) {
-    int socket = connect_to_server(reply->server.sock->server_name, reply->server.sock->port);
+    int socket = socket_connect(reply->server.sock->server_name, reply->server.sock->port);
     reply->server.sock->fd = socket;
     send_next_buffer_to_destination (reply->request->http_message, 1, socket);
     printf("$$$Message sent:\n");

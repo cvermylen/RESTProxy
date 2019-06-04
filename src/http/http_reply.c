@@ -1,7 +1,9 @@
 #include <stdlib.h>
+#include <pthread.h>
 #include "http_reply.h"
 #include "../route_def.h"
 #include "http_message.h"
+#include "../buffers/shared_buffers.h"
 
 /*! REFACTOR. Currently only accepts SOCKET as client source.
  *
@@ -11,32 +13,51 @@
  * @return
  */
 reply_t *create_reply( int (*open_connection) (void* conn_params),
-                       int (*send_data) (void* conn_params, char* dest_buffer, int max_buffer_size),
+                       int (*send_data) (void* conn_params, char* dest_buffer, int size),
                        int (*receive_data) (void* conn_params, char* dest_buffer, int max_buffer_size),
                        int (*close_connection) (void* conn_params),
-                       void* connection_params) {
-    reply_t *reply = (reply_t *) malloc(sizeof(reply_t));
-    reply->flow = out_conn->flow;
-    reply->forward_mode = forward_mode;
+                       void* connection_params)
+{
+    reply_t* reply = (reply_t *) malloc(sizeof(reply_t));
+    reply->open_connection = open_connection;
+    reply->send_data = send_data;
+    reply->receive_data = receive_data;
+    reply->close_connection = close_connection;
+    reply->connection_params = connection_params;
 
-    reply->client_transmission_type = TYPE_SOCKET;
-    switch (reply->client_transmission_type) {
-        case TYPE_SOCKET:
-            reply->client.sock->fd = conn->fd;
-            break;
-    }
-
-    reply->server_transmission_type = out_conn->type;
-    switch (reply->server_transmission_type) {
-        case TYPE_SOCKET:
-            reply->server.sock = out_conn->content.sock;
-            break;
-        case TYPE_FILE:
-            reply->server.file = out_conn->content.file;
-            break;
-    }
-    reply->response_callback = out_conn->response_callback;
     return reply;
+}
+
+struct envelope {
+    http_message_t* msg;
+    int (*send_data) (void* conn_params, char* dest_buffer, int size);
+    void* conn_params;
+    char last_server_in_list;
+};
+
+void* send_request (struct envelope* env)
+{
+    send_next_buffer_to_destination (env->send_data, env->conn_params, env->msg, env->last_server_in_list);
+    return NULL;
+}
+
+void send_request_to_server(http_message_t* msg, reply_t *reply, char last_server_in_list, char forward_mode) {
+    struct envelope* env = (struct envelope*) malloc (sizeof(struct envelope));
+    env->msg = msg;
+    env->send_data = reply->send_data;
+    env->conn_params = reply->connection_params;
+    env->last_server_in_list = last_server_in_list;
+    if (forward_mode != FORWARD_MODE_SEQ) {
+        int rc = pthread_create(&reply->pthread, NULL, (void* (*) (void*)) send_request, env);
+    } else {
+        send_request(env);
+    }
+    free (env);
+}
+
+void connect_to_server (reply_t* reply)
+{
+    reply->open_connection (reply->connection_params);
 }
 
 /*! REFACTOR: should be agnostic of channel

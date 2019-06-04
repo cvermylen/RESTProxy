@@ -6,6 +6,7 @@ bin
 # CLion
 .idea
 Gateway.cbp
+src/RESTProxy.cbp
 Testing/
 DartConfiguration.tcl
 

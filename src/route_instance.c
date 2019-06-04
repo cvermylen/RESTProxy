@@ -31,7 +31,7 @@ ri_out_connector_t* create_runtime_out_sock_connector(const int flow, const char
 	conn->type = TYPE_SOCKET;
 	conn->flow = flow;
 	conn->connection_params = res;
-	conn->open_connection = open_socket_connector;
+	conn->open_connection = open_server_socket_connector;
 	conn->send_data = sock_write;
     conn->receive_data = read_from_socket;
     conn->close_connection = close_socket;
