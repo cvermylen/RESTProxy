@@ -95,55 +95,55 @@ Test(http_message_receive_body, has_already_received_body_content)
 
 /*Test(http_message, update_status_1)
 {
-	http_message_t* msg = (http_message_t*)malloc(sizeof(http_message_t));
-	msg->status = HTTP_MSG_STATUS_INIT;
-	msg->buffer = "GET / HTTP1/1";
-	http_message_update_status(msg, 0, strlen(msg->buffer));
-	cr_assert(HTTP_MSG_STATUS_INIT == msg->status, "expected status HTTP_MSG_STATUS_INIT, not:%d", msg->status);
+	http_message_t* requestMessage = (http_message_t*)malloc(sizeof(http_message_t));
+	requestMessage->status = HTTP_MSG_STATUS_INIT;
+	requestMessage->buffer = "GET / HTTP1/1";
+	http_message_update_status(requestMessage, 0, strlen(requestMessage->buffer));
+	cr_assert(HTTP_MSG_STATUS_INIT == requestMessage->status, "expected status HTTP_MSG_STATUS_INIT, not:%d", requestMessage->status);
 }*/
 
 /*Test(http_message, update_status_2)
 {
-	http_message_t* msg = (http_message_t*)malloc(sizeof(http_message_t));
-	msg->status = HTTP_MSG_STATUS_INIT;
-	msg->buffer = "XX / HTTP1/1";
-	http_message_update_status(msg, 0, strlen(msg->buffer));
-	cr_assert(HTTP_MSG_STATUS_INIT == msg->status, "expected status HTTP_MSG_STATUS_INIT, not:%d", msg->status);
+	http_message_t* requestMessage = (http_message_t*)malloc(sizeof(http_message_t));
+	requestMessage->status = HTTP_MSG_STATUS_INIT;
+	requestMessage->buffer = "XX / HTTP1/1";
+	http_message_update_status(requestMessage, 0, strlen(requestMessage->buffer));
+	cr_assert(HTTP_MSG_STATUS_INIT == requestMessage->status, "expected status HTTP_MSG_STATUS_INIT, not:%d", requestMessage->status);
 }*/
 
 /*Test(http_message, update_status_3)
 {
-	http_message_t* msg = (http_message_t*)malloc(sizeof(http_message_t));
-	msg->status = HTTP_MSG_STATUS_INIT;
-	msg->buffer = "POST / HTTP1/1";
-	http_message_update_status(msg, 0, strlen(msg->buffer));
-	cr_assert(HTTP_MSG_STATUS_INIT == msg->status, "expected status HTTP_MSG_STATUS_INIT, not:%d", msg->status);
+	http_message_t* requestMessage = (http_message_t*)malloc(sizeof(http_message_t));
+	requestMessage->status = HTTP_MSG_STATUS_INIT;
+	requestMessage->buffer = "POST / HTTP1/1";
+	http_message_update_status(requestMessage, 0, strlen(requestMessage->buffer));
+	cr_assert(HTTP_MSG_STATUS_INIT == requestMessage->status, "expected status HTTP_MSG_STATUS_INIT, not:%d", requestMessage->status);
 }*/
 
 
 /*Test(http_message, update_status_4)
 {
-	http_message_t* msg = (http_message_t*)malloc(sizeof(http_message_t));
-	msg->status = HTTP_MSG_STATUS_HEADER;
+	http_message_t* requestMessage = (http_message_t*)malloc(sizeof(http_message_t));
+	requestMessage->status = HTTP_MSG_STATUS_HEADER;
 	
 	char buffer[] = "Host: Mac";
-	msg->buffer = (char*)malloc(sizeof(char) * strlen(buffer));
-	strcpy(msg->buffer, buffer);
-	http_message_update_status(msg, 0, strlen(msg->buffer));
-	cr_assert(HTTP_MSG_STATUS_HEADER == msg->status, "expected status HTTP_MSG_STATUS_HEADER, not:%d", msg->status);
+	requestMessage->buffer = (char*)malloc(sizeof(char) * strlen(buffer));
+	strcpy(requestMessage->buffer, buffer);
+	http_message_update_status(requestMessage, 0, strlen(requestMessage->buffer));
+	cr_assert(HTTP_MSG_STATUS_HEADER == requestMessage->status, "expected status HTTP_MSG_STATUS_HEADER, not:%d", requestMessage->status);
 }*/
 
 
 /*Test(http_message, update_status_5)
 {
-	http_message_t* msg = (http_message_t*)malloc(sizeof(http_message_t));
-	msg->status = HTTP_MSG_STATUS_HEADER;
+	http_message_t* requestMessage = (http_message_t*)malloc(sizeof(http_message_t));
+	requestMessage->status = HTTP_MSG_STATUS_HEADER;
 	
 	char buffer[] = "Content-Length: 987";
-	msg->buffer = (char*)malloc(sizeof(char) * strlen(buffer));
-	strcpy(msg->buffer, buffer);
-	http_message_update_status(msg, 0, strlen(msg->buffer));
-	cr_assert(HTTP_MSG_STATUS_HEADER == msg->status, "expected status HTTP_MSG_STATUS_LENGTH, not:%d", msg->status);
-	cr_assert(987 == msg->body_length, "expected body length of 987, not:%d", msg->body_length);
+	requestMessage->buffer = (char*)malloc(sizeof(char) * strlen(buffer));
+	strcpy(requestMessage->buffer, buffer);
+	http_message_update_status(requestMessage, 0, strlen(requestMessage->buffer));
+	cr_assert(HTTP_MSG_STATUS_HEADER == requestMessage->status, "expected status HTTP_MSG_STATUS_LENGTH, not:%d", requestMessage->status);
+	cr_assert(987 == requestMessage->body_length, "expected body length of 987, not:%d", requestMessage->body_length);
 }*/
 

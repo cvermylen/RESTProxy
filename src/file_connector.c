@@ -21,6 +21,12 @@ int file_reader(ri_file_connector_t *conn, char* dest, int max_buffer_size)
     return fread(dest, 1, max_buffer_size, conn->file);
 }
 
+void file_writer(ri_file_connector_t *conn, char* dest, int buffer_size)
+{
+    fwrite (dest, 1, buffer_size, conn->file);
+    fflush(conn->file);
+}
+
 void release_runtime_file_connector(ri_file_connector_t *conn)
 {
     free(conn);

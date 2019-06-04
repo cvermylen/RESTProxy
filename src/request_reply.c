@@ -77,13 +77,19 @@ void wait_4_all_sender_to_complete(request_replies_t *request) {
 
 void forward_request_to_all_servers(request_replies_t *rr) {
     for (int i = 0; i < rr->out_connections; i++) {
-        connect_to_server (rr->replies[i]);
-        send_request_to_server(rr->request->http_message, rr->replies[i], (i == rr->out_connections -1), rr->forward_mode);
+        send_request_to_server_and_wait_reply(rr->request->http_message, rr->replies[i], (i == rr->out_connections -1), rr->forward_mode);
     }
 }
 
 void decode_request_message_header(request_t *request) {
     decode_http_message_header(request->http_message);
+}
+
+void forward_replies (request_replies_t* rr)
+{
+    for (int i= 0; i < rr->out_connections; i++) {
+        reply_to_client (rr->replies[i]);
+    }
 }
 
 void strategy_sequential_request_replies (request_replies_t* rr)
@@ -92,6 +98,7 @@ void strategy_sequential_request_replies (request_replies_t* rr)
     process_request_message_body(rr->request);
     forward_request_to_all_servers(rr);
     synchronize_all_senders (rr);
+    forward_replies (rr);
     release_buffer_after_processing(rr);
 }
 
@@ -114,19 +121,7 @@ reply_t* create_response(reply_t* data){
     char* buffer = get_buffer(buff_no);
     http_message_t* msg = new_http_message(0, NULL, 0);  //TODO parameters 2 & 3 are wrong
     data->response_message = msg;
-    // TODO: must be refactoredstrcpy(msg->buffer, resp);
+    // TODO: must be refactoredstrcpy(requestMessage->buffer, resp);
     msg->raw_message_length = strlen(resp);
     return data;
 }
-
-void file_writer(void *params)
-{
-    reply_t* reply = (reply_t*) params;
-    // TODO must be refactored fputs(reply->request->http_message->buffer, reply->content.file->file);
-    fflush(reply->server.file->file);
-    if(reply->flow == FLOW_BIDIRECTIONAL){
-        reply->response_callback(create_response(reply));
-    }
-}
-
-

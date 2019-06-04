@@ -36,7 +36,9 @@ reply_t* create_reply( int (*open_connection) (void* conn_params),
 
 void connect_to_server (reply_t* reply);
 
-void send_request_to_server(http_message_t* message, reply_t *reply, char last_server_in_list, char forward_mode);
+void send_request_to_server_and_wait_reply(http_message_t* message, reply_t *reply, char last_server_in_list, char forward_mode);
+
+void reply_to_client(reply_t* reply);
 
 /*! RElease resources attached
  * \private
