@@ -85,11 +85,9 @@ printf("create_runtime_in_connector\n");
 	res->type = type;
 	switch(type){
 	case TYPE_SOCKET:
-		res->connection_params = create_runtime_sock_connector(port, socket_connector);
-		res->open_connection = open_socket_connector;
+	    create_runtime_sock_connector (res, port);
 		res->feed_data = read_from_socket;
 		res->send_data = reply_to_client;
-		res->close_connection = close_socket;
 		break;
 	case TYPE_FILE:
 		// res->content.file = create_runtime_file_connector(&(conn->content.file));
@@ -147,6 +145,5 @@ void start_route(ri_route_t *route)
 	pthread_t pthread;
 	ri_connection_t* conn = new_http_connection(route);
 	int i = pthread_create (&pthread, NULL, run_session, conn);
-	int i = pthread_create(&pthread, NULL, route->in_connector->content.sock->consumer_callback, (void*)route);
 	pthread_join(pthread, NULL);
 }

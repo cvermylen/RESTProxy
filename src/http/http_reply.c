@@ -88,6 +88,11 @@ void send_request_to_server_and_wait_reply(http_message_t* msg, reply_t *reply, 
     free (env);
 }
 
+void close_server_connection (reply_t* reply)
+{
+    reply->close_connection (reply->connection_params);
+}
+
 void release_reply(reply_t *reply) {
     http_message_free(reply->response_message);
     free(reply);

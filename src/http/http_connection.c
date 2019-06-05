@@ -10,7 +10,6 @@
 #include "../buffers/shared_buffers.h"
 #include "http_connection.h"
 #include "../socket/socket_connector.h"
-#include "../request_reply.h"
 #include "http_first_line.h"
 #include "../route_instance.h"
 
@@ -41,6 +40,7 @@ int open_connection(ri_connection_t *conn)
     return 0;
 }
 
+//REFACTOR
 ri_connection_t *wait_4_connection_request(ri_route_t *route) {
     ri_connection_t *res = (ri_connection_t *) malloc(sizeof(ri_connection_t));
     res->route = route;
@@ -71,9 +71,13 @@ void *socket_connector(void *param) {
     return NULL;
 }
 
-void close_connection(ri_connection_t *conn) {
-    printf("Close connection:%d\n", conn->fd);
-    close(conn->fd);
+void close_connection (request_replies_t* rr)
+{
+    printf("Close connection:\n");
+    close_client_connection (rr->request);
+    for (int i=0; i < rr->out_connections; i++) {
+        close_server_connection (rr->replies[i]);
+    }
 }
 
 void process_request_replies (ri_connection_t* conn, request_replies_t* rr)
@@ -99,7 +103,7 @@ void run_session (ri_connection_t* conn)
             rr = prepare_for_next_request_replies (conn);
         } while (keep_alive);
     }
-    close_connection (conn);
+    close_connection (rr);
 }
 
 //REFACTOR should be removed

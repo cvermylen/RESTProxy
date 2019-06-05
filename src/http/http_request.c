@@ -43,6 +43,11 @@ int get_request_connection_keep_alive (request_t* request)
     return http_headers_get (request->http_message->header, HTTP_KEEP_ALIVE);
 }
 
+void close_client_connection (request_t* request)
+{
+    request->close_connection (request->connection_params);
+}
+
 void release_request(request_t *d)
 {
     http_message_free(d->http_message);

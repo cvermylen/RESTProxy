@@ -4,6 +4,7 @@
 #include "http_message.h"
 #include "../socket/socket_connector.h"
 #include "../file_connector.h"
+#include "../request_reply.h"
 
 typedef struct request {
     int type;       //GET, POST...
@@ -35,6 +36,8 @@ void receive_new_request_from_client(request_t *request);
 void process_request_message_body (request_t* request);
 
 int get_request_connection_keep_alive (request_t* request);
+
+void close_client_connection (request_t* request);
 
 /*! RElease resources attached
  * \private

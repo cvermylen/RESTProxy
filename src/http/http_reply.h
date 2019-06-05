@@ -40,6 +40,8 @@ void send_request_to_server_and_wait_reply(http_message_t* message, reply_t *rep
 
 void reply_to_client(reply_t* reply);
 
+void close_server_connection (reply_t* reply);
+
 /*! RElease resources attached
  * \private
  * @param reply

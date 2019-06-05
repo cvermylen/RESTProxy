@@ -9,6 +9,7 @@
 #include "../buffers/shared_buffers.h"
 #include "../route_def.h"
 #include "socket_wrap.h"
+#include "../route_instance.h"
 
 //TODO Need to be unit tested
 int bind_port(const int portno) {
@@ -80,14 +81,15 @@ void open_server_socket_connector (ri_sock_connector_t* connection_params)
     connection_params->fd = socket_connect (connection_params->server_name, connection_params->port);
 }
 
-ri_sock_connector_t *create_runtime_sock_connector(const int port, void *socket_connector(void *param))
+void create_runtime_sock_connector (ri_in_connector_t *res, int port_no)
 {
     printf("create_runtime_sock_connector\n");
-    ri_sock_connector_t *res = (ri_sock_connector_t*)malloc(sizeof(ri_sock_connector_t));
-    res->port = port;
-    res->mode = MODE_TCP;
-    res->consumer_callback = socket_connector;
-    return res;
+    ri_sock_connector_t *sc = (ri_sock_connector_t*)malloc(sizeof(ri_sock_connector_t));
+    sc->port = port_no;
+    sc->mode = MODE_TCP;
+    res->connection_params = sc;
+    res->open_connection = open_socket_connector;
+    res->close_connection = close_socket;
 }
 
 int read_from_socket(int fd, char* buffer, int max_size)
@@ -96,6 +98,11 @@ printf("#####read_from_socket\n");
 	int n = wrap_recv(fd, buffer, max_size, 0);
 printf("read_from_socket, size:%d\n", n);
 	return n;
+}
+
+void close_socket (ri_sock_connector_t* connection_params)
+{
+    close (connection_params->fd);
 }
 
 void sock_write(const int sockfd, char* buffer, const int length)
