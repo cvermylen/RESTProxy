@@ -56,23 +56,21 @@ void accept_opening_request_from_client (request_replies_t* rr)
     receive_new_request_from_client(rr->request);
 }
 
-void *async_join_threads(void *params) {
-    request_replies_t* request = (request_replies_t *) params;
+void *async_join_threads(request_replies_t* request) {
     printf("Joining results...\n");
     int i = 0;
     for (int i = 0; i < request->out_connections; i++) {
         printf("Join thread at:%lu\n", request->replies[i]->pthread);
         pthread_join(request->replies[i]->pthread, NULL);
-        //release_conn_runtime_thread_data(at->route->out_connectors[i]->data[at->dest_threads[i]    ]);
     }
     printf("...joined\n");
 
-    //close(at->route->in_connector->content.sock->fd);
     return NULL;
 }
 
-void wait_4_all_sender_to_complete(request_replies_t *request) {
-    int rc = pthread_create(&request->async_replies_thread, NULL, async_join_threads, request);
+void wait_4_all_sender_to_complete(request_replies_t* rr)
+{
+    int rc = pthread_create(&rr->async_replies_thread, NULL, (void*)async_join_threads, rr);
 }
 
 void forward_request_to_all_servers(request_replies_t *rr) {
@@ -100,28 +98,4 @@ void strategy_sequential_request_replies (request_replies_t* rr)
     synchronize_all_senders (rr);
     forward_replies (rr);
     release_buffer_after_processing(rr);
-}
-
-//TODO REFACTOR: the following 3 methods are symetric: same functionality, one foe socket, the other one for file. Reafctor to make generic
-// at this level and push down what is specific
-void *sync_request_reply_to_server(reply_t *reply) {
-    int socket = socket_connect(reply->server.sock->server_name, reply->server.sock->port);
-    reply->server.sock->fd = socket;
-    send_next_buffer_to_destination (reply->request->http_message, 1, socket);
-    printf("$$$Message sent:\n");
-    receive_reply(reply, read_from_socket);
-    reply->response_callback(reply);
-}
-//cha
-// r resp[] = "HTTP/1.1 200 OK\nDate: Mon, 23 May 2005 22:38:34 GMT\nContent-Type: text/html; charset=UTF-8\nContent-Length: 138\nLast-Modified: Wed, 08 Jan 2003 23:11:55 GMT\nServer: Apache/1.3.3.7 (Unix) (Red-Hat/Linux)\nETag: \"3f80f-1b6-3e1cb03b\"\nAccept-Ranges: bytes\n\n<html>\n<head>\n <title>An Example Page</title>\n</head>\n<body>\n Hello World, this is a very simple HTML document.\n</body>\n</html>";
-char resp[] = "HTTP/1.1 200 OK\nDate: Mon, 23 May 2005 22:38:34 GMT\nContent-Type: text/html; charset=UTF-8\nContent-Length: 14\nLast-Modified: Wed, 08 Jan 2003 23:11:55 GMT\nServer: Apache/1.3.3.7 (Unix) (Red-Hat/Linux)\nETag: \"3f80f-1b6-3e1cb03b\"\nAccept-Ranges: bytes\n\n<html>\n</html>";
-
-reply_t* create_response(reply_t* data){
-    int buff_no = alloc_buffer();
-    char* buffer = get_buffer(buff_no);
-    http_message_t* msg = new_http_message(0, NULL, 0);  //TODO parameters 2 & 3 are wrong
-    data->response_message = msg;
-    // TODO: must be refactoredstrcpy(requestMessage->buffer, resp);
-    msg->raw_message_length = strlen(resp);
-    return data;
 }

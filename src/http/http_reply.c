@@ -57,7 +57,7 @@ void reply_to_client(reply_t* reply) {
 }
 
 void accept_reply_from_server(reply_t *reply) {
-    reply->response_message = receive_new_http_message(reply->server.sock->fd, reply->receive_data, TX_BUFFER_SIZE);
+    int r = read_next_buffer_from_source(reply->response_message);
     reply->type = http_message_decode_response_type(reply->response_message);
 }
 

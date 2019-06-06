@@ -28,12 +28,6 @@ typedef struct {
  */
 http_message_t* new_http_message ((*feeder)(), void* connection_params, int buffer_size);
 
-/*! Next refactoring: replace the 'fd' parameter by a callback function
- *
- * @param fd
- */
-http_message_t* receive_new_http_message (http_message_t* msg);
-
 /*!
  * @param msg
  * @return  GET or POST ...

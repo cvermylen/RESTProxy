@@ -14,12 +14,6 @@ typedef struct request {
     int (*open_connection) (void* conn_params);
     int (*send_data) (void* conn_params, char* dest_buffer, int max_buffer_size);
     int (*close_connection) (void* conn_params);
-    //REFACTOR these 2 below can be removed
-    int client_transmission_type;
-    union {
-        ri_sock_connector_t *sock;
-        ri_file_connector_t *file;
-    } client;
 } request_t;
 
 /*! \private

@@ -6,7 +6,6 @@
 typedef struct {
     char *filename;
     FILE *file;
-    void (*output_callback)(void *parms);
 } ri_file_connector_t;
 
 void open_file (ri_file_connector_t *conn);

@@ -5,11 +5,11 @@
 #include <netdb.h>
 #include <strings.h>
 #include <stdio.h>
+#include <unistd.h>
+
 #include "socket_connector.h"
-#include "../buffers/shared_buffers.h"
 #include "../route_def.h"
 #include "socket_wrap.h"
-#include "../route_instance.h"
 
 //TODO Need to be unit tested
 int bind_port(const int portno) {
@@ -71,9 +71,11 @@ void release_runtime_sock_connector(ri_sock_connector_t *conn)
     free(conn);
 }
 
-void open_socket_connector (ri_sock_connector_t* connection_params)
+int open_socket_connector (ri_sock_connector_t* connection_params)
 {
     connection_params->fd = create_input_socket_connector(connection_params->port);
+    connection_params->fd = wrap_accept(connection_params->fd, &(connection_params->cli_addr), &(connection_params->sockaddr_size));
+    return connection_params->fd;
 }
 
 void open_server_socket_connector (ri_sock_connector_t* connection_params)

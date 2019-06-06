@@ -40,37 +40,6 @@ int open_connection(ri_connection_t *conn)
     return 0;
 }
 
-//REFACTOR
-ri_connection_t *wait_4_connection_request(ri_route_t *route) {
-    ri_connection_t *res = (ri_connection_t *) malloc(sizeof(ri_connection_t));
-    res->route = route;
-    ri_sock_connector_t *conn = route->in_connector->content.sock;
-    printf("BEFORE ACCEPTING new connection:%d\n", conn->fd);
-    res->fd = accept(conn->fd, &(conn->cli_addr), &(conn->sockaddr_size));
-    if (res->fd < 0) { printf("EXIT\n"); }
-    printf("AFTER ACCEPTED new connection:%d\n", res->fd);
-    return res;
-}
-
-extern int program_should_continue;
-void *socket_connector(void *param) {
-    ri_route_t *route = (ri_route_t *) param;
-//    connections_stack = stack_init();
-    printf("socket_connector\n");
-    pthread_t thread;
-    do {
-        ri_connection_t *cli = wait_4_connection_request(route);
-        if (cli->fd > 0) {
-//            stack_push(connections_stack, cli);
-            printf("%d\n", cli->fd);
-            cli->feeder = read_from_socket;
-            int rc = pthread_create(&thread, NULL, receive_and_process_data_from_client, (void *) cli);
-        }
-    } while (program_should_continue);
-    printf("END SOCKET CONNECTOR\n");
-    return NULL;
-}
-
 void close_connection (request_replies_t* rr)
 {
     printf("Close connection:\n");
@@ -112,7 +81,7 @@ void *receive_and_process_data_from_client(void *params) {
     ri_route_t *route = conn->route;
     conn->total_messages = 0;
     conn->total_bytes = 0;
-    request_replies_t* rr = new_request_replies(conn->fd, conn->feeder);
+    request_replies_t* rr = new_request_replies(route->in_connector, route->out_connections, route->out_connectors);
     do {
         accept_opening_request_from_client(rr);
         if (rr->request != NULL) {

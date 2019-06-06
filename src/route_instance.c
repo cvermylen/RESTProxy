@@ -25,7 +25,6 @@ ri_out_connector_t* create_runtime_out_sock_connector(const int flow, const char
 	res->port = port;
 	res->server_name = (char*)malloc(sizeof(char) * strlen(hostname));
 	strcpy(res->server_name, hostname);
-	res->consumer_callback = sync_request_reply_to_server;
 
 	ri_out_connector_t* conn = (ri_out_connector_t*)malloc(sizeof(ri_out_connector_t));
 	conn->type = TYPE_SOCKET;
@@ -47,8 +46,6 @@ printf("create_runtime_file_connector\n");
 	ri_file_connector_t * res = (ri_file_connector_t*)malloc(sizeof(ri_file_connector_t));
 	res->filename = (char*)malloc((strlen(filename) + 1) * sizeof(char));
 	strcpy(res->filename, filename);
-
-	res->output_callback = file_writer;
 
 	ri_out_connector_t* conn = (ri_out_connector_t*)malloc(sizeof(ri_out_connector_t));
     conn->connection_params = res;

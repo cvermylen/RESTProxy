@@ -22,7 +22,11 @@ request_t* new_http_request (int(*open_connection) (void* conn_params),
 
 void receive_new_request_from_client (request_t *request)
 {
-    int bytes_read = receive_new_http_message(request->http_message);
+    int fd = request->open_connection (request->connection_params);
+    //REFACTOR
+    if (fd < 0) {printf("Error not handled\n"); exit(0);}
+    //END REFACTOR
+    int bytes_read = read_next_buffer_from_source(request->http_message);
     request->type = http_message_decode_request_type (request->http_message);
     read_next_buffer_from_source(request->http_message);
     decode_http_message_header(request->http_message);

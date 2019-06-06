@@ -19,11 +19,6 @@ typedef struct {
     int (*feed_data) (ri_sock_connector_t* conn_params, char* dest_buffer, int max_buffer_size);
     int (*send_data) (ri_sock_connector_t* conn_params, char* dest_buffer, int max_buffer_size);
     int (*close_connection) (ri_sock_connector_t* conn_params);
-    //REFACTOR: remove the union
-	        union {
-                ri_sock_connector_t *sock;
-                ri_file_connector_t *file;
-        } content;
 } ri_in_connector_t;
 
 typedef struct {

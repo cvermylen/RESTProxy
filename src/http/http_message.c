@@ -39,16 +39,6 @@ int read_next_buffer_from_source (http_message_t* msg)
     return r;
 }
 
-/*! REFACTOR: method could be useless
- *
- * @param msg
- * @return
- */
-http_message_t* receive_new_http_message (http_message_t* msg)
-{
-    int r = read_next_buffer_from_source (msg);
-}
-
 int http_message_decode_request_type (http_message_t* msg)
 {
     return http_decode_request_type(get_last_received_buffer(msg->buffers), get_last_received_size(msg->buffers));
