@@ -8,13 +8,13 @@
 
 unsigned int http_message_buffer_size = BUFFER_SIZE;
 
-http_message_t* new_http_message ((*feeder)(), void* connection_params, int buffer_size)
+http_message_t* new_http_message (int (*feed_data) (void* conn_params, char* dest_buffer, int max_buffer_size), void* connection_params, int buffer_size)
 {
     http_message_t* http_message = NULL;
     if (http_message_buffer_size > 0) {
         http_message = (http_message_t *) malloc(sizeof(http_message_t));
         http_message->status = HTTP_MSG_STATUS_INIT;
-        http_message->buffers = new_circular_buffer(http_message_buffer_size, feeder, connection_params, buffer_size);
+        http_message->buffers = new_circular_buffer(http_message_buffer_size, feed_data, connection_params, buffer_size);
         http_message->header = http_headers_init(http_message->buffers);
         http_message->raw_message_length = -1;
     } else {

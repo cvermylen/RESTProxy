@@ -60,7 +60,7 @@ void *async_join_threads(request_replies_t* request) {
     printf("Joining results...\n");
     int i = 0;
     for (int i = 0; i < request->out_connections; i++) {
-        printf("Join thread at:%lu\n", request->replies[i]->pthread);
+        printf("Join thread at:%i\n", request->replies[i]->pthread);
         pthread_join(request->replies[i]->pthread, NULL);
     }
     printf("...joined\n");

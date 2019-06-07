@@ -23,7 +23,7 @@ void free_circular_buffer (circular_buffer_t* buffer)
 }
 
 int mock_called_new_circular_buffer;
-circular_buffer_t* new_circular_buffer(unsigned int size, int fd, int (*feeder)(int fd, char* buffer, int buffer_size), int max_size)
+circular_buffer_t* new_circular_buffer(unsigned int size, int (*feed_data) (void* conn_params, char* dest_buffer, int max_buffer_size), void* conn_params, int max_buffer_size)
 {
     mock_called_new_circular_buffer = 1;
     return 1;

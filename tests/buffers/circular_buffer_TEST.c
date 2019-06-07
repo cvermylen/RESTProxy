@@ -920,7 +920,7 @@ Test(feed_next_buffer, shared_buffer_is_full)
     cb->size = 3;
     cb->last_sent = 0;
     cb->next_to_be_received = 2;
-    cb->feeder = mock_feeder;
+    cb->feed_data = mock_feeder;
 
     mock_called_alloc_buffer = 0;
     mock_result_alloc_buffer = -1;
@@ -946,7 +946,7 @@ Test(feed_next_buffer, circular_buffer_is_full)
     cb->size = 3;
     cb->last_sent = 0;
     cb->next_to_be_received = 7;
-    cb->feeder = mock_feeder;
+    cb->feed_data = mock_feeder;
 
     circular_ptr_t ptr;
     ptr.buff_pos = 55;

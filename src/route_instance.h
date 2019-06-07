@@ -2,7 +2,6 @@
 #define ROUTE_INSTANCE_H
 #include <pthread.h>
 
-#include "socket/socket_connector.h"
 #include "file_connector.h"
 
 
@@ -15,36 +14,20 @@ typedef struct {
     int type;
 	pthread_t pthread;  // ?????????????
 	void* connection_params;
-    int (*open_connection) (ri_sock_connector_t* conn_params);
-    int (*feed_data) (ri_sock_connector_t* conn_params, char* dest_buffer, int max_buffer_size);
-    int (*send_data) (ri_sock_connector_t* conn_params, char* dest_buffer, int max_buffer_size);
-    int (*close_connection) (ri_sock_connector_t* conn_params);
+    int (*open_connection) (void* conn_params);
+    int (*feed_data) (void* conn_params, char* dest_buffer, int max_buffer_size);
+    int (*send_data) (void* conn_params, char* dest_buffer, int max_buffer_size);
+    int (*close_connection) (void* conn_params);
 } ri_in_connector_t;
-
-typedef struct {
-	char* msg;
-} ri_response_t;
 
 typedef struct {
     int type;
     int flow;
     void* connection_params;
-    int (*open_connection) (ri_sock_connector_t* conn_params);
-    int (*send_data) (ri_sock_connector_t* conn_params, char* dest_buffer, int max_buffer_size);
-    int (*receive_data) (ri_sock_connector_t* conn_params, char* dest_buffer, int max_buffer_size);
-    int (*close_connection) (ri_sock_connector_t* conn_params);
-
-    /////////////////////////////////////
-
-    //REFACTOR: remove
-        union {
-                ri_sock_connector_t *sock;
-                ri_file_connector_t *file;
-                ri_workflow_connector_t *workflow;
-        } content;
-        //REFACTOR: remove
-	void (*response_callback)(void* ri_response);
-	////////////////////////////////
+    int (*open_connection) (void* conn_params);
+    int (*send_data) (void* conn_params, char* dest_buffer, int max_buffer_size);
+    int (*receive_data) (void* conn_params, char* dest_buffer, int max_buffer_size);
+    int (*close_connection) (void* conn_params);
 } ri_out_connector_t;
 
 typedef struct {

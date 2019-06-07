@@ -26,7 +26,7 @@ typedef struct {
  * @param fd
  * @return
  */
-http_message_t* new_http_message ((*feeder)(), void* connection_params, int buffer_size);
+http_message_t* new_http_message (int (*feed_data) (void* conn_params, char* dest_buffer, int max_buffer_size), void* connection_params, int buffer_size);
 
 /*!
  * @param msg

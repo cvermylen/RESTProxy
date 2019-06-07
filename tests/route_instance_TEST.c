@@ -42,7 +42,7 @@ static ri_out_connector_t* mock_ri_out_connector(const int type)
 {
 	ri_out_connector_t* res = (ri_out_connector_t*)malloc(sizeof(ri_out_connector_t));
 	res->type = type;
-	switch(type){
+	/*switch(type){
 	case TYPE_SOCKET:
 		res->content.sock = mock_ri_sock_connector();
 		break;
@@ -52,7 +52,7 @@ static ri_out_connector_t* mock_ri_out_connector(const int type)
 	case TYPE_WORKFLOW:
 		res->content.workflow = NULL;
 		break;
-	}
+	}*/
 	return res;
 }
 
@@ -75,14 +75,14 @@ static ri_in_connector_t* mock_ri_in_connector(const int type)
 {
 	ri_in_connector_t* res = (ri_in_connector_t*)malloc(sizeof(ri_in_connector_t));
 	res->type = type;
-	switch(type){
+	/*switch(type){
 	case TYPE_SOCKET:
 		res->content.sock = mock_ri_sock_connector();
 		break;
 	case TYPE_FILE:
 		res->content.file = mock_ri_file_connector();
 		break;
-	}
+	}*/
 	return res;
 }
 

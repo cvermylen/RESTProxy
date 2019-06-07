@@ -72,6 +72,6 @@ int connect_to_server(char* server_name, const int portno)
 	return -1;
 }
 
-void sock_write(const int sockfd, char* buffer, const int length)
+int sock_write(const int sockfd, char* buffer, const int length)
 {
 }

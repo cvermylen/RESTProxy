@@ -10,8 +10,6 @@ ri_route_t *create_mock_route(int port)
 	ri_route_t *route = (ri_route_t*) malloc(sizeof(ri_route_t));
 	route->in_connector = (ri_in_connector_t*)malloc(sizeof(ri_in_connector_t));
 	route->in_connector->type = TYPE_SOCKET;
-	route->in_connector->content.sock = (ri_sock_connector_t*)malloc(sizeof(ri_sock_connector_t));
-	route->in_connector->content.sock->fd = port;
 	return route;
 }
 

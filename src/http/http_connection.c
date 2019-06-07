@@ -102,26 +102,3 @@ void *receive_and_process_data_from_client(void *params) {
     if (rr->request != NULL) release_request(rr->request);
     pthread_exit(conn);
 }
-
-
-void close_remaining_connections() {
-    printf("close_remaining_connections\n");
-    ri_connection_t *conn = NULL;
-/*    while ((conn = (ri_connection_t *) stack_pop(connections_stack))) {
-        printf("Close this one:%d\n", conn->fd);
-        close(conn->fd);
-    }*/
-    printf("Done closing\n");
-}
-
-void close_in_connector(ri_in_connector_t *conn) {
-    close_remaining_connections();
-    switch (conn->type) {
-        case TYPE_SOCKET:
-            printf("Close in connector socket:%d\n", conn->content.sock->fd);
-            close(conn->content.sock->fd);
-            break;
-    }
-    printf("End closing IN\n");
-}
-

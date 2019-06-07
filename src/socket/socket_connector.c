@@ -66,11 +66,6 @@ int create_input_socket_connector(const int port)
     return bind_port(port);
 }
 
-void release_runtime_sock_connector(ri_sock_connector_t *conn)
-{
-    free(conn);
-}
-
 int open_socket_connector (ri_sock_connector_t* connection_params)
 {
     connection_params->fd = create_input_socket_connector(connection_params->port);
@@ -78,9 +73,10 @@ int open_socket_connector (ri_sock_connector_t* connection_params)
     return connection_params->fd;
 }
 
-void open_server_socket_connector (ri_sock_connector_t* connection_params)
+int open_server_socket_connector (ri_sock_connector_t* connection_params)
 {
     connection_params->fd = socket_connect (connection_params->server_name, connection_params->port);
+    return connection_params->fd;
 }
 
 void create_runtime_sock_connector (ri_in_connector_t *res, int port_no)
@@ -102,13 +98,14 @@ printf("read_from_socket, size:%d\n", n);
 	return n;
 }
 
-void close_socket (ri_sock_connector_t* connection_params)
+int close_socket (ri_sock_connector_t* connection_params)
 {
     close (connection_params->fd);
+    return 0;
 }
 
-void sock_write(const int sockfd, char* buffer, const int length)
+int sock_write(const int sockfd, char* buffer, const int length)
 {
 printf("SOCKET send: %d, %s length:%d\n", sockfd, buffer, length);
-    wrap_send(sockfd, buffer, length, 0);
+    return wrap_send(sockfd, buffer, length, 0);
 }

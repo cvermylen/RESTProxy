@@ -30,13 +30,10 @@ ri_out_connector_t* create_runtime_out_sock_connector(const int flow, const char
 	conn->type = TYPE_SOCKET;
 	conn->flow = flow;
 	conn->connection_params = res;
-	conn->open_connection = open_server_socket_connector;
-	conn->send_data = sock_write;
-    conn->receive_data = read_from_socket;
-    conn->close_connection = close_socket;
-	if(flow == FLOW_BIDIRECTIONAL) {
-		conn->response_callback = reply_to_client;
-	}
+	conn->open_connection = (int (*) (void*))open_server_socket_connector;
+	conn->send_data = (int (*) (void*, char*, int))sock_write;
+    conn->receive_data = (int (*) (void*, char*, int))read_from_socket;
+    conn->close_connection = (int (*) (void*))close_socket;
 	return conn;
 }
 
@@ -51,27 +48,15 @@ printf("create_runtime_file_connector\n");
     conn->connection_params = res;
 	conn->type = TYPE_FILE;
 	conn->flow = flow;
-	conn->open_connection = open_file;
-	conn->send_data = file_writer;
-	conn->receive_data = file_reader;
-	conn->close_connection = close_file;
-	//REFACTOR: Handling of the strategy should not be handled here, but at the request/reply level
-	if(flow == FLOW_BIDIRECTIONAL){
-		conn->response_callback = reply_to_client;
-	}
+	conn->open_connection = (int (*) (void*))open_file;
+	conn->send_data = (int (*) (void*, char*, int))file_writer;
+	conn->receive_data = (int (*) (void*, char*, int))file_reader;
+	conn->close_connection = (int (*) (void*))close_file;
 	return conn;
 }
 
 void release_runtime_out_connector(ri_out_connector_t *conn)
 {
-	switch(conn->type){
-	case TYPE_SOCKET:
-		release_runtime_sock_connector(conn->content.sock);
-		break;
-	case TYPE_FILE:
-		release_runtime_file_connector(conn->content.file);
-		break;
-	}
 	free(conn);
 }
 
@@ -83,27 +68,14 @@ printf("create_runtime_in_connector\n");
 	switch(type){
 	case TYPE_SOCKET:
 	    create_runtime_sock_connector (res, port);
-		res->feed_data = read_from_socket;
-		res->send_data = reply_to_client;
+		res->feed_data = (int (*) (void*, char*, int))read_from_socket;
+		res->send_data = (int (*) (void*, char*, int))reply_to_client;---This method is not the right one
 		break;
 	case TYPE_FILE:
 		// res->content.file = create_runtime_file_connector(&(conn->content.file));
 		break;
 	}
 	return res;
-}
-
-void release_runtime_in_connector(ri_in_connector_t *conn)
-{
-	switch(conn->type){
-	case TYPE_SOCKET:
-		release_runtime_sock_connector(conn->content.sock);
-		break;
-	case TYPE_FILE:
-		release_runtime_file_connector(conn->content.file);
-		break;
-	}
-	free(conn);
 }
 
 ri_route_t *create_runtime_route(const int port, const int mode, const int num_connectors)
@@ -130,7 +102,7 @@ void add_out_sock_connector(ri_route_t* route, const int index, const char* host
 void release_runtime_route(ri_route_t *route)
 {
 	close_connections(route);
-	release_runtime_in_connector(route->in_connector);
+	free(route->in_connector);
 	for(int i=0; i < route->out_connections; i++){
 		release_runtime_out_connector(route->out_connectors[i]);
 	}
