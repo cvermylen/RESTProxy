@@ -32,4 +32,4 @@ add_library(gateway ${SOURCE_FILES})
 
 add_executable(main main.c
         $<TARGET_OBJECTS:socket_wrap.o>)
-target_link_libraries(main gateway http socket_conn buffers stack pthread rest_logs m)
+target_link_libraries(main http gateway socket_conn buffers stack pthread rest_logs m)

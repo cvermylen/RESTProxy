@@ -23,14 +23,14 @@ ri_connection_t* new_http_connection (ri_route_t* route);
 
 int open_connection(ri_connection_t *conn);
 
-void run_session (ri_connection_t* conn);
+void* run_session (ri_connection_t* conn);
 
 ri_connection_t *wait_4_connection_request(ri_route_t *route);
 
 /*!
   \brief close the file descriptor associated to the described connection, and free the memory allocated to the descriptor
  */
-void close_connection (request_replies_t* rr);
+void close_connection (ri_connection_t *conn);
 
 void *receive_and_process_data_from_client(void *params);
 

@@ -3,6 +3,7 @@
 #include <pthread.h>
 
 #include "file_connector.h"
+#include "http/http_connection.h"
 
 
 typedef struct {
@@ -51,8 +52,8 @@ ri_out_connector_t *create_runtime_out_file_connector(const int flow, const char
 /*!
   \brief free all memory allocated to the route instance, except the thread data (threads may still be running)
  */
-void release_runtime_route(ri_route_t *route);
+void release_runtime_route(ri_connection_t*);
 
-void start_route(ri_route_t *route);
+ri_connection_t* start_route(ri_route_t *route);
 
 #endif

@@ -32,6 +32,10 @@ void forward_request_to_all_servers(request_replies_t *rr);
 
 void wait_4_all_sender_to_complete(request_replies_t *request);
 
+void close_in_and_out_connections (request_replies_t* rr);
+
+void free_request_replies (request_replies_t* rr);
+
 void *sync_request_reply_to_server(reply_t *reply);
 
 #endif

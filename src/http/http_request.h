@@ -2,9 +2,6 @@
 #define HTTP_REQUEST_H
 
 #include "http_message.h"
-#include "../socket/socket_connector.h"
-#include "../file_connector.h"
-#include "../request_reply.h"
 
 typedef struct request {
     int type;       //GET, POST...

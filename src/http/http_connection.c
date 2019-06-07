@@ -40,9 +40,10 @@ int open_connection(ri_connection_t *conn)
     return 0;
 }
 
-void close_connection (request_replies_t* rr)
+void close_connection (ri_connection_t *conn)
 {
     printf("Close connection:\n");
+    request_replies_t* rr = stack_top (conn->requestReplies);
     close_client_connection (rr->request);
     for (int i=0; i < rr->out_connections; i++) {
         close_server_connection (rr->replies[i]);
@@ -59,7 +60,7 @@ void process_request_replies (ri_connection_t* conn, request_replies_t* rr)
 /*! new version of 'receive_and_process_data_from_client'
  * @param conn
  */
-void run_session (ri_connection_t* conn)
+void* run_session (ri_connection_t* conn)
 {
     request_replies_t* rr = prepare_for_next_request_replies (conn);
     int r = open_connection (conn);
@@ -72,7 +73,8 @@ void run_session (ri_connection_t* conn)
             rr = prepare_for_next_request_replies (conn);
         } while (keep_alive);
     }
-    close_connection (rr);
+    close_connection (conn);
+    return NULL;
 }
 
 //REFACTOR should be removed

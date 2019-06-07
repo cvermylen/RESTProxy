@@ -200,7 +200,7 @@ void http_headers_add(http_header_t* hdr)
 
 }
 
-stack_head_t *http_headers_get(http_header_t* hdr, const int prop_key)
+stack_head_t* http_headers_get(http_header_t* hdr, const int prop_key)
 {
     stack_head_t *result = NULL;
     if (prop_key >= 0 && prop_key < NUM_HTTP_HEADERS) {

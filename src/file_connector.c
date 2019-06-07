@@ -9,11 +9,13 @@
 int open_file (ri_file_connector_t *conn)
 {
     conn->file = fopen(conn->filename, "w");
+    return 0;
 }
 
 int close_file (ri_file_connector_t *conn)
 {
     fclose (conn->file);
+    return 0;
 }
 
 int file_reader(ri_file_connector_t *conn, char* dest, int max_buffer_size)
@@ -25,4 +27,5 @@ int file_writer(ri_file_connector_t *conn, char* dest, int buffer_size)
 {
     fwrite (dest, 1, buffer_size, conn->file);
     fflush(conn->file);
+    return 0;
 }

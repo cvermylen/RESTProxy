@@ -86,8 +86,8 @@ void create_runtime_sock_connector (ri_in_connector_t *res, int port_no)
     sc->port = port_no;
     sc->mode = MODE_TCP;
     res->connection_params = sc;
-    res->open_connection = open_socket_connector;
-    res->close_connection = close_socket;
+    res->open_connection = (int (*) (void*))open_socket_connector;
+    res->close_connection = (int (*) (void*))close_socket;
 }
 
 int read_from_socket(int fd, char* buffer, int max_size)

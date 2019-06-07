@@ -10,15 +10,6 @@
 #include <pthread.h>
 #include <errno.h>
 
-int program_should_continue = 1;
-
-
-void close_connections(ri_route_t *route) {
-    printf("Close connection\n");
-    close_in_connector(route->in_connector);
-    program_should_continue = 0;
-}
-
 ri_out_connector_t* create_runtime_out_sock_connector(const int flow, const char* hostname, const int port)
 {
 	ri_sock_connector_t* res = (ri_sock_connector_t*)malloc(sizeof(ri_sock_connector_t));
@@ -69,7 +60,7 @@ printf("create_runtime_in_connector\n");
 	case TYPE_SOCKET:
 	    create_runtime_sock_connector (res, port);
 		res->feed_data = (int (*) (void*, char*, int))read_from_socket;
-		res->send_data = (int (*) (void*, char*, int))reply_to_client;---This method is not the right one
+		res->send_data = (int (*) (void*, char*, int))sock_write;
 		break;
 	case TYPE_FILE:
 		// res->content.file = create_runtime_file_connector(&(conn->content.file));
@@ -99,20 +90,32 @@ void add_out_sock_connector(ri_route_t* route, const int index, const char* host
 	route->out_connectors[index] = create_runtime_out_sock_connector(flow, hostname, port);
 }
 
-void release_runtime_route(ri_route_t *route)
+void free_route (ri_route_t* route)
 {
-	close_connections(route);
-	free(route->in_connector);
-	for(int i=0; i < route->out_connections; i++){
-		release_runtime_out_connector(route->out_connectors[i]);
-	}
-	free(route);
+    release_runtime_in_connector (route->in_connector);
+    for (int i=0; i < route->out_connections; i++) {
+        release_runtime_out_connector(route->out_connectors[i]);
+    }
 }
 
-void start_route(ri_route_t *route)
+void release_runtime_route(ri_connection_t* conn)
+{
+    stack_node_t* rr = NULL;
+    while ((rr = stack_pop (conn->requestReplies)) != NULL ) {
+        close_in_and_out_connections (rr->elem);
+    }
+    free_request_replies (rr->elem);
+	free(conn->requestReplies);
+
+	free_route (conn->route);
+	free(conn);
+}
+
+ri_connection_t* start_route(ri_route_t *route)
 {
 	pthread_t pthread;
 	ri_connection_t* conn = new_http_connection(route);
-	int i = pthread_create (&pthread, NULL, run_session, conn);
+	int i = pthread_create (&pthread, NULL, (void* (*) (void*))run_session, conn);
 	pthread_join(pthread, NULL);
+	return conn;
 }

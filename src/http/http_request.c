@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "../buffers/shared_buffers.h"
 #include "http_request.h"
@@ -44,7 +45,7 @@ void process_request_message_body (request_t* request)
 
 int get_request_connection_keep_alive (request_t* request)
 {
-    return http_headers_get (request->http_message->header, HTTP_KEEP_ALIVE);
+    return decode_body_length (request->http_message->header);
 }
 
 void close_client_connection (request_t* request)
