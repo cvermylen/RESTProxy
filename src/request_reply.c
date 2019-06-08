@@ -3,16 +3,16 @@
 #include <string.h>
 
 #include "route_def.h"
-#include "buffers/shared_buffers.h"
-#include "http/http_connection.h"
+//#include "buffers/shared_buffers.h"
+//#include "http/http_connection.h"
 #include "request_reply.h"
-#include "socket/socket_connector.h"
-#include "http/http_message.h"
-#include "http/http_first_line.h"
-#include "buffers/circular_buffer.h"
-#include "http/http_reply.h"
+//#include "socket/socket_connector.h"
+//#include "http/http_message.h"
+//#include "http/http_first_line.h"
+//#include "buffers/circular_buffer.h"
+//#include "http/http_reply.h"
 
-request_replies_t* new_request_replies (ri_in_connector_t* connector_def, int number_of_servers, ri_out_connector_t** server_conns)
+request_replies_t* new_request_replies (in_connector_t* connector_def, int number_of_servers, out_connector_t** server_conns)
 {
     request_replies_t* rr = (request_replies_t*) malloc (sizeof(request_replies_t));
     rr->request = new_http_request((void*)connector_def->open_connection, connector_def->feed_data, connector_def->send_data, connector_def->close_connection, connector_def->connection_params);
@@ -98,4 +98,13 @@ void strategy_sequential_request_replies (request_replies_t* rr)
     synchronize_all_senders (rr);
     forward_replies (rr);
     release_buffer_after_processing(rr);
+}
+
+void free_request_replies (request_replies_t* rr)
+{
+    release_request (rr->request);
+    for (int i = 0; i < rr->out_connections; i++) {
+        release_reply (rr->replies[i]);
+    }
+    free (rr);
 }

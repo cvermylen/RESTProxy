@@ -1,7 +1,6 @@
 #ifndef HTTP_MESSAGE_H
 #define HTTP_MESSAGE_H
 
-//#include <stack.h>
 #include "../buffers/circular_buffer.h"
 #include "http_headers.h"
 

@@ -2,7 +2,7 @@
 #define SOCKET_IO
 
 #include <netinet/in.h>
-#include "../route_instance.h"
+//#include "../route_instance.h"
 
 #define BINDING_ERROR	-20000
 
@@ -25,7 +25,7 @@ int bind_port(int portno);
 
 int create_input_socket_connector(int port);
 
-void create_runtime_sock_connector(ri_in_connector_t *res, int port_no);
+ri_sock_connector_t* create_runtime_sock_connector(int port_no);
 
 int sock_write(int sockfd, char* buffer, int length);
 

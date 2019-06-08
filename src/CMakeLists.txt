@@ -17,7 +17,8 @@ set(SOURCE_FILES
         workflow_handler.c
         route_instance.c
         file_connector.c
-)
+        route.c
+        route_instance.c)
 
 set(CMAKE_BUILD_TYPE "Debug")
 
@@ -27,6 +28,7 @@ add_dependencies(request_reply.o socket_connector.o)
 
 add_library(workflow_handler.o OBJECT workflow_handler.c)
 add_library(route_instance.o OBJECT route_instance.c)
+add_library(route.o OBJECT route.c)
 add_library(file_connector.o OBJECT file_connector.c)
 add_library(gateway ${SOURCE_FILES})
 

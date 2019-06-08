@@ -79,15 +79,13 @@ int open_server_socket_connector (ri_sock_connector_t* connection_params)
     return connection_params->fd;
 }
 
-void create_runtime_sock_connector (ri_in_connector_t *res, int port_no)
+ri_sock_connector_t* create_runtime_sock_connector (int port_no)
 {
     printf("create_runtime_sock_connector\n");
     ri_sock_connector_t *sc = (ri_sock_connector_t*)malloc(sizeof(ri_sock_connector_t));
     sc->port = port_no;
     sc->mode = MODE_TCP;
-    res->connection_params = sc;
-    res->open_connection = (int (*) (void*))open_socket_connector;
-    res->close_connection = (int (*) (void*))close_socket;
+    return sc;
 }
 
 int read_from_socket(int fd, char* buffer, int max_size)

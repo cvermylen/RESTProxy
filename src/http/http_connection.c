@@ -12,12 +12,12 @@
 #include "../socket/socket_connector.h"
 #include "http_first_line.h"
 #include "../route_instance.h"
-
+#include "../request_reply.h"
 #include <stack.h>
 
 //stack_head_t *connections_stack;
 
-ri_connection_t* new_http_connection (ri_route_t* route)
+ri_connection_t* new_http_connection (route_t* route)
 {
     ri_connection_t* res = (ri_connection_t *) malloc(sizeof(ri_connection_t));
     res->route = route;
@@ -78,9 +78,9 @@ void* run_session (ri_connection_t* conn)
 }
 
 //REFACTOR should be removed
-void *receive_and_process_data_from_client(void *params) {
+/*void *receive_and_process_data_from_client(void *params) {
     ri_connection_t *conn = (ri_connection_t *) params;
-    ri_route_t *route = conn->route;
+    route_t *route = conn->route;
     conn->total_messages = 0;
     conn->total_bytes = 0;
     request_replies_t* rr = new_request_replies(route->in_connector, route->out_connections, route->out_connectors);
@@ -103,4 +103,16 @@ void *receive_and_process_data_from_client(void *params) {
     close_connection(conn);
     if (rr->request != NULL) release_request(rr->request);
     pthread_exit(conn);
+}*/
+
+void release_runtime_route(ri_connection_t* conn)
+{
+    stack_node_t* rr = NULL;
+    while ((rr = stack_pop (conn->requestReplies)) != NULL ) {
+        free_request_replies (rr->elem);
+    }
+    free(conn->requestReplies);
+
+    free(conn);
 }
+
