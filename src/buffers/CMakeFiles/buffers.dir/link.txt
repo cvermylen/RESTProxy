@@ -1,2 +1,0 @@
-/usr/bin/ar qc ../../lib/libbuffers.a  CMakeFiles/buffers.dir/shared_buffers.c.o CMakeFiles/buffers.dir/circular_buffer.c.o
-/usr/bin/ranlib ../../lib/libbuffers.a

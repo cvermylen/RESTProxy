@@ -1,1 +1,0 @@
-/usr/bin/clang -g  -rdynamic CMakeFiles/shared_buffers_TEST_test.dir/shared_buffers_TEST.c.o ../src/buffers/CMakeFiles/shared_buffers.o.dir/shared_buffers.c.o  -o ../bin/shared_buffers_TEST_test  -L/home/christian/CLionProjects/RESTProxy/tests/lib  -L/usr/local/lib -Wl,-rpath,/home/christian/CLionProjects/RESTProxy/tests/lib:/usr/local/lib -lpthread -lcriterion 

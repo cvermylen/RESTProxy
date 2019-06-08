@@ -1,2 +1,0 @@
-/usr/bin/ar qc ../../lib/libsocket_conn.a  CMakeFiles/socket_conn.dir/socket_connector.c.o
-/usr/bin/ranlib ../../lib/libsocket_conn.a

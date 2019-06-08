@@ -1,2 +1,0 @@
-/usr/bin/ar qc ../../lib/librest_logs.a  CMakeFiles/rest_logs.dir/error_handler.c.o CMakeFiles/rest_logs.dir/log.c.o
-/usr/bin/ranlib ../../lib/librest_logs.a

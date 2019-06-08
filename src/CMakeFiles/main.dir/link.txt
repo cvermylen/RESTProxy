@@ -1,1 +1,0 @@
-/usr/bin/clang -g  -rdynamic CMakeFiles/main.dir/main.c.o socket/CMakeFiles/socket_wrap.o.dir/socket_wrap.c.o  -o ../bin/main  -L/usr/local/lib -Wl,-rpath,/usr/local/lib ../lib/libhttp.a ../lib/libgateway.a ../lib/libsocket_conn.a ../lib/libbuffers.a -lstack -lpthread ../lib/librest_logs.a -lm 

@@ -1,2 +1,0 @@
-/usr/bin/ar qc ../../lib/libhttp.a  CMakeFiles/http.dir/http_first_line.c.o CMakeFiles/http.dir/http_headers.c.o CMakeFiles/http.dir/http_message.c.o CMakeFiles/http.dir/http_request.c.o CMakeFiles/http.dir/http_reply.c.o CMakeFiles/http.dir/http_connection.c.o
-/usr/bin/ranlib ../../lib/libhttp.a
