@@ -1,0 +1,22 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/christian/CLionProjects/RESTProxy/tests/mocks/mock_socket.c
+stdio.h
+-
+stdlib.h
+-
+sys/socket.h
+-
+mock_socket.h
+/home/christian/CLionProjects/RESTProxy/tests/mocks/mock_socket.h
+
+/home/christian/CLionProjects/RESTProxy/tests/mocks/mock_socket.h
+netinet/in.h
+-
+

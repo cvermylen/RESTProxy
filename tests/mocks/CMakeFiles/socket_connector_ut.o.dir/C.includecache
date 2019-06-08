@@ -1,0 +1,42 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/christian/CLionProjects/RESTProxy/src/route_def.h
+stdio.h
+-
+
+/home/christian/CLionProjects/RESTProxy/src/socket/socket_connector.c
+stdlib.h
+-
+sys/socket.h
+-
+fcntl.h
+-
+netinet/in.h
+-
+netdb.h
+-
+strings.h
+-
+stdio.h
+-
+unistd.h
+-
+socket_connector.h
+/home/christian/CLionProjects/RESTProxy/src/socket/socket_connector.h
+../route_def.h
+/home/christian/CLionProjects/RESTProxy/src/route_def.h
+socket_wrap.h
+/home/christian/CLionProjects/RESTProxy/src/socket/socket_wrap.h
+
+/home/christian/CLionProjects/RESTProxy/src/socket/socket_connector.h
+netinet/in.h
+-
+
+/home/christian/CLionProjects/RESTProxy/src/socket/socket_wrap.h
+

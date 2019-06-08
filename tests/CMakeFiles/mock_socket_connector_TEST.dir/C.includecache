@@ -1,0 +1,32 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/christian/CLionProjects/RESTProxy/src/socket/socket_connector.h
+netinet/in.h
+-
+
+/home/christian/CLionProjects/RESTProxy/tests/mock_socket_connector_TEST.c
+../src/socket/socket_connector.h
+/home/christian/CLionProjects/RESTProxy/src/socket/socket_connector.h
+mocks/mock_socket_connector.h
+/home/christian/CLionProjects/RESTProxy/tests/mocks/mock_socket_connector.h
+str_stack.h
+-
+criterion/criterion.h
+-
+stdlib.h
+-
+
+/home/christian/CLionProjects/RESTProxy/tests/mocks/mock_socket_connector.h
+
+/usr/local/include/stack.h
+
+/usr/local/include/str_stack.h
+stack.h
+/usr/local/include/stack.h
+

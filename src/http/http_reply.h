@@ -1,6 +1,7 @@
 #ifndef HTTP_REPLY_H
 #define HTTP_REPLY_H
 
+#include <pthread.h>
 #include "http_message.h"
 
 typedef struct {

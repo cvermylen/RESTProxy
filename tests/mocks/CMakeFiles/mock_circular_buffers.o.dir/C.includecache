@@ -1,0 +1,20 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/christian/CLionProjects/RESTProxy/src/buffers/circular_buffer.h
+
+/home/christian/CLionProjects/RESTProxy/tests/mocks/mock_circular_buffers.c
+../../src/buffers/circular_buffer.h
+/home/christian/CLionProjects/RESTProxy/src/buffers/circular_buffer.h
+stdlib.h
+-
+string.h
+-
+math.h
+-
+

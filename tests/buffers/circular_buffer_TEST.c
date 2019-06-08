@@ -7,7 +7,7 @@
 
 int mock_return_read_data;
 char* mock_transfer_read_data_buffer;
-int read_data(int fd, char* buffer, int buffer_size)
+int read_data(void* conn_params, char* buffer, int buffer_size)
 {
     strcpy(buffer, mock_transfer_read_data_buffer);
     return mock_return_read_data;
@@ -90,12 +90,11 @@ Test (increment, 8_to_7)
 
 Test (circular_buffer, new)
 {
-    circular_buffer_t* cb = new_circular_buffer(3, 7, read_data, 5);
+    circular_buffer_t* cb = new_circular_buffer(3, read_data, NULL, 5);
 
     cr_assert_not_null(cb, "new method expected to return something");
     cr_assert(3 == cb->size, "The 'size' property should be initialized at 3, not:%d", cb->size);
-    cr_assert(7 == cb->fd, "'fd' should have been set up");
-    cr_assert(&read_data == cb->feeder, "Address of feed function should have been set up");
+    cr_assert(&read_data == cb->feed_data, "Address of feed function should have been set up");
     cr_assert(5 == cb->max_size, "max_size field should have been set up");
     free_circular_buffer(cb);
 }
@@ -103,7 +102,7 @@ Test (circular_buffer, new)
 
 Test (circular_buffer, buffer_access_ok)
 {
-    circular_buffer_t* cb = new_circular_buffer(3, 7, NULL, 5);
+    circular_buffer_t* cb = new_circular_buffer(3, NULL, NULL, 5);
 
     for (int i = 0; i < 8; i++) {
         cb->buffers[i] = i;
@@ -114,7 +113,7 @@ Test (circular_buffer, buffer_access_ok)
 extern char is_full_circular_buffer (circular_buffer_t* buffer);
 Test (circular_buffer, is_empty)
 {
-    circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 0);
+    circular_buffer_t* cb = new_circular_buffer(3, NULL, NULL, 0);
 
     char empty = is_empty_circular_buffer(cb);
     char full = is_full_circular_buffer(cb);
@@ -126,7 +125,7 @@ Test (circular_buffer, is_empty)
 
 Test (circular_buffer, alloc_1)
 {
-    circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 0);
+    circular_buffer_t* cb = new_circular_buffer(3, NULL, NULL, 0);
 
     int r = alloc_entry_in_circular_buffer (cb);
     char empty = is_empty_circular_buffer(cb);
@@ -140,7 +139,7 @@ Test (circular_buffer, alloc_1)
 
 Test (circular_buffer, alloc_)
 {
-    circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 0);
+    circular_buffer_t* cb = new_circular_buffer(3, NULL, NULL, 0);
 
     for (int i = 0; i < 8; i++) {
         alloc_entry_in_circular_buffer (cb);
@@ -155,7 +154,7 @@ Test (circular_buffer, alloc_)
 
 Test (circular_buffer, deny_alloc)
 {
-    circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 0);
+    circular_buffer_t* cb = new_circular_buffer(3, NULL, NULL, 0);
 
     for (int i = 0; i < 8; i++) {
         alloc_entry_in_circular_buffer (cb);
@@ -172,7 +171,7 @@ Test (circular_buffer, deny_alloc)
 
 Test (circular_buffer, free_nothing)
 {
-    circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 0);
+    circular_buffer_t* cb = new_circular_buffer(3, read_data, NULL, 0);
 
     int r = buffer_has_been_sent(cb);
 
@@ -189,7 +188,7 @@ Test (circular_buffer, free_nothing)
 
 Test (circular_buffer, alloc_free_all)
 {
-    circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 0);
+    circular_buffer_t* cb = new_circular_buffer(3, read_data, NULL, 0);
 
     alloc_entry_in_circular_buffer (cb);
     int r = buffer_has_been_sent(cb);
@@ -207,7 +206,7 @@ Test (circular_buffer, alloc_free_all)
 
 Test (circular_buffer, alloc_4_free_all)
 {
-    circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 0);
+    circular_buffer_t* cb = new_circular_buffer(3, read_data, NULL, 0);
 
     alloc_entry_in_circular_buffer (cb);
     alloc_entry_in_circular_buffer (cb);
@@ -231,7 +230,7 @@ Test (circular_buffer, alloc_4_free_all)
 
 Test (circular_buffer, set_data_size)
 {
-    circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 0);
+    circular_buffer_t* cb = new_circular_buffer(3, read_data, NULL, 0);
     alloc_entry_in_circular_buffer (cb);
     alloc_entry_in_circular_buffer (cb);
     alloc_entry_in_circular_buffer (cb);
@@ -246,7 +245,7 @@ Test (circular_buffer, set_data_size)
 
 Test (circular_buffer, set_data_size_on_boundary)
 {
-    circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 0);
+    circular_buffer_t* cb = new_circular_buffer(3, read_data, NULL, 0);
     for (int i = 0; i < 8; i++) {
         alloc_entry_in_circular_buffer (cb);
     }
@@ -264,7 +263,7 @@ Test (circular_buffer, set_data_size_on_boundary)
 
 Test (circular_buffer, sent_size)
 {
-    circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 0);
+    circular_buffer_t* cb = new_circular_buffer(3, read_data, NULL, 0);
     alloc_entry_in_circular_buffer (cb);
     set_data_size_for_last_received_buffer(cb, 111);
     alloc_entry_in_circular_buffer (cb);
@@ -285,7 +284,7 @@ Test (circular_buffer, sent_size)
 extern int mock_called_free_buffer;
 Test (circular_buffer, one_sent)
 {
-    circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 0);
+    circular_buffer_t* cb = new_circular_buffer(3, read_data, NULL, 0);
     alloc_entry_in_circular_buffer (cb);
     set_data_size_for_last_received_buffer(cb, 111);
     alloc_entry_in_circular_buffer (cb);
@@ -307,7 +306,7 @@ Test(circular_buffer, out_of_shared_buffers)
 {
     init_mock_shared_buffers_variables ();
     mock_result_alloc_buffer = -4;
-    circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 0);
+    circular_buffer_t* cb = new_circular_buffer(3, read_data, NULL, 0);
 
     int r = alloc_entry_in_circular_buffer (cb);
 
@@ -411,7 +410,7 @@ Test(circular_ptr, distance_five_buffers)
 
 int mock_called_feeder;
 int mock_result_feeder;
-int mock_feeder(int fd, char* buffer, int size)
+int mock_feeder(void* conn_params, char* buffer, int size)
 {
     mock_called_feeder += 1;
     return mock_result_feeder;
@@ -423,7 +422,7 @@ Test(circular_ptr, add_inside_one_buffer_no_exceed_limit)
     cb->size = 3;
     cb->data_sizes = (int*) malloc (sizeof(int) * 8);
     cb->data_sizes[0] = 10;
-    cb->feeder = mock_feeder;
+    cb->feed_data = mock_feeder;
     mock_called_feeder = 0;
 
     circular_ptr_t from;
@@ -441,7 +440,7 @@ Test(circular_ptr, add_inside_one_buffer_no_exceed_limit)
 
 Test(circular_ptr, add_overlap_one_buffer_no_load)
 {
-    circular_buffer_t* cb = new_circular_buffer(3, 0, mock_feeder, 1024);
+    circular_buffer_t* cb = new_circular_buffer(3, mock_feeder, NULL, 1024);
     cb->data_sizes[0] = 10;
     cb->data_sizes[1] = 20;
     cb->next_to_be_received = 2;
@@ -470,7 +469,7 @@ Test(circular_ptr, add_overlap_one_buffer_load)
     cb->buffers = (int*) malloc (sizeof(int) * 8);
     cb->data_sizes[0] = 6;
     cb->next_to_be_received = 1;
-    cb->feeder = mock_feeder;
+    cb->feed_data = mock_feeder;
     mock_result_feeder = 5;
     mock_called_feeder = 0;
 
@@ -496,7 +495,7 @@ Test(circular_ptr, add_overlap_3_buffers_load) {
     cb->buffers = (int *) malloc(sizeof(int) * 8);
     cb->data_sizes[0] = 6;
     cb->next_to_be_received = 1;
-    cb->feeder = mock_feeder;
+    cb->feed_data = mock_feeder;
     mock_result_feeder = 5;
     mock_called_feeder = 0;
 
@@ -980,7 +979,7 @@ Test(feed_next_buffer, happy_path)
     mock_called_get_buffer= 0;
 
     mock_result_feeder = strlen("MyString");
-    cb->feeder = mock_feeder;
+    cb->feed_data = mock_feeder;
 
     int res = feed_next_buffer(cb, &ptr);
 

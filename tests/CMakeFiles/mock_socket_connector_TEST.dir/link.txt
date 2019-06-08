@@ -1,0 +1,1 @@
+/usr/bin/clang -g  -rdynamic CMakeFiles/mock_socket_connector_TEST.dir/mock_socket_connector_TEST.c.o mocks/CMakeFiles/mock_socket_connector.o.dir/mock_socket_connector.c.o  -o ../bin/mock_socket_connector_TEST  -L/home/christian/CLionProjects/RESTProxy/tests/lib  -L/usr/local/lib -Wl,-rpath,/home/christian/CLionProjects/RESTProxy/tests/lib:/usr/local/lib -lstack -lcriterion 

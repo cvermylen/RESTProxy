@@ -52,6 +52,14 @@ int alloc_entry_in_circular_buffer (circular_buffer_t *buffer)
     return mock_result_alloc_entry_in_circular_buffer;
 }
 
+int mock_called_read_into_next_buffer;
+int mock_result_read_into_next_buffer;
+int read_into_next_buffer(circular_buffer_t *buffer)
+{
+    mock_called_read_into_next_buffer += 1;
+    return mock_result_read_into_next_buffer;
+}
+
 int mock_called_free_last_sent_in_circular_buffer;
 int mock_result_free_last_sent_in_circular_buffer;
 int free_last_sent_in_circular_buffer(circular_buffer_t *buffer)

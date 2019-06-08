@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../../lib/libmock_http_message.o.a  CMakeFiles/mock_http_message.o.dir/mock_http_message.c.o
+/usr/bin/ranlib ../../lib/libmock_http_message.o.a

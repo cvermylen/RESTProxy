@@ -1,6 +1,7 @@
 include_directories(/usr/local/include)
 #link_directories(/usr/local/lib)
 
+add_library(mock_http_message.o OBJECT mock_http_message.c)
 add_library(mock_socket.o OBJECT mock_socket.c)
 add_library(mock_file_connector.o OBJECT mock_file_connector.c)
 add_library(mock_socket_connector.o OBJECT mock_socket_connector.c)

@@ -1,0 +1,34 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/christian/CLionProjects/RESTProxy/src/buffers/circular_buffer.h
+
+/home/christian/CLionProjects/RESTProxy/src/http/http_headers.h
+str_stack.h
+-
+../buffers/circular_buffer.h
+/home/christian/CLionProjects/RESTProxy/src/buffers/circular_buffer.h
+
+/home/christian/CLionProjects/RESTProxy/tests/http/http_headers_TEST.c
+../../src/http/http_headers.h
+/home/christian/CLionProjects/RESTProxy/src/http/http_headers.h
+stdio.h
+-
+../mocks/mock_socket_connector.h
+/home/christian/CLionProjects/RESTProxy/tests/mocks/mock_socket_connector.h
+criterion/criterion.h
+-
+
+/home/christian/CLionProjects/RESTProxy/tests/mocks/mock_socket_connector.h
+
+/usr/local/include/stack.h
+
+/usr/local/include/str_stack.h
+stack.h
+/usr/local/include/stack.h
+

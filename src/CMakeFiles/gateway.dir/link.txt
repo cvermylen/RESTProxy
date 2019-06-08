@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../lib/libgateway.a  CMakeFiles/gateway.dir/request_reply.c.o CMakeFiles/gateway.dir/logs/error_handler.c.o CMakeFiles/gateway.dir/logs/log.c.o CMakeFiles/gateway.dir/workflow_handler.c.o CMakeFiles/gateway.dir/route_instance.c.o CMakeFiles/gateway.dir/file_connector.c.o CMakeFiles/gateway.dir/route.c.o
+/usr/bin/ranlib ../lib/libgateway.a

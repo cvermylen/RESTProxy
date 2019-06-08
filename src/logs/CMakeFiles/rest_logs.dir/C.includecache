@@ -1,0 +1,30 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/christian/CLionProjects/RESTProxy/src/logs/error_handler.c
+error_handler.h
+/home/christian/CLionProjects/RESTProxy/src/logs/error_handler.h
+setjmp.h
+-
+stdio.h
+-
+stdlib.h
+-
+
+/home/christian/CLionProjects/RESTProxy/src/logs/error_handler.h
+
+/home/christian/CLionProjects/RESTProxy/src/logs/log.c
+log.h
+/home/christian/CLionProjects/RESTProxy/src/logs/log.h
+stdio.h
+-
+stdlib.h
+-
+
+/home/christian/CLionProjects/RESTProxy/src/logs/log.h
+

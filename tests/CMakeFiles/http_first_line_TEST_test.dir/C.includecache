@@ -1,0 +1,16 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/christian/CLionProjects/RESTProxy/src/http/http_first_line.h
+
+/home/christian/CLionProjects/RESTProxy/tests/http_first_line_TEST.c
+../src/http/http_first_line.h
+/home/christian/CLionProjects/RESTProxy/src/http/http_first_line.h
+criterion/criterion.h
+-
+
