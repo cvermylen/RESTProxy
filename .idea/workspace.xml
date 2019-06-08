@@ -79,18 +79,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a31fb953-ff1f-405d-aa0c-016aa84be8cb" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/http/http_reply.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/http/http_reply.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/buffers/circular_buffer_TEST.c" beforeDir="false" afterPath="$PROJECT_DIR$/tests/buffers/circular_buffer_TEST.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/http/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/tests/http/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/http/http_reply_TEST.c" beforeDir="false" afterPath="$PROJECT_DIR$/tests/http/http_reply_TEST.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/http/http_request_TEST.c" beforeDir="false" afterPath="$PROJECT_DIR$/tests/http/http_request_TEST.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/mocks/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/tests/mocks/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/mocks/mock_circular_buffers.c" beforeDir="false" afterPath="$PROJECT_DIR$/tests/mocks/mock_circular_buffers.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/mocks/mock_file_connector.c" beforeDir="false" afterPath="$PROJECT_DIR$/tests/mocks/mock_file_connector.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/socket_connector_TEST.c" beforeDir="false" afterPath="$PROJECT_DIR$/tests/socket_connector_TEST.c" afterDir="false" />
-    </list>
+    <list default="true" id="a31fb953-ff1f-405d-aa0c-016aa84be8cb" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <ignored path="$PROJECT_DIR$/CMakeFiles/" />
     <ignored path="$PROJECT_DIR$/src/http/CMakeFiles/" />
