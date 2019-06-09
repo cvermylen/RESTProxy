@@ -108,7 +108,7 @@ extern void skip_eol_if_present (http_header_t *header);
 Test(skip_eol_if_present, empty_string) {
     char buf[] = "";
     mock_result_get_buffer[0] = buf;
-    circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 1024);
+    circular_buffer_t* cb = new_circular_buffer(3, NULL, NULL, 1024);
     cb->buffers[0] = 0;
     cb->data_sizes[0] = 0;
     http_header_t *header = http_headers_init(cb);
@@ -124,7 +124,7 @@ Test(skip_eol_if_present, empty_string) {
 Test(skip_eol_if_present, unix_1) {
     char buf[] = "\n";
     mock_result_get_buffer[0] = buf;
-    circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 1024);
+    circular_buffer_t* cb = new_circular_buffer(3, NULL, NULL, 1024);
     cb->buffers[0] = 0;
     cb->data_sizes[0] = 1;
     http_header_t *header = http_headers_init(cb);
@@ -140,7 +140,7 @@ Test(skip_eol_if_present, unix_1) {
 Test(skip_eol_if_present, ms_1) {
     char str[] = {0x0A, 0x0D};
     mock_result_get_buffer[0] = str;
-    circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 1024);
+    circular_buffer_t* cb = new_circular_buffer(3, NULL, NULL, 1024);
     cb->buffers[0] = 0;
     cb->data_sizes[0] = 2;
     http_header_t *header = http_headers_init(cb);
@@ -156,7 +156,7 @@ Test(skip_eol_if_present, ms_1) {
 Test(skip_eol_if_present, ms_2) {
     char str[] = {0x0D, 0x0A};
     mock_result_get_buffer[0] = str;
-    circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 1024);
+    circular_buffer_t* cb = new_circular_buffer(3, NULL, NULL, 1024);
     cb->buffers[0] = 0;
     cb->data_sizes[0] = 2;
     http_header_t *header = http_headers_init(cb);
@@ -172,7 +172,7 @@ Test(skip_eol_if_present, ms_2) {
 Test(skip_eol_if_present, ms_3) {
     char str[] = {0x0A, 0x20, 0x0D};
     mock_result_get_buffer[0] = str;
-    circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 1024);
+    circular_buffer_t* cb = new_circular_buffer(3, NULL, NULL, 1024);
     cb->buffers[0] = 0;
     cb->data_sizes[0] = 3;
     http_header_t *header = http_headers_init(cb);
@@ -188,7 +188,7 @@ Test(skip_eol_if_present, ms_3) {
 Test(skip_eol_if_present, ms_4) {
     char str[] = {0x0D, 0x20, 0x0A};
     mock_result_get_buffer[0] = str;
-    circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 1024);
+    circular_buffer_t* cb = new_circular_buffer(3, NULL, NULL, 1024);
     cb->buffers[0] = 0;
     cb->data_sizes[0] = 3;
     http_header_t *header = http_headers_init(cb);
@@ -204,7 +204,7 @@ Test(skip_eol_if_present, ms_4) {
 Test(skip_eol_if_present, unix_2) {
     char str[] = "  \n";
     mock_result_get_buffer[0] = str;
-    circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 1024);
+    circular_buffer_t* cb = new_circular_buffer(3, NULL, NULL, 1024);
     cb->buffers[0] = 0;
     cb->data_sizes[0] = 2;
     http_header_t *header = http_headers_init(cb);
@@ -220,7 +220,7 @@ extern circular_buffer_t* mock_create_circular_buffer (char** data, int size);
 Test(http_headers_add, happy) {
     char data[] = {"Server:value\n"};
     mock_result_get_buffer[0] = data;
-    circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 1024);
+    circular_buffer_t* cb = new_circular_buffer(3, NULL, NULL, 1024);
     cb->buffers[0] = 0;
     cb->data_sizes[0] = strlen(data);
     http_header_t *header = http_headers_init(cb);
@@ -241,7 +241,7 @@ Test(http_headers_add, happy) {
 Test(http_headers_add, non_existing) {
     char data[] = {"funny:value"};
     mock_result_get_buffer[0] = data;
-    circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 1024);
+    circular_buffer_t* cb = new_circular_buffer(3, NULL, NULL, 1024);
     cb->buffers[0] = 0;
     cb->data_sizes[0] = strlen(data);
     http_header_t *header = http_headers_init(cb);
@@ -257,7 +257,7 @@ Test(http_headers_add, non_existing) {
 
 int mock_called_feeder;
 int mock_result_feeder[100];
-int mock_feeder(int fd, char* buffer, int size)
+int mock_feeder(void* params, char* buffer, int size)
 {
     mock_called_feeder += 1;
     return mock_result_feeder[mock_called_feeder-1];
@@ -267,7 +267,7 @@ Test (is_ptr_pointing_to_eol_or_eos, empty_buffer)
 {
     char data[] = "";
     mock_result_get_buffer[0] = data;
-    circular_buffer_t* cb = new_circular_buffer(3, 0, mock_feeder, 1024);
+    circular_buffer_t* cb = new_circular_buffer(3, mock_feeder, NULL, 1024);
     cb->buffers[0] = 0;
     cb->data_sizes[0] = 0;
     cb->next_to_be_received = 1;
@@ -292,7 +292,7 @@ Test (is_ptr_pointing_to_eol_or_eos, big_buffer_full_of_spaces)
 {
     char data[] = "     ";
     mock_result_get_buffer[0] = data;
-    circular_buffer_t* cb = new_circular_buffer(3, 0, mock_feeder, 1024);
+    circular_buffer_t* cb = new_circular_buffer(3, mock_feeder, NULL, 1024);
     cb->buffers[0] = 0;
     cb->data_sizes[0] = strlen(data);
     cb->next_to_be_received = 1;
@@ -317,7 +317,7 @@ Test (is_ptr_pointing_to_eol_or_eos, big_buffer_with_eol)
 {
     char data[] = "   \n";
     mock_result_get_buffer[0] = data;
-    circular_buffer_t* cb = new_circular_buffer(3, 0, mock_feeder, 1024);
+    circular_buffer_t* cb = new_circular_buffer(3, mock_feeder, NULL, 1024);
     cb->buffers[0] = 0;
     cb->data_sizes[0] = strlen(data);
     cb->next_to_be_received = 1;
@@ -342,7 +342,7 @@ Test (is_ptr_pointing_to_eol_or_eos, buffer_size_1_with_CR_no_next_line)
 {
     char data[] = "\n";
     mock_result_get_buffer[0] = data;
-    circular_buffer_t* cb = new_circular_buffer(3, 0, mock_feeder, 1024);
+    circular_buffer_t* cb = new_circular_buffer(3, mock_feeder, NULL, 1024);
     cb->buffers[0] = 0;
     cb->data_sizes[0] = strlen(data);
     cb->next_to_be_received = 1;
@@ -370,7 +370,7 @@ Test (is_ptr_pointing_to_eol_or_eos, buffer_size_1_with_CR_and_next_line)
     char line2[] = " ";
     mock_result_get_buffer[0] = line1;
     mock_result_get_buffer[1] = line2;
-    circular_buffer_t* cb = new_circular_buffer(3, 0, mock_feeder, 1024);
+    circular_buffer_t* cb = new_circular_buffer(3, mock_feeder, NULL, 1024);
     cb->buffers[0] = 0;
     cb->data_sizes[0] = strlen(line1);
     cb->next_to_be_received = 1;
@@ -397,7 +397,7 @@ Test (is_ptr_pointing_to_eol_or_eos, buffer_size_2_with_NL_CR)
 {
     char data[] = {0x0A, 0x0D};
     mock_result_get_buffer[0] = data;
-    circular_buffer_t* cb = new_circular_buffer(3, 0, mock_feeder, 1024);
+    circular_buffer_t* cb = new_circular_buffer(3, mock_feeder, NULL, 1024);
     cb->buffers[0] = 0;
     cb->data_sizes[0] = 2;
     cb->next_to_be_received = 1;
@@ -425,7 +425,7 @@ Test (is_ptr_pointing_to_eol_or_eos, buffer_size_1_with_NL_and_CR_on_next_buffer
     char line2[] = {0x0D};
     mock_result_get_buffer[0] = line1;
     mock_result_get_buffer[1] = line2;
-    circular_buffer_t* cb = new_circular_buffer(3, 0, mock_feeder, 1024);
+    circular_buffer_t* cb = new_circular_buffer(3, mock_feeder, NULL, 1024);
     cb->buffers[0] = 0;
     cb->data_sizes[0] = 1;
     cb->next_to_be_received = 1;
@@ -452,7 +452,7 @@ Test (is_ptr_pointing_to_eol_or_eos, buffer_size_1_with_NL_and_no_next_buffer)
 {
     char line1[] = {0x0D};
     mock_result_get_buffer[0] = line1;
-    circular_buffer_t* cb = new_circular_buffer(3, 0, mock_feeder, 1024);
+    circular_buffer_t* cb = new_circular_buffer(3, mock_feeder, NULL, 1024);
     cb->buffers[0] = 0;
     cb->data_sizes[0] = 1;
     cb->next_to_be_received = 1;
@@ -477,7 +477,7 @@ Test (is_ptr_pointing_to_eol_or_eos, buffer_size_1_with_NL_and_no_next_buffer)
 extern int mock_called_alloc_buffer;
 Test (get_next_line, null)
 {
-    circular_buffer_t* cb = new_circular_buffer(3, 0, mock_feeder, 1024);
+    circular_buffer_t* cb = new_circular_buffer(3, mock_feeder, NULL, 1024);
     http_header_t *header = http_headers_init(cb);
     mock_called_alloc_buffer = 0;
     mock_called_feeder = 0;
@@ -494,7 +494,7 @@ Test(get_next_line, semicolon_true)
 {
     char str[] = "key:value";
     mock_result_get_buffer[0] = str;
-    circular_buffer_t* cb = new_circular_buffer(3, 0, mock_feeder, 1024);
+    circular_buffer_t* cb = new_circular_buffer(3, mock_feeder, NULL, 1024);
     cb->buffers[0] = 0;
     cb->data_sizes[0] = strlen(str);
     cb->next_to_be_received = 1;
@@ -521,7 +521,7 @@ Test(get_next_line, semicolon_false)
 {
     char str[] = "keyvalue";
     mock_result_get_buffer[0] = str;
-    circular_buffer_t* cb = new_circular_buffer(3, 0, mock_feeder, 1024);
+    circular_buffer_t* cb = new_circular_buffer(3, mock_feeder, NULL, 1024);
     cb->buffers[0] = 0;
     cb->data_sizes[0] = strlen(str);
     cb->next_to_be_received = 1;
@@ -552,7 +552,7 @@ Test(get_next_line, 2_lines_1_buffer)
 {
     char str[] = "line1\nline2";
     mock_result_get_buffer[0] = str;
-    circular_buffer_t* cb = new_circular_buffer(3, 0, mock_feeder, 1024);
+    circular_buffer_t* cb = new_circular_buffer(3, mock_feeder, NULL, 1024);
     cb->buffers[0] = 0;
     cb->data_sizes[0] = 11;
     cb->next_to_be_received = 1;
@@ -580,7 +580,7 @@ Test(get_next_line, 3_lines_1_buffer)
 {
     char str[] = "first line\nsecond line\nthird line";
     mock_result_get_buffer[0] = str;
-    circular_buffer_t* cb = new_circular_buffer(3, 0, mock_feeder, 1024);
+    circular_buffer_t* cb = new_circular_buffer(3, mock_feeder, NULL, 1024);
     cb->buffers[0] = 0;
     cb->data_sizes[0] = 33;
     cb->next_to_be_received = 1;
@@ -609,7 +609,7 @@ Test(get_next_line, 2_CR_1_buffer)
 {
     char str[] = "\n\nthird line";
     mock_result_get_buffer[0] = str;
-    circular_buffer_t* cb = new_circular_buffer(3, 0, mock_feeder, 1024);
+    circular_buffer_t* cb = new_circular_buffer(3, mock_feeder, NULL, 1024);
     cb->buffers[0] = 0;
     cb->data_sizes[0] = 12;
     cb->next_to_be_received = 1;
@@ -638,7 +638,7 @@ Test(get_next_line, special_char)
 {
     char str[] = "Content-Type: text/html; charset=UTF-8";
     mock_result_get_buffer[0] = str;
-    circular_buffer_t* cb = new_circular_buffer(3, 0, mock_feeder, 1024);
+    circular_buffer_t* cb = new_circular_buffer(3, mock_feeder, NULL, 1024);
     cb->buffers[0] = 0;
     cb->data_sizes[0] = strlen(str);
     cb->next_to_be_received = 1;
@@ -668,7 +668,7 @@ Test(get_next_line, read_from_socket)
     char str2[] = "Content-Type: text/html;";
     mock_result_get_buffer[0] = str2;
     mock_result_get_buffer[1] = str1;
-    circular_buffer_t* cb = new_circular_buffer(3, 0, mock_feeder, 1024);
+    circular_buffer_t* cb = new_circular_buffer(3, mock_feeder, NULL, 1024);
     cb->buffers[0] = 0;
     cb->data_sizes[0] = strlen(str2);
     cb->next_to_be_received = 1;
@@ -697,7 +697,7 @@ Test(get_next_line, split_header)
     char str2[] = "Content-T";
     mock_result_get_buffer[0] = str2;
     mock_result_get_buffer[1] = str1;
-    circular_buffer_t* cb = new_circular_buffer(3, 0, mock_feeder, 1024);
+    circular_buffer_t* cb = new_circular_buffer(3, mock_feeder, NULL, 1024);
     cb->buffers[0] = 0;
     cb->data_sizes[0] = strlen(str2);
     cb->next_to_be_received = 1;
@@ -728,7 +728,7 @@ Test(get_next_line, 3_lines_read)
     mock_result_get_buffer[0] = str3;
     mock_result_get_buffer[1] = str2;
     mock_result_get_buffer[2] = str1;
-    circular_buffer_t* cb = new_circular_buffer(3, 0, mock_feeder, 1024);
+    circular_buffer_t* cb = new_circular_buffer(3, mock_feeder, NULL, 1024);
     cb->buffers[0] = 0;
     cb->data_sizes[0] = strlen(str3);
     cb->next_to_be_received = 1;
@@ -757,7 +757,7 @@ Test(get_next_line, 3_lines_read)
 Test(header_strlen, 1_line) {
     char str[] = "a line";
     mock_result_get_buffer[0] = str;
-    circular_buffer_t* cb = new_circular_buffer(3, 0, mock_feeder, 1024);
+    circular_buffer_t* cb = new_circular_buffer(3, mock_feeder, NULL, 1024);
     cb->buffers[0] = 0;
     cb->data_sizes[0] = strlen(str);
     cb->next_to_be_received = 1;
@@ -778,7 +778,7 @@ Test(header_strlen, 1_line) {
 Test(header_strlen, 1_line_cr) {
     char str[] = "a line\n";
     mock_result_get_buffer[0] = str;
-    circular_buffer_t* cb = new_circular_buffer(3, 0, mock_feeder, 1024);
+    circular_buffer_t* cb = new_circular_buffer(3, mock_feeder, NULL, 1024);
     cb->buffers[0] = 0;
     cb->data_sizes[0] = 7;
     cb->next_to_be_received = 1;
@@ -799,7 +799,7 @@ Test(header_strlen, 1_line_cr) {
 Test(header_strlen, 1_line_cr_2) {
     char str[] = {'a', ' ', 'l', 'i', 'n', 'e', 0x0A, 0x0D};
     mock_result_get_buffer[0] = str;
-    circular_buffer_t* cb = new_circular_buffer(3, 0, mock_feeder, 1024);
+    circular_buffer_t* cb = new_circular_buffer(3, mock_feeder, NULL, 1024);
     cb->buffers[0] = 0;
     cb->data_sizes[0] = 7;
     cb->next_to_be_received = 1;
@@ -820,7 +820,7 @@ Test(header_strlen, 1_line_cr_2) {
 Test(header_strlen, 2_lines_cr) {
     char str[] = "a line\nsecond line";
     mock_result_get_buffer[0] = str;
-    circular_buffer_t* cb = new_circular_buffer(3, 0, mock_feeder, 1024);
+    circular_buffer_t* cb = new_circular_buffer(3, mock_feeder, NULL, 1024);
     cb->buffers[0] = 0;
     cb->data_sizes[0] = 18;
     cb->next_to_be_received = 1;
@@ -842,7 +842,7 @@ Test(header_strlen, 2_lines_cr) {
 Test(header_strlen, 2_line_scr_2) {
     char str[] = {'a', ' ', 'l', 'i', 'n', 'e', 0x0A, 0x0D, 's', 'e', 'c', 'o', 'n', 'd', ' ', 'l', 'i', 'n', 'e'};
     mock_result_get_buffer[0] = str;
-    circular_buffer_t* cb = new_circular_buffer(3, 0, mock_feeder, 1024);
+    circular_buffer_t* cb = new_circular_buffer(3, mock_feeder, NULL, 1024);
     cb->buffers[0] = 0;
     cb->data_sizes[0] = 19;
     cb->next_to_be_received = 1;
@@ -865,7 +865,7 @@ Test(header_strlen, 2_lines_empty_line) {
     char str[] = {'a', ' ', 'l', 'i', 'n', 'e', 0x0A, 0x0D, 0x0A, 0x0D, 's', 'e', 'c', 'o', 'n', 'd', ' ', 'l', 'i',
                   'n', 'e'};
     mock_result_get_buffer[0] = str;
-    circular_buffer_t* cb = new_circular_buffer(3, 0, mock_feeder, 1024);
+    circular_buffer_t* cb = new_circular_buffer(3, mock_feeder, NULL, 1024);
     cb->buffers[0] = 0;
     cb->data_sizes[0] = 21;
     cb->next_to_be_received = 1;
@@ -886,7 +886,7 @@ Test(header_strlen, 2_lines_empty_line) {
 
 
 Test(body_length, not_present) {
-    circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 1024);
+    circular_buffer_t* cb = new_circular_buffer(3, NULL, NULL, 1024);
     http_header_t *header = http_headers_init(cb);
 
     int result = decode_body_length(header);
@@ -895,7 +895,7 @@ Test(body_length, not_present) {
 }
 
 Test(body_length, happy) {
-    circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 1024);
+    circular_buffer_t* cb = new_circular_buffer(3, NULL, NULL, 1024);
     http_header_t *header = http_headers_init(cb);
 
     str_stack_push(header->headers[HTTP_CONTENT_LENGTH], "32");
@@ -906,7 +906,7 @@ Test(body_length, happy) {
 
 Test(decode_http_headers, empty_0)
 {
-    circular_buffer_t* cb = new_circular_buffer(3, 0, mock_feeder, 1024);
+    circular_buffer_t* cb = new_circular_buffer(3, mock_feeder, NULL, 1024);
     http_header_t *header = http_headers_init(cb);
     mock_called_alloc_buffer = 0;
     mock_called_feeder = 0;
@@ -921,7 +921,7 @@ Test(decode_http_headers, empty_0)
 Test(decode_http_headers, empty_1)
 {
     char str[] = "HTTP 1/1 GET\n";
-    circular_buffer_t* cb = new_circular_buffer(3, 0, mock_feeder, 1024);
+    circular_buffer_t* cb = new_circular_buffer(3, mock_feeder, NULL, 1024);
     http_header_t *header = http_headers_init(cb);
     mock_called_alloc_buffer = 0;
     mock_called_feeder = 0;
@@ -936,7 +936,7 @@ Test(decode_http_headers, empty_1)
 Test(decode_http_headers, happy_1)
 {
     char str[] = "HTTP 1/1 GET\nAccept: Apple\nServer: localhost\n\n<html>\n";
-    circular_buffer_t* cb = new_circular_buffer(3, 0, mock_feeder, 1024);
+    circular_buffer_t* cb = new_circular_buffer(3, mock_feeder, NULL, 1024);
     http_header_t *header = http_headers_init(cb);
     mock_called_alloc_buffer = 0;
     mock_called_feeder = 0;
@@ -953,7 +953,7 @@ Test(decode_http_headers, happy_1)
 
 Test(http_headers, get_empty)
 {
-    circular_buffer_t* cb = new_circular_buffer(3, 0, NULL, 1024);
+    circular_buffer_t* cb = new_circular_buffer(3, NULL, NULL, 1024);
     http_header_t *header = http_headers_init(cb);
 
     stack_head_t *empty = http_headers_get(header, 3);
@@ -965,7 +965,7 @@ Test(http_headers, get_empty)
 Test(decode_http_header, parse_retrieve)
 {
     char msg[] = "HTTP/1.1 200 OK\nDate: Mon, 23 May 2005 22:38:34 GMT\nContent-Type: text/html; charset=UTF-8\nContent-Length: 14\nLast-Modified: Wed, 08 Jan 2003 23:11:55 GMT\nServer: Apache/1.3.3.7 (Unix) (Red-Hat/Linux)\nETag: \"3f80f-1b6-3e1cb03b\"\nAccept-Ranges: bytes\n\n<html>\n</html>";
-    circular_buffer_t* cb = new_circular_buffer(3, 0, mock_feeder, 1024);
+    circular_buffer_t* cb = new_circular_buffer(3, mock_feeder, NULL, 1024);
     http_header_t *header = http_headers_init(cb);
     mock_called_alloc_buffer = 0;
     mock_called_feeder = 0;
