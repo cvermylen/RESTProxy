@@ -19,7 +19,6 @@ http_message_t* new_http_message (int (*feed_data) (void* conn_params, char* des
         http_message->raw_message_length = -1;
     } else {
         printf("ERROR: Messages should be allocated more than 1 buffer\n");
-        exit(0);
     }
     return http_message;
 }

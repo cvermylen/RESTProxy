@@ -7,7 +7,7 @@
 
 extern int http_message_buffer_size;
 
-Test(http_message, init)
+Test(new_http_message, init)
 {
 	char* buff = (char*)malloc(sizeof(char));
 
@@ -19,24 +19,33 @@ Test(http_message, init)
 	http_message_free(msg);
 }
 
-Test(http_message, init2)
+Test(new_http_message, init2)
 {
-    http_message_buffer_size = 0;  //Expect to have only one buffer
     http_message_t* msg = new_http_message(0, NULL, 0);
 
     cr_assert(msg != NULL, "init expected to return a non-NULL value");
     cr_assert(msg->buffers != NULL, "Need a circular buffer");
-    cr_assert(msg->status == HTTP_MSG_STATUS_HEADER, "Status should be initialized");
+    cr_assert(msg->status == HTTP_MSG_STATUS_INIT, "Status should be initialized");
     http_message_free(msg);
+}
+
+Test (new_http_message, bad_buffer_size)
+{
+    http_message_buffer_size = 0;
+    http_message_t* msg = new_http_message (0, NULL, 0);
+    http_message_buffer_size = BUFFER_SIZE;
+
+    cr_assert_null(msg, "Won't create a message if size of buffer is 0");
 }
 
 extern int mock_called_set_data_size_for_last_received_buffer;
 extern int mock_called_alloc_entry_in_circular_buffer;
 extern int mock_result_read_into_next_buffer;
+extern int mock_called_read_into_next_buffer;
 /*!
  * Simulate 1 received buffer
  */
-Test(read_from_source, read_in_one_buffer)
+Test(read_next_buffer_from_source, read_in_one_buffer)
 {
     http_message_buffer_size = 1;  // 2 ^ 1 = 2 buffers
     http_message_t* msg = new_http_message(0, NULL, 0);
@@ -51,10 +60,11 @@ Test(read_from_source, read_in_one_buffer)
 	cr_assert(5 == n, "expected length 5, not: %d", n);
 	cr_assert(mock_called_set_data_size_for_last_received_buffer == 1, "Function should have been called");
 	cr_assert(mock_called_alloc_entry_in_circular_buffer == 1, "Should have been called: 'alloc_entry_in_circular_buffer'");
+	cr_assert (mock_called_read_into_next_buffer == 1, "Should have called 'read_into_next_buffer'");
 	http_message_free(msg);
 }
 
-Test(http_message, 2_read_should_block)
+Test(read_next_buffer_from_source, 2_read_should_block)
 {
     http_message_buffer_size = 1;  // 2 ^ 1 = 2 buffers
     http_message_t* msg = new_http_message(0, NULL, 0);
@@ -71,6 +81,54 @@ Test(http_message, 2_read_should_block)
 	cr_assert(0 == m, "Not buffer available for the second read, expected to return '0', not:%d", m);
     cr_assert(mock_called_alloc_entry_in_circular_buffer == 2, "Should have been called: 'alloc_entry_in_circular_buffer'");
 	http_message_free(msg);
+}
+
+extern int mock_result_alloc_entry_in_circular_buffer;
+Test (read_next_buffer_from_source, no_buffer_available)
+{
+    http_message_t* msg = new_http_message(0, NULL, 0);
+    mock_result_alloc_entry_in_circular_buffer = -1;
+
+    int res = read_next_buffer_from_source (msg);
+
+    cr_assert (0 == res, "Should not actually execute any read if no buffer is available. Actual result was:%d", res);
+    http_message_free(msg);
+}
+
+extern int mock_called_http_decode_request_type;
+Test (http_message_decode_request_type, call)
+{
+    http_message_t* msg = new_http_message(0, NULL, 0);
+
+    int res = http_message_decode_request_type (msg);
+
+    cr_assert (1 == mock_called_http_decode_request_type, "Should have called 'http_decode_request_type'. Actual was:%d", mock_called_http_decode_request_type);
+    http_message_free(msg);
+}
+
+extern int mock_called_http_decode_response_type;
+Test (http_message_decode_response_type, call)
+{
+    http_message_t* msg = new_http_message(0, NULL, 0);
+
+    int res = http_message_decode_response_type (msg);
+
+    cr_assert (1 == mock_called_http_decode_response_type, "Should have called 'http_decode_response_type'. Actual was:%d", mock_called_http_decode_response_type);
+    http_message_free(msg);
+}
+
+extern int mock_called_decode_http_headers;
+extern int mock_called_decode_body_length;
+Test (decode_http_message_header, call)
+{
+    http_message_t* msg = new_http_message(0, NULL, 0);
+
+    decode_http_message_header (msg);
+
+    cr_assert (1 == mock_called_decode_http_headers, "Should have called 'decode_http_headers'. Actual was:%d", mock_called_decode_http_headers);
+    cr_assert (1 == mock_called_decode_body_length, "Should have called 'decode_body_length'. Actual was:%d", mock_called_decode_body_length);
+    cr_assert (HTTP_MSG_STATUS_HEADER_COMPLETE == msg->status, "Status expected to be 'HTTP_MSG_STATUS_HEADER_COMPLETE', not:%d", msg->status);
+    http_message_free(msg);
 }
 
 extern int mock_called_free_circular_buffer;
@@ -94,60 +152,69 @@ Test(http_message_receive_body, has_already_received_body_content)
     http_message_t* msg = (http_message_t*)malloc(sizeof(http_message_t));
     msg->raw_message_length = 10;
     msg->body_length = 5;
+    mock_result_alloc_entry_in_circular_buffer = -1;
+
     http_message_receive_body(msg);
+
+    cr_assert (1 == mock_called_alloc_entry_in_circular_buffer, "Should have called 'alloc_entry_in_circular_buffer', Actual was:%d", mock_called_alloc_entry_in_circular_buffer);
+    cr_assert (HTTP_MSG_STATUS_BODY_COMPLETE == msg->status, "Expected status 'HTTP_MSG_STATUS_BODY_COMPLETE', not:%d", msg->status);
+    http_message_free(msg);
 }
 
-/*Test(http_message, update_status_1)
+int mock_called_send_data = 0;
+int mock_result_send_data;
+int mock_send_data ()
 {
-	http_message_t* requestMessage = (http_message_t*)malloc(sizeof(http_message_t));
-	requestMessage->status = HTTP_MSG_STATUS_INIT;
-	requestMessage->buffer = "GET / HTTP1/1";
-	http_message_update_status(requestMessage, 0, strlen(requestMessage->buffer));
-	cr_assert(HTTP_MSG_STATUS_INIT == requestMessage->status, "expected status HTTP_MSG_STATUS_INIT, not:%d", requestMessage->status);
-}*/
-
-/*Test(http_message, update_status_2)
+    mock_called_send_data += 1;
+    return mock_result_send_data;
+}
+extern int mock_called_is_empty_circular_buffer;
+extern int mock_result_is_empty_circular_buffer;
+extern int mock_called_buffer_has_been_sent;
+Test (send_next_buffer_to_destination, call)
 {
-	http_message_t* requestMessage = (http_message_t*)malloc(sizeof(http_message_t));
-	requestMessage->status = HTTP_MSG_STATUS_INIT;
-	requestMessage->buffer = "XX / HTTP1/1";
-	http_message_update_status(requestMessage, 0, strlen(requestMessage->buffer));
-	cr_assert(HTTP_MSG_STATUS_INIT == requestMessage->status, "expected status HTTP_MSG_STATUS_INIT, not:%d", requestMessage->status);
-}*/
+    http_message_t* msg = (http_message_t*)malloc(sizeof(http_message_t));
+    mock_result_is_empty_circular_buffer = 0;
+    mock_called_is_empty_circular_buffer = 0;
+    mock_called_send_data = 0;
+    mock_called_buffer_has_been_sent = 0;
 
-/*Test(http_message, update_status_3)
+    send_next_buffer_to_destination (mock_send_data, NULL, msg, 0);
+
+    cr_assert (1 == mock_called_is_empty_circular_buffer, "Should have called 'is_empty_circular_buffer'. Actual was:%d", mock_called_is_empty_circular_buffer);
+    cr_assert (1 == mock_called_send_data, "Should have called 'send_data'. Actual was:%d", mock_called_send_data);
+    cr_assert (0 == mock_called_buffer_has_been_sent, "Should NOT have been called 'buffer_has_been_sent'. Actual was:%d", mock_called_buffer_has_been_sent);
+    http_message_free(msg);
+}
+
+Test (send_next_buffer_to_destination, no_call)
 {
-	http_message_t* requestMessage = (http_message_t*)malloc(sizeof(http_message_t));
-	requestMessage->status = HTTP_MSG_STATUS_INIT;
-	requestMessage->buffer = "POST / HTTP1/1";
-	http_message_update_status(requestMessage, 0, strlen(requestMessage->buffer));
-	cr_assert(HTTP_MSG_STATUS_INIT == requestMessage->status, "expected status HTTP_MSG_STATUS_INIT, not:%d", requestMessage->status);
-}*/
+    http_message_t* msg = (http_message_t*)malloc(sizeof(http_message_t));
+    mock_result_is_empty_circular_buffer = 1;
+    mock_called_is_empty_circular_buffer = 0;
+    mock_called_send_data = 0;
+    mock_called_buffer_has_been_sent = 0;
 
+    send_next_buffer_to_destination (mock_send_data, NULL, msg, 0);
 
-/*Test(http_message, update_status_4)
+    cr_assert (1 == mock_called_is_empty_circular_buffer, "Should have called 'is_empty_circular_buffer'. Actual was:%d", mock_called_is_empty_circular_buffer);
+    cr_assert (0 == mock_called_send_data, "Should NOT have been called 'send_data'. Actual was:%d", mock_called_send_data);
+    cr_assert (0 == mock_called_buffer_has_been_sent, "Should NOT have been called 'buffer_has_been_sent'. Actual was:%d", mock_called_buffer_has_been_sent);
+    http_message_free(msg);
+}
+
+Test (send_next_buffer_to_destination, all_sent)
 {
-	http_message_t* requestMessage = (http_message_t*)malloc(sizeof(http_message_t));
-	requestMessage->status = HTTP_MSG_STATUS_HEADER;
-	
-	char buffer[] = "Host: Mac";
-	requestMessage->buffer = (char*)malloc(sizeof(char) * strlen(buffer));
-	strcpy(requestMessage->buffer, buffer);
-	http_message_update_status(requestMessage, 0, strlen(requestMessage->buffer));
-	cr_assert(HTTP_MSG_STATUS_HEADER == requestMessage->status, "expected status HTTP_MSG_STATUS_HEADER, not:%d", requestMessage->status);
-}*/
+    http_message_t* msg = (http_message_t*)malloc(sizeof(http_message_t));
+    mock_result_is_empty_circular_buffer = 0;
+    mock_called_is_empty_circular_buffer = 0;
+    mock_called_send_data = 0;
+    mock_called_buffer_has_been_sent = 0;
 
+    send_next_buffer_to_destination (mock_send_data, NULL, msg, 1);
 
-/*Test(http_message, update_status_5)
-{
-	http_message_t* requestMessage = (http_message_t*)malloc(sizeof(http_message_t));
-	requestMessage->status = HTTP_MSG_STATUS_HEADER;
-	
-	char buffer[] = "Content-Length: 987";
-	requestMessage->buffer = (char*)malloc(sizeof(char) * strlen(buffer));
-	strcpy(requestMessage->buffer, buffer);
-	http_message_update_status(requestMessage, 0, strlen(requestMessage->buffer));
-	cr_assert(HTTP_MSG_STATUS_HEADER == requestMessage->status, "expected status HTTP_MSG_STATUS_LENGTH, not:%d", requestMessage->status);
-	cr_assert(987 == requestMessage->body_length, "expected body length of 987, not:%d", requestMessage->body_length);
-}*/
-
+    cr_assert (1 == mock_called_is_empty_circular_buffer, "Should have called 'is_empty_circular_buffer'. Actual was:%d", mock_called_is_empty_circular_buffer);
+    cr_assert (1 == mock_called_send_data, "Should have called 'send_data'. Actual was:%d", mock_called_send_data);
+    cr_assert (1 == mock_called_buffer_has_been_sent, "Should have called 'buffer_has_been_sent'. Actual was:%d", mock_called_buffer_has_been_sent);
+    http_message_free(msg);
+}
