@@ -1,4 +1,4 @@
-#include "../src/buffers/shared_buffers.h"
+#include "../../src/buffers/shared_buffers.h"
 #include <criterion/criterion.h>
 
 Test(buffers, init2) {

@@ -802,7 +802,7 @@ Test(buffer_2_str_copy, empty)
     char empty_buffer[] = "     ";
     mock_result_get_buffer[2] = empty_buffer;
     mock_called_get_buffer = 0;
-
+    cb->buffers[2] = 2;
     circular_ptr_t start;
     start.circ_index = 2;
     start.buff_pos = 3;
