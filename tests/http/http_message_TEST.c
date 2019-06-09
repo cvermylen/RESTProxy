@@ -84,7 +84,7 @@ Test(free_buffer, free_1)
     mock_called_http_headers_free = 0;
 
     http_message_free(msg);
-    
+
     cr_assert(mock_called_free_circular_buffer == 1, "Should have been called: 'free_circular_buffer'");
     cr_assert(mock_called_http_headers_free == 1, "Should have been called: 'http_headers_free'");
 }

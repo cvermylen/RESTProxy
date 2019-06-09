@@ -1,4 +1,4 @@
-#include "../src/http/http_first_line.h"
+#include "../../src/http/http_first_line.h"
 #include <criterion/criterion.h>
 
 extern char *mock_result_get_buffer;
