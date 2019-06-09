@@ -239,7 +239,7 @@ int cmp_circular_ptr (circular_buffer_t* cb, circular_ptr_t* lhs, circular_ptr_t
 static int starcount =0;
 char* buffer_2_str_copy (circular_buffer_t* cb, circular_ptr_t* start, circular_ptr_t* end)
 {
-    printf("###DEBUG###  %d", starcount++);
+    printf("###DEBUG###,%d-- end ind:%d\n", starcount++, end->circ_index);
     int length = op_distance_circ_pointers(cb, start, end);
     char* result = (char*) malloc(sizeof (char) * (length +1));
     int dest_start = 0;

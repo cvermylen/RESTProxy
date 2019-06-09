@@ -1,4 +1,5 @@
-.idea
+.idea/
+.DS_Store
 CMakeFiles/
 Makefile
 CTestTestfile.cmake
@@ -11,3 +12,4 @@ cmake-build-debug
 bin
 cmake
 Gateway.cbp
+src/RESTProxy.cbp

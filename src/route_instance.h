@@ -3,7 +3,6 @@
 
 #include "route.h"
 #include "http/http_connection.h"
-#include <pthread.h>
 
 typedef struct {
     route_t* route;

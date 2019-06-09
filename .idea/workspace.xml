@@ -3,8 +3,8 @@
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
     <generated>
       <config projectName="Gateway" targetName="ContinuousStart" />
-      <config projectName="Gateway" targetName="mock_socket_connector.o" />
       <config projectName="Gateway" targetName="gateway" />
+      <config projectName="Gateway" targetName="mock_socket_connector.o" />
       <config projectName="Gateway" targetName="circular_buffer_TEST" />
       <config projectName="Gateway" targetName="mock_file_connector.o" />
       <config projectName="Gateway" targetName="http_reply_TEST" />
@@ -18,9 +18,9 @@
       <config projectName="Gateway" targetName="mock_pthread.o" />
       <config projectName="Gateway" targetName="socket_connector_TEST_test" />
       <config projectName="Gateway" targetName="NightlyCoverage" />
-      <config projectName="Gateway" targetName="http_message_TEST" />
-      <config projectName="Gateway" targetName="route_instance.o" />
       <config projectName="Gateway" targetName="NightlyMemoryCheck" />
+      <config projectName="Gateway" targetName="route_instance.o" />
+      <config projectName="Gateway" targetName="http_message_TEST" />
       <config projectName="Gateway" targetName="socket_connector_ut.o" />
       <config projectName="Gateway" targetName="ContinuousTest" />
       <config projectName="Gateway" targetName="mock_circular_buffers.o" />
@@ -28,16 +28,16 @@
       <config projectName="Gateway" targetName="file_connector.o" />
       <config projectName="Gateway" targetName="http_connection.o" />
       <config projectName="Gateway" targetName="http_reply.o" />
-      <config projectName="Gateway" targetName="NightlyMemCheck" />
       <config projectName="Gateway" targetName="ExperimentalCoverage" />
+      <config projectName="Gateway" targetName="NightlyMemCheck" />
       <config projectName="Gateway" targetName="ContinuousCoverage" />
       <config projectName="Gateway" targetName="ExperimentalTest" />
       <config projectName="Gateway" targetName="http_request.o" />
       <config projectName="Gateway" targetName="shared_buffers.o" />
       <config projectName="Gateway" targetName="ContinuousBuild" />
+      <config projectName="Gateway" targetName="NightlyTest" />
       <config projectName="Gateway" targetName="request_reply.o" />
       <config projectName="Gateway" targetName="mock_first_line.o" />
-      <config projectName="Gateway" targetName="NightlyTest" />
       <config projectName="Gateway" targetName="NightlyConfigure" />
       <config projectName="Gateway" targetName="workflow_handler.o" />
       <config projectName="Gateway" targetName="mock_http_message.o" />
@@ -46,15 +46,15 @@
       <config projectName="Gateway" targetName="ExperimentalUpdate" />
       <config projectName="Gateway" targetName="ExperimentalStart" />
       <config projectName="Gateway" targetName="NightlyUpdate" />
-      <config projectName="Gateway" targetName="http_first_line.o" />
       <config projectName="Gateway" targetName="ContinuousUpdate" />
+      <config projectName="Gateway" targetName="http_first_line.o" />
       <config projectName="Gateway" targetName="socket_connector.o" />
       <config projectName="Gateway" targetName="ExperimentalBuild" />
       <config projectName="Gateway" targetName="http_headers_TEST" />
       <config projectName="Gateway" targetName="Continuous" />
       <config projectName="Gateway" targetName="ContinuousSubmit" />
-      <config projectName="Gateway" targetName="ExperimentalMemCheck" />
       <config projectName="Gateway" targetName="ContinuousConfigure" />
+      <config projectName="Gateway" targetName="ExperimentalMemCheck" />
       <config projectName="Gateway" targetName="http_first_line_TEST_test" />
       <config projectName="Gateway" targetName="mock_socket.o" />
       <config projectName="Gateway" targetName="route.o" />
@@ -66,33 +66,42 @@
       <config projectName="Gateway" targetName="mock_shared_buffers.o" />
       <config projectName="Gateway" targetName="ExperimentalConfigure" />
       <config projectName="Gateway" targetName="http_message.o" />
-      <config projectName="Gateway" targetName="circular_buffer.o" />
       <config projectName="Gateway" targetName="Nightly" />
+      <config projectName="Gateway" targetName="circular_buffer.o" />
       <config projectName="Gateway" targetName="shared_buffers_TEST_test" />
       <config projectName="Gateway" targetName="ExperimentalSubmit" />
       <config projectName="Gateway" targetName="http" />
     </generated>
   </component>
-  <component name="CMakeSettings" AUTO_RELOAD="true">
+  <component name="CMakeSettings">
     <configurations>
-      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" TOOLCHAIN_NAME="Default" />
+      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" />
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a31fb953-ff1f-405d-aa0c-016aa84be8cb" name="Default Changelist" comment="" />
+    <list default="true" id="97c95347-125e-422a-a947-cdb26f56083c" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/RESTProxy.cbp" beforeDir="false" afterPath="$PROJECT_DIR$/src/RESTProxy.cbp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/buffers/circular_buffer.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/buffers/circular_buffer.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/route.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/route.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/route_instance.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/route_instance.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/tests/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/buffers/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/tests/buffers/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/buffers/circular_buffer_TEST.c" beforeDir="false" afterPath="$PROJECT_DIR$/tests/buffers/circular_buffer_TEST.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/shared_buffers_TEST.c" beforeDir="false" afterPath="$PROJECT_DIR$/tests/buffers/shared_buffers_TEST.c" afterDir="false" />
+    </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <ignored path="$PROJECT_DIR$/CMakeFiles/" />
     <ignored path="$PROJECT_DIR$/src/http/CMakeFiles/" />
-    <ignored path="$PROJECT_DIR$/tests/mocks/CMakeFiles/" />
-    <ignored path="$PROJECT_DIR$/tests/CMakeFiles/" />
-    <ignored path="$PROJECT_DIR$/src/CMakeFiles/" />
-    <ignored path="$PROJECT_DIR$/src/frame_buffers/CMakeFiles/" />
-    <ignored path="$PROJECT_DIR$/src/logs/CMakeFiles/" />
-    <ignored path="$PROJECT_DIR$/src/socket/CMakeFiles/" />
-    <ignored path="$PROJECT_DIR$/tests/shared_buffers/CMakeFiles/" />
-    <ignored path="$PROJECT_DIR$/src/buffers/CMakeFiles/" />
     <ignored path="$PROJECT_DIR$/tests/buffers/CMakeFiles/" />
+    <ignored path="$PROJECT_DIR$/src/CMakeFiles/" />
+    <ignored path="$PROJECT_DIR$/src/buffers/CMakeFiles/" />
     <ignored path="$PROJECT_DIR$/tests/http/CMakeFiles/" />
+    <ignored path="$PROJECT_DIR$/tests/CMakeFiles/" />
+    <ignored path="$PROJECT_DIR$/src/socket/CMakeFiles/" />
+    <ignored path="$PROJECT_DIR$/tests/mocks/CMakeFiles/" />
+    <ignored path="$PROJECT_DIR$/src/logs/CMakeFiles/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -103,272 +112,8 @@
     <option name="formatViaClangd" value="false" />
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
-  <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.45201534">
-      <split-first>
-        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/route_instance.h">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="210">
-                  <caret line="14" column="6" selection-start-line="14" selection-start-column="6" selection-end-line="14" selection-end-column="6" />
-                  <folding>
-                    <element signature="e#51#69#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/tests/http/CMakeLists.txt">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="510">
-                  <caret line="34" column="39" selection-start-line="34" selection-start-column="39" selection-end-line="34" selection-end-column="39" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/tests/http/decode_http_headers.c">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="360">
-                  <caret line="24" selection-start-line="24" selection-end-line="24" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/tests/http/http_headers_TEST.c">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="-84">
-                  <caret line="693" column="33" selection-start-line="693" selection-start-column="33" selection-end-line="693" selection-end-column="33" />
-                  <folding>
-                    <element signature="e#0#40#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/tests/http/http_message_TEST.c">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="-792">
-                  <caret line="22" column="1" selection-start-line="22" selection-start-column="1" selection-end-line="22" selection-end-column="1" />
-                  <folding>
-                    <element signature="e#0#40#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/tests/connections_TEST.c">
-              <provider selected="true" editor-type-id="text-editor">
-                <state>
-                  <folding>
-                    <element signature="e#0#29#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/tests/route_instance_TEST.c">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="-270">
-                  <folding>
-                    <element signature="e#0#32#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/tests/CMakeLists.txt">
-              <provider selected="true" editor-type-id="text-editor" />
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/http/http_reply.h">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="45">
-                  <caret line="3" column="19" selection-start-line="3" selection-start-column="19" selection-end-line="3" selection-end-column="19" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/tests/http/http_reply_TEST.c">
-              <provider selected="true" editor-type-id="text-editor">
-                <state>
-                  <caret column="34" selection-start-column="34" selection-end-column="34" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
-      </split-first>
-      <split-second>
-        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/route_instance.c">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="240">
-                  <caret line="16" selection-start-line="16" selection-end-line="16" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/main.c">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="435">
-                  <caret line="29" column="28" selection-start-line="29" selection-start-column="28" selection-end-line="29" selection-end-column="28" />
-                  <folding>
-                    <element signature="e#0#35#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/src/http/http_request.c">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="750">
-                  <caret line="50" column="28" selection-start-line="50" selection-start-column="28" selection-end-line="50" selection-end-column="28" />
-                  <folding>
-                    <element signature="e#0#19#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/tests/http/http_request_TEST.c">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="15">
-                  <caret line="1" column="32" selection-start-line="1" selection-start-column="32" selection-end-line="1" selection-end-column="32" />
-                  <folding>
-                    <element signature="e#0#40#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/http/http_message.h">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="825">
-                  <caret line="56" column="122" selection-start-line="27" selection-end-line="56" selection-end-column="122" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
-      </split-second>
-    </splitter>
-  </component>
-  <component name="FindInProjectRecents">
-    <findStrings>
-      <find>request_init</find>
-      <find>process_request_message_body</find>
-      <find>receive_new_request</find>
-      <find>feeder</find>
-      <find>read_next_buffer_from_source</find>
-      <find>feederf</find>
-      <find>consumer_callback</find>
-      <find>create_runtime_out_file_connector</find>
-      <find>sync_request_reply_to_server</find>
-      <find>send_next_buffer_to_destination</find>
-      <find>flow</find>
-      <find>forward_mode</find>
-      <find>close_remaining_connections</find>
-      <find>buffer</find>
-      <find>open_socket_connector</find>
-      <find>for</find>
-      <find>receive_and_process_data_from_client</find>
-      <find>send_request</find>
-      <find>release_conn_runtime_thread_data</find>
-      <find>create_runtime_thread_data</find>
-      <find>synchronize_all_senders</find>
-      <find>feed_data</find>
-      <find>socket_connector</find>
-      <find>accept</find>
-      <find>open_connection</find>
-      <find>free_request_replies</find>
-      <find>close_in_and_out_connections</find>
-      <find>new_circular_buffer</find>
-      <find>read_into_next_buffer</find>
-      <find>create_runtime_sock_connector</find>
-    </findStrings>
-    <dirStrings>
-      <dir>$PROJECT_DIR$/tests/mocks</dir>
-      <dir>$PROJECT_DIR$/src</dir>
-    </dirStrings>
-  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-  </component>
-  <component name="IdeDocumentHistory">
-    <option name="CHANGED_PATHS">
-      <list>
-        <option value="$PROJECT_DIR$/tests/http_message_TEST.c" />
-        <option value="$PROJECT_DIR$/tests/CMakeLists.txt" />
-        <option value="$PROJECT_DIR$/tests/mocks/mock_http_headers.c" />
-        <option value="$PROJECT_DIR$/tests/http/http_message_TEST.c" />
-        <option value="$PROJECT_DIR$/CMakeLists.txt" />
-        <option value="$APPLICATION_CONFIG_DIR$/clion64.vmoptions" />
-        <option value="$PROJECT_DIR$/src/http/http_headers.c" />
-        <option value="$PROJECT_DIR$/tests/http/decode_http_headers.c" />
-        <option value="$PROJECT_DIR$/tests/http/http_headers_TEST.c" />
-        <option value="$PROJECT_DIR$/tests/mocks/mock_shared_buffers.c" />
-        <option value="$PROJECT_DIR$/src/http/http_headers.h" />
-        <option value="$PROJECT_DIR$/src/http/request.c" />
-        <option value="$PROJECT_DIR$/src/buffers/shared_buffers.c" />
-        <option value="$PROJECT_DIR$/src/connection.c" />
-        <option value="$PROJECT_DIR$/src/buffers/circular_buffer.c" />
-        <option value="$PROJECT_DIR$/src/buffers/circular_buffer.h" />
-        <option value="$PROJECT_DIR$/src/connection.h" />
-        <option value="$PROJECT_DIR$/src/http_connection.h" />
-        <option value="$PROJECT_DIR$/src/http_connection.c" />
-        <option value="$PROJECT_DIR$/src/http/CMakeLists.txt" />
-        <option value="$PROJECT_DIR$/src/file_connector.c" />
-        <option value="$PROJECT_DIR$/src/http/http_reply.c" />
-        <option value="$PROJECT_DIR$/src/http/http_message.c" />
-        <option value="$PROJECT_DIR$/src/http/http_request.h" />
-        <option value="$PROJECT_DIR$/src/file_connector.h" />
-        <option value="$PROJECT_DIR$/src/http/http_request.c" />
-        <option value="$PROJECT_DIR$/src/http/http_message.h" />
-        <option value="$PROJECT_DIR$/src/socket/socket_connector.c" />
-        <option value="$PROJECT_DIR$/src/socket/socket_connector.h" />
-        <option value="$PROJECT_DIR$/src/route.c" />
-        <option value="$PROJECT_DIR$/src/route.h" />
-        <option value="$PROJECT_DIR$/src/route_instance.h" />
-        <option value="$PROJECT_DIR$/src/route_instance.c" />
-        <option value="$PROJECT_DIR$/src/main.c" />
-        <option value="$PROJECT_DIR$/src/CMakeLists.txt" />
-        <option value="$PROJECT_DIR$/src/http/http_connection.h" />
-        <option value="$PROJECT_DIR$/src/http/http_connection.c" />
-        <option value="$PROJECT_DIR$/src/request_reply.h" />
-        <option value="$PROJECT_DIR$/src/request_reply.c" />
-        <option value="$PROJECT_DIR$/tests/mocks/mock_socket_connector.c" />
-        <option value="$PROJECT_DIR$/tests/socket_connector_TEST.c" />
-        <option value="$PROJECT_DIR$/tests/mocks/mock_file_connector.c" />
-        <option value="$PROJECT_DIR$/tests/buffers/circular_buffer_TEST.c" />
-        <option value="$PROJECT_DIR$/tests/mocks/mock_circular_buffers.c" />
-        <option value="$PROJECT_DIR$/tests/http/http_request_TEST.c" />
-        <option value="$PROJECT_DIR$/tests/mocks/mock_http_message.cpp" />
-        <option value="$PROJECT_DIR$/tests/mocks/mock_http_message.c" />
-        <option value="$PROJECT_DIR$/tests/mocks/CMakeLists.txt" />
-        <option value="$PROJECT_DIR$/tests/http/http_reply_TEST.c" />
-        <option value="$PROJECT_DIR$/src/http/http_reply.h" />
-        <option value="$PROJECT_DIR$/tests/http/CMakeLists.txt" />
-      </list>
-    </option>
-  </component>
-  <component name="OCFindUsagesOptions" text="true" ivars="false" properties="true" derivedClasses="false" />
-  <component name="OCResolveContextSettings">
-    <option name="configuration" value="0-gateway" />
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="273" />
@@ -378,6 +123,8 @@
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
+      <showMembers ProjectPane="false" />
+      <showExcludedFiles Scope="false" ProjectPane="false" />
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
@@ -392,42 +139,13 @@
             <path>
               <item name="Gateway" type="b2602c69:ProjectViewProjectNode" />
               <item name="RESTProxy" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="tests" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Gateway" type="b2602c69:ProjectViewProjectNode" />
               <item name="RESTProxy" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="tests" type="462c0819:PsiDirectoryNode" />
               <item name="buffers" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Gateway" type="b2602c69:ProjectViewProjectNode" />
-              <item name="RESTProxy" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="http" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Gateway" type="b2602c69:ProjectViewProjectNode" />
-              <item name="RESTProxy" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="yaml" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Gateway" type="b2602c69:ProjectViewProjectNode" />
-              <item name="RESTProxy" type="462c0819:PsiDirectoryNode" />
-              <item name="tests" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Gateway" type="b2602c69:ProjectViewProjectNode" />
-              <item name="RESTProxy" type="462c0819:PsiDirectoryNode" />
-              <item name="tests" type="462c0819:PsiDirectoryNode" />
-              <item name="http" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Gateway" type="b2602c69:ProjectViewProjectNode" />
-              <item name="RESTProxy" type="462c0819:PsiDirectoryNode" />
-              <item name="tests" type="462c0819:PsiDirectoryNode" />
-              <item name="yaml" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -438,25 +156,6 @@
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/tests/http" />
-    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
-    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="settings.editor.selected.configurable" value="configurable.group.build" />
-  </component>
-  <component name="PyConsoleOptionsProvider">
-    <option name="myShowDebugConsoleByDefault" value="true" />
-  </component>
-  <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/tests/http" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/src/http" />
-      <recent name="$PROJECT_DIR$/tests/http" />
-      <recent name="$PROJECT_DIR$/src/logs" />
-      <recent name="$PROJECT_DIR$/src/frame_buffers" />
-      <recent name="$PROJECT_DIR$/src/socket" />
-    </key>
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -470,7 +169,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="CMake Application.circular_buffer_TEST">
+  <component name="RunManager" selected="CMake Application.ContinuousBuild">
     <configuration name="Continuous" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Gateway" TARGET_NAME="Continuous" CONFIG_NAME="Debug">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -616,7 +315,7 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="circular_buffer_TEST" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="--filter circular_ptr/add_overlap_one_buffer_load" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Gateway" TARGET_NAME="circular_buffer_TEST" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Gateway" RUN_TARGET_NAME="circular_buffer_TEST">
+    <configuration name="circular_buffer_TEST" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Gateway" TARGET_NAME="circular_buffer_TEST" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Gateway" RUN_TARGET_NAME="circular_buffer_TEST">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -716,7 +415,7 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="mock_first_line.o" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Gateway" TARGET_NAME="mock_first_line.o" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Gateway" RUN_TARGET_NAME="mock_first_line.o">
+    <configuration name="mock_first_line.o" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Gateway" TARGET_NAME="mock_first_line.o" CONFIG_NAME="Debug">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -817,6 +516,7 @@
       </method>
     </configuration>
     <list>
+      <item itemvalue="CMake Application.Continuous" />
       <item itemvalue="CMake Application.ContinuousBuild" />
       <item itemvalue="CMake Application.ContinuousConfigure" />
       <item itemvalue="CMake Application.ContinuousCoverage" />
@@ -825,7 +525,7 @@
       <item itemvalue="CMake Application.ContinuousSubmit" />
       <item itemvalue="CMake Application.ContinuousTest" />
       <item itemvalue="CMake Application.ContinuousUpdate" />
-      <item itemvalue="CMake Application.Continuous" />
+      <item itemvalue="CMake Application.Experimental" />
       <item itemvalue="CMake Application.ExperimentalBuild" />
       <item itemvalue="CMake Application.ExperimentalConfigure" />
       <item itemvalue="CMake Application.ExperimentalCoverage" />
@@ -834,7 +534,7 @@
       <item itemvalue="CMake Application.ExperimentalSubmit" />
       <item itemvalue="CMake Application.ExperimentalTest" />
       <item itemvalue="CMake Application.ExperimentalUpdate" />
-      <item itemvalue="CMake Application.Experimental" />
+      <item itemvalue="CMake Application.Nightly" />
       <item itemvalue="CMake Application.NightlyBuild" />
       <item itemvalue="CMake Application.NightlyConfigure" />
       <item itemvalue="CMake Application.NightlyCoverage" />
@@ -844,26 +544,37 @@
       <item itemvalue="CMake Application.NightlySubmit" />
       <item itemvalue="CMake Application.NightlyTest" />
       <item itemvalue="CMake Application.NightlyUpdate" />
-      <item itemvalue="CMake Application.Nightly" />
+      <item itemvalue="CMake Application.file_connector.o" />
+      <item itemvalue="CMake Application.gateway" />
+      <item itemvalue="CMake Application.main" />
+      <item itemvalue="CMake Application.request_reply.o" />
+      <item itemvalue="CMake Application.route.o" />
+      <item itemvalue="CMake Application.route_instance.o" />
+      <item itemvalue="CMake Application.workflow_handler.o" />
       <item itemvalue="CMake Application.buffers" />
-      <item itemvalue="CMake Application.circular_buffer_TEST" />
       <item itemvalue="CMake Application.circular_buffer.o" />
+      <item itemvalue="CMake Application.shared_buffers.o" />
+      <item itemvalue="CMake Application.http" />
+      <item itemvalue="CMake Application.http_connection.o" />
+      <item itemvalue="CMake Application.http_first_line.o" />
+      <item itemvalue="CMake Application.http_headers.o" />
+      <item itemvalue="CMake Application.http_message.o" />
+      <item itemvalue="CMake Application.http_reply.o" />
+      <item itemvalue="CMake Application.http_request.o" />
+      <item itemvalue="CMake Application.rest_logs" />
+      <item itemvalue="CMake Application.socket_conn" />
+      <item itemvalue="CMake Application.socket_connector.o" />
+      <item itemvalue="CMake Application.socket_wrap.o" />
+      <item itemvalue="CMake Application.http_first_line_TEST_test" />
+      <item itemvalue="CMake Application.mock_socket_connector_TEST" />
+      <item itemvalue="CMake Application.socket_connector_TEST_test" />
+      <item itemvalue="CMake Application.circular_buffer_TEST" />
+      <item itemvalue="CMake Application.shared_buffers_TEST_test" />
       <item itemvalue="CMake Application.decode_http_headers" />
       <item itemvalue="CMake Application.http_headers_TEST" />
       <item itemvalue="CMake Application.http_message_TEST" />
       <item itemvalue="CMake Application.http_reply_TEST" />
-      <item itemvalue="CMake Application.file_connector.o" />
-      <item itemvalue="CMake Application.gateway" />
-      <item itemvalue="CMake Application.http" />
-      <item itemvalue="CMake Application.http_connection.o" />
-      <item itemvalue="CMake Application.http_first_line_TEST_test" />
-      <item itemvalue="CMake Application.http_first_line.o" />
-      <item itemvalue="CMake Application.http_headers.o" />
       <item itemvalue="CMake Application.http_request_TEST" />
-      <item itemvalue="CMake Application.http_message.o" />
-      <item itemvalue="CMake Application.http_reply.o" />
-      <item itemvalue="CMake Application.http_request.o" />
-      <item itemvalue="CMake Application.main" />
       <item itemvalue="CMake Application.mock_circular_buffers.o" />
       <item itemvalue="CMake Application.mock_file_connector.o" />
       <item itemvalue="CMake Application.mock_first_line.o" />
@@ -871,21 +582,9 @@
       <item itemvalue="CMake Application.mock_http_message.o" />
       <item itemvalue="CMake Application.mock_pthread.o" />
       <item itemvalue="CMake Application.mock_shared_buffers.o" />
-      <item itemvalue="CMake Application.mock_socket_connector_TEST" />
-      <item itemvalue="CMake Application.mock_socket_connector.o" />
       <item itemvalue="CMake Application.mock_socket.o" />
-      <item itemvalue="CMake Application.request_reply.o" />
-      <item itemvalue="CMake Application.route.o" />
-      <item itemvalue="CMake Application.rest_logs" />
-      <item itemvalue="CMake Application.route_instance.o" />
-      <item itemvalue="CMake Application.shared_buffers_TEST_test" />
-      <item itemvalue="CMake Application.shared_buffers.o" />
-      <item itemvalue="CMake Application.socket_conn" />
-      <item itemvalue="CMake Application.socket_connector_TEST_test" />
-      <item itemvalue="CMake Application.socket_connector.o" />
+      <item itemvalue="CMake Application.mock_socket_connector.o" />
       <item itemvalue="CMake Application.socket_connector_ut.o" />
-      <item itemvalue="CMake Application.socket_wrap.o" />
-      <item itemvalue="CMake Application.workflow_handler.o" />
     </list>
   </component>
   <component name="SvnConfiguration">
@@ -893,510 +592,58 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="a31fb953-ff1f-405d-aa0c-016aa84be8cb" name="Default Changelist" comment="" />
-      <created>1555695478097</created>
+      <changelist id="97c95347-125e-422a-a947-cdb26f56083c" name="Default Changelist" comment="" />
+      <created>1560087782839</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1555695478097</updated>
-      <workItem from="1555695484235" duration="2676000" />
-      <workItem from="1555774624272" duration="6190000" />
-      <workItem from="1555879406887" duration="820000" />
-      <workItem from="1556385613070" duration="10000" />
-      <workItem from="1557093836309" duration="4426000" />
-      <workItem from="1557186865256" duration="4677000" />
-      <workItem from="1557362182696" duration="2554000" />
-      <workItem from="1557447372259" duration="3708000" />
-      <workItem from="1557533500304" duration="3339000" />
-      <workItem from="1557600232378" duration="6387000" />
-      <workItem from="1557682963314" duration="12284000" />
-      <workItem from="1558269095756" duration="5971000" />
-      <workItem from="1558287708355" duration="16986000" />
-      <workItem from="1558358202539" duration="22921000" />
-      <workItem from="1558396645122" duration="4606000" />
-      <workItem from="1558438101112" duration="32372000" />
-      <workItem from="1558524434023" duration="11546000" />
-      <workItem from="1558537211859" duration="18797000" />
-      <workItem from="1558614203696" duration="3086000" />
-      <workItem from="1558617344169" duration="1940000" />
-      <workItem from="1558625341654" duration="14758000" />
-      <workItem from="1558655142211" duration="10000" />
-      <workItem from="1558655185510" duration="4947000" />
-      <workItem from="1558794756300" duration="21721000" />
-      <workItem from="1558877390486" duration="1765000" />
-      <workItem from="1558883810493" duration="8743000" />
-      <workItem from="1559177366953" duration="1463000" />
-      <workItem from="1559264718730" duration="33000" />
-      <workItem from="1559264789140" duration="925000" />
-      <workItem from="1559400999184" duration="23632000" />
-      <workItem from="1559501516000" duration="11581000" />
-      <workItem from="1559604921786" duration="4812000" />
-      <workItem from="1559778436468" duration="4566000" />
-      <workItem from="1560002732316" duration="12180000" />
+      <updated>1560087782839</updated>
+      <workItem from="1560087803058" duration="279000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="276432000" />
+    <option name="totallyTimeSpent" value="279000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="67" y="25" width="2493" height="1415" extended-state="6" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.14834492" />
+      <window_info id="Favorites" side_tool="true" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.15202288" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Database Changes" />
+      <window_info anchor="bottom" id="Version Control" />
+      <window_info anchor="bottom" id="Terminal" />
+      <window_info anchor="bottom" id="Event Log" side_tool="true" />
+      <window_info anchor="bottom" id="CMake" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.31881803" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.32970452" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.39968896" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Database Changes" order="7" />
-      <window_info anchor="bottom" id="Messages" order="8" weight="0.3289269" />
-      <window_info anchor="bottom" id="Terminal" order="9" />
-      <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
-      <window_info anchor="bottom" id="Version Control" order="11" weight="0.16485226" />
-      <window_info anchor="bottom" id="CMake" order="12" visible="true" weight="0.1881804" />
+      <window_info anchor="right" id="Database" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="Database" order="3" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
   </component>
-  <component name="Vcs.Log.History.Properties">
-    <option name="COLUMN_ORDER">
-      <list>
-        <option value="0" />
-        <option value="2" />
-        <option value="3" />
-        <option value="1" />
-      </list>
-    </option>
-  </component>
-  <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/tests/shared_buffers_TEST.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="855">
-          <caret line="57" column="20" selection-start-line="57" selection-start-column="20" selection-end-line="57" selection-end-column="20" />
-          <folding>
-            <element signature="e#0#42#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/http/http_headers.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="540">
-          <caret line="87" column="30" lean-forward="true" selection-start-line="87" selection-start-column="30" selection-end-line="87" selection-end-column="30" />
-          <folding>
-            <element signature="e#0#25#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/buffers/shared_buffers.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="14" column="37" lean-forward="true" selection-start-line="14" selection-start-column="37" selection-end-line="14" selection-end-column="37" />
-          <folding>
-            <element signature="e#0#27#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///usr/local/include/stack.h">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file:///usr/include/x86_64-linux-gnu/sys/socket.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="356">
-          <caret line="231" column="11" selection-start-line="231" selection-start-column="11" selection-end-line="231" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/http/CMakeLists.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="14" column="24" selection-start-line="14" selection-start-column="12" selection-end-line="14" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/http/http_reply.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="280">
-          <caret line="51" column="5" selection-start-line="51" selection-start-column="5" selection-end-line="51" selection-end-column="5" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/file_connector.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" selection-start-line="8" selection-end-line="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/workflow_handler.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#29#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/socket/socket_wrap.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" column="15" selection-start-line="7" selection-start-column="15" selection-end-line="7" selection-end-column="15" />
-          <folding>
-            <element signature="e#0#23#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/http/http_first_line.h">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/http/http_headers.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1260">
-          <caret line="84" column="42" selection-start-line="84" selection-start-column="42" selection-end-line="84" selection-end-column="42" />
-          <folding>
-            <element signature="e#47#69#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/socket/socket_connector.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/http/http_request.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="30" column="28" selection-start-line="30" selection-start-column="5" selection-end-line="30" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/http/http_connection.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="629">
-          <caret line="111" selection-start-line="111" selection-end-line="111" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/request_reply.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="74" selection-start-line="74" selection-end-line="74" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/request_reply.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="405">
-          <caret line="27" lean-forward="true" selection-start-line="27" selection-end-line="27" />
-          <folding>
-            <element signature="e#85#112#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tests/mocks/mock_socket_connector.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="20" column="11" lean-forward="true" selection-start-line="20" selection-start-column="11" selection-end-line="20" selection-end-column="11" />
-          <folding>
-            <element signature="e#0#46#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/http/http_connection.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
-          <caret line="25" selection-start-line="25" selection-end-line="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/route.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="269">
-          <caret line="19" column="2" selection-start-line="19" selection-start-column="2" selection-end-line="19" selection-end-column="2" />
-          <folding>
-            <element signature="e#33#52#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/route.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="5" selection-start-line="5" selection-end-line="5" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/socket/socket_connector.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="284">
-          <caret line="81" column="50" selection-start-line="81" selection-start-column="21" selection-end-line="81" selection-end-column="50" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tests/socket_connector_TEST.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
-          <caret line="26" column="37" selection-start-line="26" selection-start-column="37" selection-end-line="26" selection-end-column="37" />
-          <folding>
-            <element signature="e#0#32#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/route_instance.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="16" selection-start-line="16" selection-end-line="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/file_connector.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="18" column="1" selection-start-line="18" selection-end-line="18" selection-end-column="1" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tests/mocks/mock_file_connector.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="10" selection-start-line="10" selection-end-line="10" />
-          <folding>
-            <element signature="e#0#37#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tests/buffers/circular_buffer_TEST.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="264">
-          <caret line="92" column="59" selection-start-line="92" selection-start-column="59" selection-end-line="92" selection-end-column="59" />
-          <folding>
-            <element signature="e#0#32#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/CMakeLists.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
-          <caret line="26" column="34" selection-start-line="26" selection-start-column="34" selection-end-line="26" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/buffers/CMakeLists.txt">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/buffers/circular_buffer.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
-          <caret line="25" selection-start-line="25" selection-end-line="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/http/http_message.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="364">
-          <caret line="35" column="33" selection-start-line="35" selection-start-column="12" selection-end-line="35" selection-end-column="33" />
-          <folding>
-            <element signature="e#0#25#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/buffers/circular_buffer.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="354">
-          <caret line="124" selection-start-line="118" selection-end-line="124" />
-          <folding>
-            <element signature="e#0#28#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tests/mocks/mock_circular_buffers.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="19">
-          <caret line="27" column="10" selection-start-line="27" selection-start-column="10" selection-end-line="27" selection-end-column="10" />
-          <folding>
-            <element signature="e#1#47#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tests/buffers/CMakeLists.txt">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/route_instance.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="14" column="6" selection-start-line="14" selection-start-column="6" selection-end-line="14" selection-end-column="6" />
-          <folding>
-            <element signature="e#51#69#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="435">
-          <caret line="29" column="28" selection-start-line="29" selection-start-column="28" selection-end-line="29" selection-end-column="28" />
-          <folding>
-            <element signature="e#0#35#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tests/http/http_request_TEST.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="1" column="32" selection-start-line="1" selection-start-column="32" selection-end-line="1" selection-end-column="32" />
-          <folding>
-            <element signature="e#0#40#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/http/http_message.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="825">
-          <caret line="56" column="122" selection-start-line="27" selection-end-line="56" selection-end-column="122" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tests/mocks/mock_http_headers.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="25" selection-start-column="10" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tests/mocks/mock_http_message.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="645">
-          <caret line="43" column="1" selection-start-line="43" selection-start-column="1" selection-end-line="43" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tests/mocks/CMakeLists.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" column="39" selection-start-line="3" selection-start-column="39" selection-end-line="3" selection-end-column="39" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/http/http_request.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="750">
-          <caret line="50" column="28" selection-start-line="50" selection-start-column="28" selection-end-line="50" selection-end-column="28" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tests/http/http_reply_TEST.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="34" selection-start-column="34" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/http/http_reply.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" column="19" selection-start-line="3" selection-start-column="19" selection-end-line="3" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tests/CMakeLists.txt">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tests/http/CMakeLists.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="510">
-          <caret line="34" column="39" selection-start-line="34" selection-start-column="39" selection-end-line="34" selection-end-column="39" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tests/http/decode_http_headers.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="24" selection-start-line="24" selection-end-line="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tests/http/http_headers_TEST.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-84">
-          <caret line="693" column="33" selection-start-line="693" selection-start-column="33" selection-end-line="693" selection-end-column="33" />
-          <folding>
-            <element signature="e#0#40#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tests/http/http_message_TEST.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-792">
-          <caret line="22" column="1" selection-start-line="22" selection-start-column="1" selection-end-line="22" selection-end-column="1" />
-          <folding>
-            <element signature="e#0#40#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tests/connections_TEST.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#29#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tests/route_instance_TEST.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-270">
-          <folding>
-            <element signature="e#0#32#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+  <component name="masterDetails">
+    <states>
+      <state key="ScopeChooserConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
   </component>
 </project>
