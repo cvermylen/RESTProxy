@@ -32,6 +32,7 @@ Test(http_message, init2)
 
 extern int mock_called_set_data_size_for_last_received_buffer;
 extern int mock_called_alloc_entry_in_circular_buffer;
+extern int mock_result_read_into_next_buffer;
 /*!
  * Simulate 1 received buffer
  */
@@ -44,6 +45,7 @@ Test(read_from_source, read_in_one_buffer)
     mock_socket_push_buffer(0, buff);
     mock_called_set_data_size_for_last_received_buffer = 0;
     mock_called_alloc_entry_in_circular_buffer = 0;
+    mock_result_read_into_next_buffer = 5;
 
     int n = read_next_buffer_from_source(msg);
 	cr_assert(5 == n, "expected length 5, not: %d", n);
@@ -81,6 +83,8 @@ Test(free_buffer, free_1)
     mock_called_free_circular_buffer = 0;
     mock_called_http_headers_free = 0;
 
+    http_message_free(msg);
+    
     cr_assert(mock_called_free_circular_buffer == 1, "Should have been called: 'free_circular_buffer'");
     cr_assert(mock_called_http_headers_free == 1, "Should have been called: 'http_headers_free'");
 }
