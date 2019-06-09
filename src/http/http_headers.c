@@ -25,6 +25,14 @@ int decode_body_length(http_header_t *header) {
     return result;
 }
 
+int decode_keep_alive (http_header_t* header)
+{
+    int result = 0;
+    stack_head_t* st = http_headers_get(header, HTTP_CONNECTION);
+    char* value = str_stack_top(st);
+    return (strcmp("keep-alive", value));
+}
+
 //TODO REFACTOR. headers needs to get its data from the message, and a message contains the headers.
 // BUT we want to avoid a circular dependency. Callbacks is not the nicest way, as there is no reason
 // for genericity.

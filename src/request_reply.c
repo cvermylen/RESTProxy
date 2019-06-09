@@ -42,7 +42,7 @@ void synchronize_all_senders (request_replies_t* rr)
 
 void release_buffer_after_processing(request_replies_t* rr) {
     printf("Release_buffer_after_processing\n");
-    release_request(rr->request);
+    rr->request = release_request(rr->request);
     for (int i = 0; i < rr->out_connections; i++) {
         release_reply(rr->replies[i]);
     }
@@ -102,7 +102,7 @@ void strategy_sequential_request_replies (request_replies_t* rr)
 
 void free_request_replies (request_replies_t* rr)
 {
-    release_request (rr->request);
+    rr->request = release_request (rr->request);
     for (int i = 0; i < rr->out_connections; i++) {
         release_reply (rr->replies[i]);
     }

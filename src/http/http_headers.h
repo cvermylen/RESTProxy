@@ -62,6 +62,8 @@ int header_strlen(http_header_t* header);
 
 int str2int(const char* value, int field_length);
 
+int decode_keep_alive (http_header_t* header);
+
 char* http_headers_to_string(http_header_t* hdr);
 
 extern char* HTTP_HEADER_STRINGS[];

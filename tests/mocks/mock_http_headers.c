@@ -24,3 +24,11 @@ int decode_body_length(http_header_t *header) {
     mock_called_decode_body_length += 1;
     return mock_result_decode_body_length;
 }
+
+int mock_called_decode_keep_alive;
+int mock_return_decode_keep_alive;
+int decode_keep_alive (http_header_t* header)
+{
+    mock_called_decode_keep_alive += 1;
+    return mock_return_decode_keep_alive;
+}

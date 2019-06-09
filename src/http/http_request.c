@@ -27,10 +27,10 @@ void receive_new_request_from_client (request_t *request)
     //REFACTOR
     if (fd < 0) {printf("Error not handled\n"); exit(0);}
     //END REFACTOR
-    int bytes_read = read_next_buffer_from_source(request->http_message);
+    int bytes_read = read_next_buffer_from_source (request->http_message);
     request->type = http_message_decode_request_type (request->http_message);
-    read_next_buffer_from_source(request->http_message);
-    decode_http_message_header(request->http_message);
+    read_next_buffer_from_source (request->http_message);
+    decode_http_message_header (request->http_message);
 }
 
 void process_request_message_body (request_t* request)
@@ -45,7 +45,7 @@ void process_request_message_body (request_t* request)
 
 int get_request_connection_keep_alive (request_t* request)
 {
-    return decode_body_length (request->http_message->header);
+    return decode_keep_alive (request->http_message->header);
 }
 
 void close_client_connection (request_t* request)
@@ -53,8 +53,9 @@ void close_client_connection (request_t* request)
     request->close_connection (request->connection_params);
 }
 
-void release_request(request_t *d)
+request_t* release_request (request_t *d)
 {
-    http_message_free(d->http_message);
-    free(d);
+    http_message_free (d->http_message);
+    free (d);
+    return NULL;
 }

@@ -34,6 +34,6 @@ void close_client_connection (request_t* request);
  * \private
  * @param request
  */
-void release_request(request_t *request);
+request_t* release_request(request_t *request);
 
 #endif //HTTP_REQUEST_H
