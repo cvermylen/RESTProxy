@@ -9,6 +9,7 @@ add_subdirectory(http)
 add_subdirectory(socket)
 add_subdirectory(buffers)
 add_subdirectory(logs)
+add_subdirectory(thread)
 
 set(SOURCE_FILES
         request_reply.c
@@ -34,4 +35,4 @@ add_library(gateway ${SOURCE_FILES})
 
 add_executable(main main.c
         $<TARGET_OBJECTS:socket_wrap.o>)
-target_link_libraries(main http gateway socket_conn buffers stack pthread rest_logs m)
+target_link_libraries(main http gateway socket_conn buffers stack pthread pthread_wrap rest_logs m)

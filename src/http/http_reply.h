@@ -37,6 +37,6 @@ void close_server_connection (reply_t* reply);
  * \private
  * @param reply
  */
-void release_reply(reply_t *reply);
+reply_t* release_reply(reply_t *reply);
 
 #endif //HTTP_REPLY_H

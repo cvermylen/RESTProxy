@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include <pthread.h>
+#include "../thread/pthread_wrap.h"
 #include "http_reply.h"
 #include "../route_def.h"
 #include "http_message.h"
@@ -50,10 +50,7 @@ void connect_to_server (reply_t* reply)
  * @param thread_data
  */
 void reply_to_client(reply_t* reply) {
-    printf("reply_to_client\n");
     send_next_buffer_to_destination (reply->send_data, reply->connection_params, reply->response_message, 1);
-
-    printf("sent to client\n");
 }
 
 void accept_reply_from_server(reply_t *reply) {
@@ -64,9 +61,7 @@ void accept_reply_from_server(reply_t *reply) {
 void receive_reply(reply_t *reply) {
     accept_reply_from_server(reply);
     decode_http_message_header(reply->response_message);
-    printf("Body length:%d\n", reply->response_message->body_length);
     http_message_receive_body(reply->response_message);
-    printf("Body received\n");
 }
 
 void send_request_receive_reply (struct envelope* env)
@@ -80,8 +75,9 @@ void send_request_to_server_and_wait_reply(http_message_t* msg, reply_t *reply, 
     struct envelope* env = (struct envelope*) malloc (sizeof(struct envelope));
     env->requestMessage = msg;
     env->last_server_in_list = last_server_in_list;
+    env->reply = reply;
     if (forward_mode != FORWARD_MODE_SEQ) {
-        int rc = pthread_create(&reply->pthread, NULL, (void* (*) (void*)) send_request_receive_reply, env);
+        int rc = pthread_create_wrapped(&reply->pthread, NULL, (void* (*) (void*)) send_request_receive_reply, env);
     } else {
         send_request_receive_reply(env);
     }
@@ -93,8 +89,9 @@ void close_server_connection (reply_t* reply)
     reply->close_connection (reply->connection_params);
 }
 
-void release_reply(reply_t *reply) {
+reply_t* release_reply(reply_t *reply) {
     http_message_free(reply->response_message);
     free(reply);
+    return NULL;
 }
 

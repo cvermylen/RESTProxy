@@ -25,7 +25,8 @@ add_executable (http_request_TEST http_request_TEST.c $<TARGET_OBJECTS:http_requ
         $<TARGET_OBJECTS:mock_http_headers.o>)
 
 add_executable(http_reply_TEST http_reply_TEST.c $<TARGET_OBJECTS:http_reply.o>
-        $<TARGET_OBJECTS:mock_http_message.o>)
+        $<TARGET_OBJECTS:mock_http_message.o>
+        $<TARGET_OBJECTS:mock_pthread.o>)
 
 target_link_libraries (http_message_TEST stack m ${CRITERION_LIBRARIES})
 target_link_libraries (http_headers_TEST stack m ${CRITERION_LIBRARIES})
