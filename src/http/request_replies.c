@@ -2,15 +2,8 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "route_def.h"
-//#include "buffers/shared_buffers.h"
-//#include "http/http_connection.h"
-#include "request_reply.h"
-//#include "socket/socket_connector.h"
-//#include "http/http_message.h"
-//#include "http/http_first_line.h"
-//#include "buffers/circular_buffer.h"
-//#include "http/http_reply.h"
+#include "../route_def.h"
+#include "request_replies.h"
 
 request_replies_t* new_request_replies (in_connector_t* connector_def, int number_of_servers, out_connector_t** server_conns)
 {
@@ -40,7 +33,8 @@ void synchronize_all_senders (request_replies_t* rr)
     }
 }
 
-void release_buffer_after_processing(request_replies_t* rr) {
+void release_buffer_after_processing (request_replies_t* rr)
+{
     printf("Release_buffer_after_processing\n");
     rr->request = release_request(rr->request);
     for (int i = 0; i < rr->out_connections; i++) {
@@ -56,9 +50,9 @@ void accept_opening_request_from_client (request_replies_t* rr)
     receive_new_request_from_client(rr->request);
 }
 
-void *async_join_threads(request_replies_t* request) {
+void *async_join_threads (request_replies_t* request)
+{
     printf("Joining results...\n");
-    int i = 0;
     for (int i = 0; i < request->out_connections; i++) {
         printf("Join thread at:%i\n", (int)request->replies[i]->pthread);
         pthread_join(request->replies[i]->pthread, NULL);
@@ -68,18 +62,20 @@ void *async_join_threads(request_replies_t* request) {
     return NULL;
 }
 
-void wait_4_all_sender_to_complete(request_replies_t* rr)
+void wait_4_all_sender_to_complete (request_replies_t* rr)
 {
     int rc = pthread_create(&rr->async_replies_thread, NULL, (void*)async_join_threads, rr);
 }
 
-void forward_request_to_all_servers(request_replies_t *rr) {
+void forward_request_to_all_servers (request_replies_t *rr)
+{
     for (int i = 0; i < rr->out_connections; i++) {
         send_request_to_server_and_wait_reply(rr->request->http_message, rr->replies[i], (i == rr->out_connections -1), rr->forward_mode);
     }
 }
 
-void decode_request_message_header(request_t *request) {
+void decode_request_message_header (request_t *request)
+{
     decode_http_message_header(request->http_message);
 }
 

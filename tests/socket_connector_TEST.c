@@ -2,7 +2,7 @@
 #include "../src/socket/socket_connector.h"
 #include "../src/route_instance.h"
 #include "../src/route_def.h"
-#include "../src/request_reply.h"
+#include "../src/http/request_replies.h"
 #include "mocks/mock_socket.h"
 
 int has_been_called;
