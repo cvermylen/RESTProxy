@@ -28,8 +28,13 @@ int sem_post_wrapped (sem_t *__sem)
 
 int mock_called_pthread_create;
 
+#ifdef __DARWIN_64_BIT_INO_T
+typedef  __darwin_pthread_attr_t pthread_attr_t;
+typedef __darwin_pthread_t pthread_t;
+#else
 typedef union pthread_attr_t pthread_attr_t;
 typedef unsigned long int pthread_t;
+#endif
 int pthread_create_wrapped(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine) (void *), void *arg)
 {
     mock_called_pthread_create++;
