@@ -38,9 +38,11 @@ void http_message_free (http_message_t* msg)
 }
 
 int mock_called_decode_http_message_header;
+long decode_http_message_header_param1;
 void decode_http_message_header (http_message_t* msg)
 {
     mock_called_decode_http_message_header += 1;
+    decode_http_message_header_param1 = (long)msg;
 }
 
 int mock_called_http_message_receive_body;

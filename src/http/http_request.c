@@ -53,6 +53,11 @@ void close_client_connection (request_t* request)
     request->close_connection (request->connection_params);
 }
 
+void decode_request_message_header (request_t *request)
+{
+    decode_http_message_header (request->http_message);
+}
+
 request_t* release_request (request_t *d)
 {
     http_message_free (d->http_message);

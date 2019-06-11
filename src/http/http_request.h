@@ -30,6 +30,8 @@ int get_request_connection_keep_alive (request_t* request);
 
 void close_client_connection (request_t* request);
 
+void decode_request_message_header (request_t *request);
+
 /*! RElease resources attached
  * \private
  * @param request

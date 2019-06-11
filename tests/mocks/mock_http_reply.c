@@ -32,7 +32,9 @@ void connect_to_server (reply_t* reply)
 }
 
 int mock_called_reply_to_client;
+long mock_param_reply_to_client[500];
 void reply_to_client(reply_t* reply) {
+    mock_param_reply_to_client[mock_called_reply_to_client] = (long)reply;
     mock_called_reply_to_client += 1;
 }
 

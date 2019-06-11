@@ -53,31 +53,22 @@ void synchronize_all_senders (request_replies_t* rr)
 
 void release_buffer_after_processing (request_replies_t* rr)
 {
-    printf("Release_buffer_after_processing\n");
-    rr->request = release_request(rr->request);
+    rr->request = release_request (rr->request);
     for (int i = 0; i < rr->out_connections; i++) {
-        release_reply(rr->replies[i]);
+        release_reply (rr->replies[i]);
     }
-    printf("release_buffer_after_processing:END\n");
 }
 
 void accept_opening_request_from_client (request_replies_t* rr)
 {
-    printf("accept_opening_request_from_client\n");
-
-    receive_new_request_from_client(rr->request);
+    receive_new_request_from_client (rr->request);
 }
 
 void forward_request_to_all_servers (request_replies_t *rr)
 {
     for (int i = 0; i < rr->out_connections; i++) {
-        send_request_to_server_and_wait_reply(rr->request->http_message, rr->replies[i], (i == rr->out_connections -1), rr->forward_mode);
+        send_request_to_server_and_wait_reply (rr->request->http_message, rr->replies[i], (i == rr->out_connections -1), rr->forward_mode);
     }
-}
-
-void decode_request_message_header (request_t *request)
-{
-    decode_http_message_header(request->http_message);
 }
 
 void forward_replies (request_replies_t* rr)

@@ -84,3 +84,17 @@ Test (close_client_connection, call)
                                                 "Actual was:%d", mock_call_close_connection);
     release_request (request);
 }
+
+extern long decode_http_message_header_param1;
+Test (decode_request_message_header, call)
+{
+    request_t* request = new_http_request(NULL, NULL, NULL, mock_close_connection, NULL);
+    mock_called_decode_http_message_header = 0;
+
+    decode_request_message_header (request);
+
+    cr_assert (1 == mock_called_decode_http_message_header, "Should have called 'decode_http_message_header'."
+                                                            "Actual was:%d", mock_called_decode_http_message_header);
+    cr_assert ((long)request->http_message == decode_http_message_header_param1, "Call to 'decode_http_message_header' should have been"
+                                                             "done by passing the message");
+}

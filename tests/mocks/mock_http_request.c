@@ -41,8 +41,16 @@ void close_client_connection (request_t* request)
 
 int mock_called_release_request;
 request_t* mock_result_release_request;
+long mock_param1_release_request[500];
 request_t* release_request (request_t *d)
 {
+    mock_param1_release_request[mock_called_release_request] = d;
     mock_called_release_request += 1;
     return mock_result_release_request;
+}
+
+int mock_called_decode_request_message_header;
+void decode_request_message_header (request_t *request)
+{
+    mock_called_decode_request_message_header += 1;
 }
