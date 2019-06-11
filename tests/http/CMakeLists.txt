@@ -15,7 +15,7 @@ add_executable (http_headers_TEST http_headers_TEST.c $<TARGET_OBJECTS:http_head
 add_executable(decode_http_headers decode_http_headers.c $<TARGET_OBJECTS:http_headers.o>
         $<TARGET_OBJECTS:mock_socket_connector.o>
         $<TARGET_OBJECTS:mock_shared_buffers.o>
-        $<TARGET_OBJECTS:circular_buffer.o> request_replies_TEST.c)
+        $<TARGET_OBJECTS:circular_buffer.o>)
 
 add_executable (http_first_line_TEST http_first_line_TEST.c $<TARGET_OBJECTS:http_first_line.o>
         $<TARGET_OBJECTS:mock_shared_buffers.o>)
@@ -35,7 +35,7 @@ add_executable (request_replies_TEST request_replies_TEST.c $<TARGET_OBJECTS:req
 
 target_link_libraries (http_message_TEST stack m ${CRITERION_LIBRARIES})
 target_link_libraries (http_headers_TEST stack m ${CRITERION_LIBRARIES})
-target_link_libraries(decode_http_headers stack m)
+target_link_libraries(decode_http_headers stack m ${CRITERION_LIBRARIES})
 target_link_libraries(http_request_TEST ${CRITERION_LIBRARIES})
 target_link_libraries(http_reply_TEST pthread ${CRITERION_LIBRARIES})
 target_link_libraries (http_first_line_TEST ${CRITERION_LIBRARIES})

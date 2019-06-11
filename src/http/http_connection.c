@@ -109,7 +109,7 @@ void release_runtime_route(ri_connection_t* conn)
 {
     stack_node_t* rr = NULL;
     while ((rr = stack_pop (conn->requestReplies)) != NULL ) {
-        free_request_replies (rr->elem);
+        rr->elem = free_request_replies (rr->elem);
     }
     free(conn->requestReplies);
 

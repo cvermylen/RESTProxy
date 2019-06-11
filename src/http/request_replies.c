@@ -9,6 +9,7 @@ request_replies_t* new_request_replies (in_connector_t* connector_def, int numbe
 {
     request_replies_t* rr = (request_replies_t*) malloc (sizeof(request_replies_t));
     rr->request = new_http_request((void*)connector_def->open_connection, connector_def->feed_data, connector_def->send_data, connector_def->close_connection, connector_def->connection_params);
+    rr->out_connections = number_of_servers;
     rr->replies = (reply_t **) malloc(sizeof(reply_t *) * number_of_servers);
     for (int i = 0; i < number_of_servers; i++) {
         rr->replies[i] = create_reply(server_conns[i]->open_connection, server_conns[i]->send_data, server_conns[i]->receive_data, server_conns[i]->close_connection, server_conns[i]->connection_params);
@@ -96,11 +97,12 @@ void strategy_sequential_request_replies (request_replies_t* rr)
     release_buffer_after_processing(rr);
 }
 
-void free_request_replies (request_replies_t* rr)
+request_replies_t* free_request_replies (request_replies_t* rr)
 {
     rr->request = release_request (rr->request);
     for (int i = 0; i < rr->out_connections; i++) {
         release_reply (rr->replies[i]);
     }
     free (rr);
+    return NULL;
 }

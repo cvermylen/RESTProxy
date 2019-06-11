@@ -29,6 +29,6 @@ void forward_request_to_all_servers(request_replies_t *rr);
 
 void wait_4_all_sender_to_complete(request_replies_t *request);
 
-void free_request_replies (request_replies_t* rr);
+request_replies_t* free_request_replies (request_replies_t* rr);
 
 #endif
