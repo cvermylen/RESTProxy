@@ -77,7 +77,7 @@ void send_request_to_server_and_wait_reply(http_message_t* msg, reply_t *reply, 
     env->last_server_in_list = last_server_in_list;
     env->reply = reply;
     if (forward_mode != FORWARD_MODE_SEQ) {
-        int rc = pthread_create_wrapped(&reply->pthread, NULL, (void* (*) (void*)) send_request_receive_reply, env);
+        int rc = pthread_create_wrapper (&reply->pthread, NULL, (void* (*) (void*)) send_request_receive_reply, env);
     } else {
         send_request_receive_reply(env);
     }

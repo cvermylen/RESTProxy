@@ -27,7 +27,7 @@ ri_connection_t* new_http_connection (route_t* route)
 
 request_replies_t* prepare_for_next_request_replies (ri_connection_t* conn)
 {
-    request_replies_t* rr = new_request_replies(conn->route->in_connector, conn->route->out_connections, conn->route->out_connectors);
+    request_replies_t* rr = new_request_replies(conn->route->in_connector, conn->route->out_connections, conn->route->out_connectors, conn->route->forward_mode);
     return rr;
 }
 /*!

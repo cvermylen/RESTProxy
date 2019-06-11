@@ -4,8 +4,9 @@
 
 #include "../route_def.h"
 #include "request_replies.h"
+#include "../thread/pthread_wrap.h"
 
-request_replies_t* new_request_replies (in_connector_t* connector_def, int number_of_servers, out_connector_t** server_conns)
+request_replies_t* new_request_replies (in_connector_t* connector_def, int number_of_servers, out_connector_t** server_conns, int forward_mode)
 {
     request_replies_t* rr = (request_replies_t*) malloc (sizeof(request_replies_t));
     rr->request = new_http_request((void*)connector_def->open_connection, connector_def->feed_data, connector_def->send_data, connector_def->close_connection, connector_def->connection_params);
@@ -14,7 +15,23 @@ request_replies_t* new_request_replies (in_connector_t* connector_def, int numbe
     for (int i = 0; i < number_of_servers; i++) {
         rr->replies[i] = create_reply(server_conns[i]->open_connection, server_conns[i]->send_data, server_conns[i]->receive_data, server_conns[i]->close_connection, server_conns[i]->connection_params);
     }
+    rr->forward_mode = forward_mode;
     return rr;
+}
+
+void join_client_threads (request_replies_t* request)
+{
+    printf("Joining results...\n");
+    for (int i = 0; i < request->out_connections; i++) {
+        printf("Join thread at:%i\n", (int)request->replies[i]->pthread);
+        pthread_join_wrapper (request->replies[i]->pthread, NULL);
+    }
+    printf("...joined\n");
+}
+
+int wait_4_all_client_send_receive_to_complete(request_replies_t *rr)
+{
+    return pthread_create_wrapper (&rr->async_replies_thread, NULL, (void* (*) (void*))join_client_threads, rr);
 }
 
 void synchronize_all_senders (request_replies_t* rr)
@@ -23,13 +40,13 @@ void synchronize_all_senders (request_replies_t* rr)
     switch (rr->forward_mode) {
         case FORWARD_MODE_SYNC:
             for (i = 0; i < rr->out_connections; i++) {
-                pthread_join(rr->replies[i]->pthread, NULL);
+                pthread_join_wrapper (rr->replies[i]->pthread, NULL);
             }
             //No break here
         case FORWARD_MODE_SEQ:
             break;
         case FORWARD_MODE_ASYNC:
-            wait_4_all_sender_to_complete(rr);
+            wait_4_all_client_send_receive_to_complete(rr);
             break;
     }
 }
@@ -49,23 +66,6 @@ void accept_opening_request_from_client (request_replies_t* rr)
     printf("accept_opening_request_from_client\n");
 
     receive_new_request_from_client(rr->request);
-}
-
-void *async_join_threads (request_replies_t* request)
-{
-    printf("Joining results...\n");
-    for (int i = 0; i < request->out_connections; i++) {
-        printf("Join thread at:%i\n", (int)request->replies[i]->pthread);
-        pthread_join(request->replies[i]->pthread, NULL);
-    }
-    printf("...joined\n");
-
-    return NULL;
-}
-
-void wait_4_all_sender_to_complete (request_replies_t* rr)
-{
-    int rc = pthread_create(&rr->async_replies_thread, NULL, (void*)async_join_threads, rr);
 }
 
 void forward_request_to_all_servers (request_replies_t *rr)

@@ -35,7 +35,17 @@ typedef __darwin_pthread_t pthread_t;
 typedef union pthread_attr_t pthread_attr_t;
 typedef unsigned long int pthread_t;
 #endif
-int pthread_create_wrapped(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine) (void *), void *arg)
+int mock_return_pthread_create;
+int pthread_create_wrapper(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine) (void *), void *arg)
 {
     mock_called_pthread_create++;
+    return mock_return_pthread_create;
+}
+
+int mock_called_pthread_join;
+int mock_return_pthread_join;
+int pthread_join_wrapper (pthread_t thread, void** p)
+{
+    mock_called_pthread_join += 1;
+    return mock_return_pthread_join;
 }
