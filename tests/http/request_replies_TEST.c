@@ -5,6 +5,7 @@
 
 extern int mock_called_new_http_request;
 extern int mock_called_create_reply;
+extern long mock_param1_release_request[];
 Test (new_request_replies, zero_reply)
 {
     in_connector_t* in_conn = (in_connector_t*) malloc (sizeof(in_connector_t));
@@ -54,7 +55,6 @@ Test (new_request_replies, two_replies)
 
 extern int mock_called_release_request;
 extern int mock_called_release_reply;
-extern long mock_param1_release_request[];
 Test (free_request_replies, zero_reply)
 {
     in_connector_t* in_conn = (in_connector_t*) malloc (sizeof(in_connector_t));
@@ -69,7 +69,6 @@ Test (free_request_replies, zero_reply)
                                                   "Actual was:%d", mock_called_release_request);
     cr_assert (0 == mock_called_release_reply, "Should not have called ''create_replies."
                                               "Actual was:%d", mock_called_release_reply);
-    cr_assert ((long)rr->request == mock_param1_release_request[0], "Should have passed the request in parameter");
 }
 
 Test (free_request_replies, two_replies) {

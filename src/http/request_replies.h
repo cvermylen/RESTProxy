@@ -23,8 +23,6 @@ void strategy_sequential_request_replies (request_replies_t* rr);
 
 void release_buffer_after_processing(request_replies_t* request);
 
-void decode_request_message_header(request_t *request);
-
 void forward_request_to_all_servers(request_replies_t *rr);
 
 int wait_4_all_client_send_receive_to_complete(request_replies_t *rr);

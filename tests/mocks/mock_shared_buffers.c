@@ -1,4 +1,5 @@
 #include "../../src/buffers/shared_buffers.h"
+#include "mock_defs.h"
 
 #include <stdio.h>
 #include <stdio.h>
@@ -14,7 +15,7 @@ int alloc_buffer()
 }
 
 int mock_called_get_buffer;
-char* mock_result_get_buffer[500];
+char* mock_result_get_buffer[MAX_CALLS_SAME_FUNCTION];
 int mock_param1_get_buffer;
 char* get_buffer(int buff_no)
 {
