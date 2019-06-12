@@ -34,6 +34,11 @@ add_executable (request_replies_TEST request_replies_TEST.c $<TARGET_OBJECTS:req
         $<TARGET_OBJECTS:mock_http_message.o>
         $<TARGET_OBJECTS:mock_pthread.o>)
 
+add_executable (http_connection_TEST http_connection_TEST.c $<TARGET_OBJECTS:http_connection.o>
+        $<TARGET_OBJECTS:mock_request_replies.o>
+        $<TARGET_OBJECTS:mock_http_request.o>
+        $<TARGET_OBJECTS:mock_http_reply.o>)
+
 target_link_libraries (http_message_TEST stack m ${CRITERION_LIBRARIES})
 target_link_libraries (http_headers_TEST stack m ${CRITERION_LIBRARIES})
 target_link_libraries(decode_http_headers stack m ${CRITERION_LIBRARIES})
@@ -41,6 +46,7 @@ target_link_libraries(http_request_TEST ${CRITERION_LIBRARIES})
 target_link_libraries(http_reply_TEST pthread ${CRITERION_LIBRARIES})
 target_link_libraries (http_first_line_TEST ${CRITERION_LIBRARIES})
 target_link_libraries (request_replies_TEST ${CRITERION_LIBRARIES})
+target_link_libraries(http_connection_TEST stack ${CRITERION_LIBRARIES})
 
 set_property (TARGET http_message_TEST PROPERTY C_STANDARD 99)
 set_property (TARGET http_headers_TEST PROPERTY C_STANDARD 99)
@@ -48,6 +54,7 @@ set_property(TARGET http_request_TEST PROPERTY C_STANDARD 99)
 set_property(TARGET http_reply_TEST PROPERTY C_STANDARD 99)
 set_property (TARGET http_first_line_TEST PROPERTY C_STANDARD 99)
 set_property (TARGET request_replies_TEST PROPERTY C_STANDARD 99)
+set_property(TARGET http_connection_TEST PROPERTY C_STANDARD 99)
 
 add_test (http_message_TEST bin/http_message_TEST)
 add_test (http_headers_TEST bin/http_headers_TEST)
@@ -55,3 +62,4 @@ add_test (http_request_TEST bin/http_request_TEST)
 add_test (http_reply_TEST bin/http_reply_TEST)
 add_test (http_first_line_TEST bin/http_first_line_TEST)
 add_test (request_replies_TEST bin/request_replies_TEST)
+add_test (http_connection_TEST bin/http_connection_TEST)
