@@ -15,8 +15,6 @@
 #include "request_replies.h"
 #include <stack.h>
 
-//stack_head_t *connections_stack;
-
 ri_connection_t* new_http_connection (route_t* route)
 {
     ri_connection_t* res = (ri_connection_t *) malloc(sizeof(ri_connection_t));
