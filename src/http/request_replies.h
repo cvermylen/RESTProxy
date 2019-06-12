@@ -17,7 +17,7 @@ request_replies_t* new_request_replies (in_connector_t* connector_def, int numbe
 
 /*! Waits for a new request from the client and returns only after the header has been fully decoded
  */
-void accept_opening_request_from_client (request_replies_t* rr);
+int accept_opening_request_from_client (request_replies_t* rr);
 
 void strategy_sequential_request_replies (request_replies_t* rr);
 

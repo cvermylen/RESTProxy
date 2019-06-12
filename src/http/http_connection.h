@@ -2,11 +2,6 @@
 #define HTTP_CONNECTION_H
 
 #include "../route.h"
-
-//#include <netinet/in.h>
-//#include "../socket/socket_connector.h"
-//#include "../route_instance.h"
-//#include "../request_reply.h"
 #include <stack.h>
 
 typedef struct {
@@ -31,13 +26,7 @@ void* run_session (ri_connection_t* conn);
  */
 void close_connection (ri_connection_t *conn);
 
-void *receive_and_process_data_from_client(void *params);
-
-int *create_all_runtime_thread_data(ri_connection_t *conn, int buffer_size, char *buffer, int data_len);
-
 void *socket_connector(void *param);
-
-void *receive_data(void *params);
 
 void release_runtime_route(ri_connection_t* conn);
 

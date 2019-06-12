@@ -21,7 +21,7 @@ request_t* new_http_request (int(*open_connection) (void* conn_params),
     return request;
 }
 
-void receive_new_request_from_client (request_t *request)
+int receive_new_request_from_client (request_t *request)
 {
     int fd = request->open_connection (request->connection_params);
     //REFACTOR
@@ -31,6 +31,7 @@ void receive_new_request_from_client (request_t *request)
     request->type = http_message_decode_request_type (request->http_message);
     read_next_buffer_from_source (request->http_message);
     decode_http_message_header (request->http_message);
+    return fd;
 }
 
 void process_request_message_body (request_t* request)

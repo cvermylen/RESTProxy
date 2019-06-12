@@ -21,10 +21,12 @@ request_replies_t* new_request_replies (in_connector_t* connector_def, int numbe
 
 int mock_called_accept_opening_request_from_client;
 long mock_param_1_accept_opening_request_from_client[MAX_CALLS_SAME_FUNCTION];
-void accept_opening_request_from_client (request_replies_t* rr)
+int mock_result_accept_opening_request_from_client;
+int accept_opening_request_from_client (request_replies_t* rr)
 {
     mock_param_1_accept_opening_request_from_client[mock_called_accept_opening_request_from_client] = (long)rr;
     mock_called_accept_opening_request_from_client += 1;
+    return mock_result_accept_opening_request_from_client;
 }
 
 int mock_called_strategy_sequential_request_replies;

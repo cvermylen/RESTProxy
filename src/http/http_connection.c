@@ -28,14 +28,14 @@ request_replies_t* prepare_for_next_request_replies (ri_connection_t* conn)
     request_replies_t* rr = new_request_replies(conn->route->in_connector, conn->route->out_connections, conn->route->out_connectors, conn->route->forward_mode);
     return rr;
 }
+
 /*!
  * @param conn
  * @return <0 error
  */
 int open_connection(ri_connection_t *conn)
 {
-    accept_opening_request_from_client (stack_top(conn->requestReplies));
-    return 0;
+    return accept_opening_request_from_client (stack_top(conn->requestReplies));
 }
 
 void close_connection (ri_connection_t *conn)
@@ -50,7 +50,6 @@ void close_connection (ri_connection_t *conn)
 
 void process_request_replies (ri_connection_t* conn, request_replies_t* rr)
 {
-    printf("Received:%d\n", rr->request->http_message->raw_message_length);
     conn->total_messages += 1;
     conn->total_bytes += rr->request->http_message->raw_message_length;
     strategy_sequential_request_replies (rr);

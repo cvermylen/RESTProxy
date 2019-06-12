@@ -59,9 +59,9 @@ void release_buffer_after_processing (request_replies_t* rr)
     }
 }
 
-void accept_opening_request_from_client (request_replies_t* rr)
+int accept_opening_request_from_client (request_replies_t* rr)
 {
-    receive_new_request_from_client (rr->request);
+    return receive_new_request_from_client (rr->request);
 }
 
 void forward_request_to_all_servers (request_replies_t *rr)

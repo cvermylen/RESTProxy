@@ -1,4 +1,5 @@
 #include "../../src/http/http_request.h"
+#include "mock_defs.h"
 #include <stdlib.h>
 
 int mock_called_new_http_request;
@@ -14,9 +15,11 @@ request_t* new_http_request (int(*open_connection) (void* conn_params),
 }
 
 int mock_called_receive_new_request_from_client;
-void receive_new_request_from_client (request_t *request)
+int mock_result_receive_new_request_from_client;
+int receive_new_request_from_client (request_t *request)
 {
     mock_called_receive_new_request_from_client += 1;
+    return mock_result_receive_new_request_from_client;
 }
 
 int mock_called_process_request_message_body;
@@ -34,8 +37,10 @@ int get_request_connection_keep_alive (request_t* request)
 }
 
 int mock_called_close_client_connection;
+long mock_param_1_close_client_connection[MAX_CALLS_SAME_FUNCTION];
 void close_client_connection (request_t* request)
 {
+    mock_param_1_close_client_connection[mock_called_close_client_connection] = request;
     mock_called_close_client_connection += 1;
 }
 
@@ -44,7 +49,7 @@ request_t* mock_result_release_request;
 long mock_param1_release_request[500];
 request_t* release_request (request_t *d)
 {
-    mock_param1_release_request[mock_called_release_request] = d;
+    mock_param1_release_request[mock_called_release_request] = (long)d;
     mock_called_release_request += 1;
     return mock_result_release_request;
 }

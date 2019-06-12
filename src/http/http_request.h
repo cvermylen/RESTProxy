@@ -22,7 +22,7 @@ request_t* new_http_request (int(*open_connection) (void* conn_params),
         int (*send_data) (void* conn_params, char* dest_buffer, int max_buffer_size),
         int(*close_connection) (void* conn_params), void* connection_params);
 
-void receive_new_request_from_client(request_t *request);
+int receive_new_request_from_client(request_t *request);
 
 void process_request_message_body (request_t* request);
 
