@@ -29,6 +29,7 @@ extern long mock_param_1_new_request_replies[];
 extern int mock_param_2_new_request_replies[];
 extern long mock_param_3_new_request_replies[];
 extern int mock_param_4_new_request_replies[];
+extern request_replies_t* mock_result_new_request_replies;
 Test (prepare_for_next_request_replies, should_pass_all_parameters_and_never_return_null)
 {
     route_t* route = (route_t*) malloc (sizeof(route_t));
@@ -38,7 +39,7 @@ Test (prepare_for_next_request_replies, should_pass_all_parameters_and_never_ret
     route->forward_mode = 77;
     ri_connection_t* c = new_http_connection(route);
     mock_called_new_request_replies = 0;
-
+    mock_result_new_request_replies = (request_replies_t*) malloc (sizeof(request_replies_t));
     request_replies_t* rr = prepare_for_next_request_replies (c);
 
     cr_assert_not_null(rr, "Returned request_replies should not be null");
@@ -132,4 +133,113 @@ Test (close_connection, two_server_conection)
     free (rr->replies[1]);
     free (rr);
     free (c);
+}
+
+extern void process_request_replies (ri_connection_t* conn, request_replies_t* rr);
+extern int mock_called_strategy_sequential_request_replies;
+extern long mock_param_1_strategy_sequential_request_replies[];
+Test (process_request_replies, delegate_to_request_replies)
+{
+    ri_connection_t* c = new_http_connection(NULL);
+    request_replies_t* rr = (request_replies_t*) malloc (sizeof(request_replies_t));
+    rr->request = (request_t*) malloc (sizeof(request_t));
+    rr->request->http_message = (http_message_t*) malloc (sizeof(http_message_t));
+    rr->request->http_message->raw_message_length = 50;
+    c->total_bytes = 5;
+    c->total_messages = 12;
+    mock_called_strategy_sequential_request_replies = 0;
+
+    process_request_replies (c, rr);
+
+    cr_assert(55 == c->total_bytes, "Should have updated total size to 55. Instead is:%lu", c->total_bytes);
+    cr_assert(13 == c->total_messages, "Should have added 1 message. Instead is:%d", c->total_messages);
+    cr_assert(1 == mock_called_strategy_sequential_request_replies, "Should have called 'strategy_sequential_request_replies'."
+                                                                    "Actual was:%d", mock_called_strategy_sequential_request_replies);
+    cr_assert((long)rr == mock_param_1_strategy_sequential_request_replies[0], "Should have passed request_replies in"
+                                                                               "first parameter");
+}
+
+extern void process_connection (ri_connection_t* conn);
+extern int mock_called_get_request_connection_keep_alive;
+extern int mock_result_get_request_connection_keep_alive;
+Test (process_connection, call_all_methods)
+{
+    route_t* route = (route_t*) malloc (sizeof(route_t));
+    route->in_connector = (in_connector_t*) malloc (sizeof(in_connector_t));
+    route->out_connections = 44;
+    route->out_connectors = (out_connector_t**) malloc (sizeof(out_connector_t*));
+    ri_connection_t* c = new_http_connection(route);
+    request_replies_t* rr = (request_replies_t*) malloc (sizeof(request_replies_t));
+    rr->request = (request_t*) malloc (sizeof(request_t));
+    rr->request->http_message = (http_message_t*) malloc (sizeof(http_message_t));
+    mock_called_strategy_sequential_request_replies = 0;
+    mock_called_get_request_connection_keep_alive = 0;
+    mock_result_new_request_replies = rr;
+    mock_result_get_request_connection_keep_alive = 0;
+    mock_called_new_request_replies = 0;
+
+    process_connection (c);
+
+    cr_assert(1 == mock_called_strategy_sequential_request_replies, "Should have called 'strategy_sequential_request_replies'."
+                                                                    "Actual was:%d", mock_called_strategy_sequential_request_replies);
+    cr_assert(1 == mock_called_get_request_connection_keep_alive, "Should have called 'get_request_connection_keep_alive'."
+                                                                    "Actual was:%d", mock_called_get_request_connection_keep_alive);
+    cr_assert(1 == mock_called_new_request_replies, "Should have called 'new_request_replies'."
+                                                                  "Actual was:%d", mock_called_new_request_replies);
+
+}
+
+Test (run_session, no_connection)
+{
+    route_t* route = (route_t*) malloc (sizeof(route_t));
+    route->in_connector = (in_connector_t*) malloc (sizeof(in_connector_t));
+    route->out_connections = 44;
+    route->out_connectors = (out_connector_t**) malloc (sizeof(out_connector_t*));
+    ri_connection_t* c = new_http_connection(route);
+
+    mock_called_new_request_replies = 0;
+    mock_called_accept_opening_request_from_client = 0;
+    mock_called_get_request_connection_keep_alive = 0;
+    mock_result_accept_opening_request_from_client = -1;
+    mock_called_close_client_connection = 0;
+
+    run_session (c);
+
+    cr_assert(0 == mock_called_new_request_replies, "Should have called 'new_request_replies'."
+                                                    "Actual was:%d", mock_called_new_request_replies);
+    cr_assert(1 == mock_called_accept_opening_request_from_client, "Should have called 'accept_opening_request_from_client'."
+                                                    "Actual was:%d", mock_called_accept_opening_request_from_client);
+    cr_assert(0 == mock_called_get_request_connection_keep_alive, "Should not have called 'get_request_connection_keep_alive'."
+                                                                  "Actual was:%d", mock_called_get_request_connection_keep_alive);
+    cr_assert(0 == mock_called_close_client_connection, "Should not have called 'close_client_connection'."
+                                                                  "Actual was:%d", mock_called_close_client_connection);
+}
+
+Test (run_session, open_connection)
+{
+    route_t* route = (route_t*) malloc (sizeof(route_t));
+    route->in_connector = (in_connector_t*) malloc (sizeof(in_connector_t));
+    route->out_connections = 44;
+    route->out_connectors = (out_connector_t**) malloc (sizeof(out_connector_t*));
+    ri_connection_t* c = new_http_connection(route);
+
+    mock_called_new_request_replies = 0;
+    mock_called_accept_opening_request_from_client = 0;
+    mock_called_get_request_connection_keep_alive = 0;
+    mock_result_accept_opening_request_from_client = 1;
+    mock_called_close_client_connection = 0;
+    request_replies_t* rr = (request_replies_t*) malloc (sizeof(request_replies_t));
+    rr->request = (request_t*) malloc (sizeof(request_t));
+    rr->request->http_message = (http_message_t*) malloc (sizeof(http_message_t));
+    mock_result_new_request_replies = rr;
+    run_session (c);
+
+    cr_assert(1 == mock_called_new_request_replies, "Should have called 'new_request_replies'."
+                                                    "Actual was:%d", mock_called_new_request_replies);
+    cr_assert(1 == mock_called_accept_opening_request_from_client, "Should have called 'accept_opening_request_from_client'."
+                                                                   "Actual was:%d", mock_called_accept_opening_request_from_client);
+    cr_assert(1 == mock_called_get_request_connection_keep_alive, "Should not have called 'get_request_connection_keep_alive'."
+                                                                  "Actual was:%d", mock_called_get_request_connection_keep_alive);
+    cr_assert(1 == mock_called_close_client_connection, "Should not have called 'close_client_connection'."
+                                                        "Actual was:%d", mock_called_close_client_connection);
 }

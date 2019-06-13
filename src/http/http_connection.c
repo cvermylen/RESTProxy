@@ -54,23 +54,26 @@ void process_request_replies (ri_connection_t* conn, request_replies_t* rr)
     conn->total_bytes += rr->request->http_message->raw_message_length;
     strategy_sequential_request_replies (rr);
 }
-/*! new version of 'receive_and_process_data_from_client'
- * @param conn
- */
+
+void process_connection (ri_connection_t* conn)
+{
+    int keep_alive;
+    do {
+        request_replies_t* rr = prepare_for_next_request_replies (conn);
+        stack_push (conn->requestReplies, rr);
+        process_request_replies (conn, rr);
+        keep_alive = get_request_connection_keep_alive (rr->request);
+    } while (keep_alive);
+}
+
 void* run_session (ri_connection_t* conn)
 {
-    request_replies_t* rr = prepare_for_next_request_replies (conn);
+
     int r = open_connection (conn);
     if (r > 0) {
-        int keep_alive = 1;
-        do {
-            stack_push (conn->requestReplies, rr);
-            process_request_replies (conn, rr);
-            keep_alive = get_request_connection_keep_alive (rr->request);
-            rr = prepare_for_next_request_replies (conn);
-        } while (keep_alive);
+        process_connection (conn);
+        close_connection (conn);
     }
-    close_connection (conn);
     return NULL;
 }
 

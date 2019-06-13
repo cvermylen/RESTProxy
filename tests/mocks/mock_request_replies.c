@@ -6,6 +6,7 @@ long mock_param_1_new_request_replies[MAX_CALLS_SAME_FUNCTION];
 int mock_param_2_new_request_replies[MAX_CALLS_SAME_FUNCTION];
 long mock_param_3_new_request_replies[MAX_CALLS_SAME_FUNCTION];
 int mock_param_4_new_request_replies[MAX_CALLS_SAME_FUNCTION];
+request_replies_t* mock_result_new_request_replies;
 request_replies_t* new_request_replies (in_connector_t* connector_def, int number_of_servers, out_connector_t** server_conns, int forward_mode)
 {
     mock_param_1_new_request_replies[mock_called_new_request_replies] = (long) connector_def;
@@ -14,9 +15,7 @@ request_replies_t* new_request_replies (in_connector_t* connector_def, int numbe
     mock_param_4_new_request_replies[mock_called_new_request_replies] = forward_mode;
     mock_called_new_request_replies += 1;
 
-    request_replies_t* rr = (request_replies_t*) malloc (sizeof(request_replies_t));
-
-    return rr;
+    return mock_result_new_request_replies;
 }
 
 int mock_called_accept_opening_request_from_client;
