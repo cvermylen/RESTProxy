@@ -76,7 +76,7 @@ void* run_session (ri_connection_t* conn)
     return NULL;
 }
 
-void release_runtime_route(ri_connection_t* conn)
+void release_runtime_route (ri_connection_t* conn)
 {
     stack_node_t* rr = NULL;
     while ((rr = stack_pop (conn->requestReplies)) != NULL ) {
