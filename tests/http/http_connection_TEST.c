@@ -243,3 +243,28 @@ Test (run_session, open_connection)
     cr_assert(1 == mock_called_close_client_connection, "Should not have called 'close_client_connection'."
                                                         "Actual was:%d", mock_called_close_client_connection);
 }
+
+extern int mock_called_free_request_replies;
+Test (release_runtime_route, no_server_connection)
+{
+    ri_connection_t* c = new_http_connection(NULL);
+    mock_called_free_request_replies = 0;
+
+    release_runtime_route (c);
+
+    cr_assert (0 == mock_called_free_request_replies, "Should not have called 'free_request_replies'. Actual was:%d", mock_called_free_request_replies);
+
+}
+
+extern long mock_param_1_free_request_replies[];
+Test (release_runtime_route, one_server_connection)
+{
+    ri_connection_t* c = new_http_connection(NULL);
+    request_replies_t* rr = (request_replies_t*) malloc (sizeof(request_replies_t));
+    stack_push(c->requestReplies, rr);
+    mock_called_free_request_replies = 0;
+
+    release_runtime_route (c);
+    cr_assert (1 == mock_called_free_request_replies, "Should not have called 'free_request_replies'. Actual was:%d", mock_called_free_request_replies);
+    cr_assert((long)rr == mock_param_1_free_request_replies[0], "Should have passed 'request_replies' as first parameter to 'free_request_replies'");
+}
