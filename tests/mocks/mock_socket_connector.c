@@ -61,6 +61,16 @@ int read_from_socket(int fd, char* buffer, int max_size)
     }
 }
 
+int mock_result_open_socket_connector;
+int open_socket_connector (ri_sock_connector_t* connection_params) {
+    return mock_result_open_socket_connector;
+}
+
+int mock_result_open_server_socket_connector;
+int open_server_socket_connector (ri_sock_connector_t* connection_params) {
+    return mock_result_open_server_socket_connector;
+}
+
 //TODO: unit test
 int split_receive(int socket, char* buffer, int max_size)
 {
@@ -72,6 +82,19 @@ int connect_to_server(char* server_name, const int portno)
 	return -1;
 }
 
+int mock_result_sock_write;
 int sock_write(const int sockfd, char* buffer, const int length)
 {
+    return mock_result_sock_write;
+}
+
+int mock_result_close_socket;
+int close_socket (ri_sock_connector_t* connection_params) {
+    return mock_result_close_socket;
+}
+
+ri_sock_connector_t* mock_result_create_runtime_sock_connector;
+ri_sock_connector_t* create_runtime_sock_connector (int port_no)
+{
+    return mock_result_create_runtime_sock_connector;
 }
