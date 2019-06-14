@@ -4,21 +4,23 @@
 #include "socket/socket_connector.h"
 #include "file_connector.h"
 
-in_connector_t *create_runtime_in_connector(const int type, const int port)
+in_connector_t *create_runtime_in_connector (const int type, const int port)
 {
-    printf("create_runtime_in_connector\n");
-    in_connector_t *res = (in_connector_t*)malloc(sizeof(in_connector_t));
-    res->type = type;
+    in_connector_t* res = NULL;
     switch(type){
         case TYPE_SOCKET:
+            res = (in_connector_t*)malloc(sizeof(in_connector_t));
             res->connection_params = create_runtime_sock_connector (port);
             res->feed_data = (int (*) (void*, char*, int))read_from_socket;
             res->send_data = (int (*) (void*, char*, int))sock_write;
             res->open_connection = (int (*) (void*))open_socket_connector;
             res->close_connection = (int (*) (void*))close_socket;
+            res->type = type;
             break;
         case TYPE_FILE:
             // res->content.file = create_runtime_file_connector(&(conn->content.file));
+            break;
+        default:
             break;
     }
     return res;
@@ -26,7 +28,6 @@ in_connector_t *create_runtime_in_connector(const int type, const int port)
 
 route_t *create_route(const int port, const int mode, const int num_connectors)
 {
-    printf("create_route\n");
     route_t *res = (route_t*)malloc(sizeof(route_t));
     res->out_connections = num_connectors;
     res->forward_mode = mode;
@@ -35,7 +36,7 @@ route_t *create_route(const int port, const int mode, const int num_connectors)
     return res;
 }
 
-out_connector_t* create_runtime_out_sock_connector(const int flow, const char* hostname, const int port)
+out_connector_t* create_runtime_out_sock_connector (const int flow, const char* hostname, const int port)
 {
     ri_sock_connector_t* res = (ri_sock_connector_t*)malloc(sizeof(ri_sock_connector_t));
     res->port = port;

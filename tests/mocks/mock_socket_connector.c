@@ -93,8 +93,10 @@ int close_socket (ri_sock_connector_t* connection_params) {
     return mock_result_close_socket;
 }
 
+int mock_called_create_runtime_sock_connector;
 ri_sock_connector_t* mock_result_create_runtime_sock_connector;
 ri_sock_connector_t* create_runtime_sock_connector (int port_no)
 {
+    mock_called_create_runtime_sock_connector += 1;
     return mock_result_create_runtime_sock_connector;
 }
