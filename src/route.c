@@ -54,10 +54,9 @@ out_connector_t* create_runtime_out_sock_connector (const int flow, const char* 
     return conn;
 }
 
-out_connector_t *create_runtime_out_file_connector(const int flow, const char* filename)
+out_connector_t *create_runtime_out_file_connector(int flow, char* filename)
 {
-    printf("create_runtime_file_connector\n");
-    ri_file_connector_t * res = (ri_file_connector_t*)malloc(sizeof(ri_file_connector_t));
+    ri_file_connector_t* res = (ri_file_connector_t*)malloc(sizeof(ri_file_connector_t));
     res->filename = (char*)malloc((strlen(filename) + 1) * sizeof(char));
     strcpy(res->filename, filename);
 
@@ -92,10 +91,12 @@ void add_out_sock_connector(route_t* route, const int index, const char* hostnam
     route->out_connectors[index] = create_runtime_out_sock_connector(flow, hostname, port);
 }
 
-void free_route (route_t* route)
+route_t* free_route (route_t* route)
 {
     release_runtime_in_connector (route->in_connector);
     for (int i=0; i < route->out_connections; i++) {
         release_runtime_out_connector(route->out_connectors[i]);
     }
+    free (route);
+    return NULL;
 }

@@ -46,7 +46,7 @@ void add_out_file_connector(route_t* route, int index, const char* filename, int
 
 void add_out_sock_connector(route_t* route, int index, const char* hostname, int port, int flow);
 
-out_connector_t *create_runtime_out_file_connector(int flow, const char* filename);
+out_connector_t *create_runtime_out_file_connector(int flow, char* filename);
 
-void free_route (route_t* route);
+route_t* free_route (route_t* route);
 #endif //ROUTE_H

@@ -1,6 +1,7 @@
 #include "../src/route.h"
 #include "../src/route_def.h"
 #include "../src/socket/socket_connector.h"
+#include "../src/file_connector.h"
 #include <criterion/criterion.h>
 
 extern in_connector_t *create_runtime_in_connector (int type, int port);
@@ -55,8 +56,8 @@ Test (create_runtime_out_sock_connector, call_all_functions)
     out_connector_t* c = create_runtime_out_sock_connector (3, "host", 8);
 
     cr_assert_not_null (c, "Should always create a connector");
-    cr_assert (strcmp("host", ((ri_sock_connector_t*)c->connection_params)->server_name) == 0, "Should have propagated the server name."
-                                                     "Actual is:%s", ((ri_sock_connector_t*)c->connection_params)->server_name);
+    cr_assert (strcmp("host", ((ri_sock_connector_t*)c->connection_params)->server_name) == 0,
+            "Should have propagated the server name. Actual is:%s", ((ri_sock_connector_t*)c->connection_params)->server_name);
     cr_assert (8 == ((ri_sock_connector_t*)c->connection_params)->port, "Should have propagated the server port."
                                                                         "Actual was:%d", ((ri_sock_connector_t*)c->connection_params)->port);
     cr_assert (TYPE_SOCKET == c->type, "Expected to be a socket, Actual was:%d", c->type);
@@ -65,4 +66,42 @@ Test (create_runtime_out_sock_connector, call_all_functions)
     cr_assert_not_null (c->send_data, "'send_data' should not be null");
     cr_assert_not_null (c->receive_data, "'receive_data' should not be null");
     cr_assert_not_null (c->close_connection, "'close_connection' should not be null");
+}
+
+Test (create_runtime_out_file_connector, call_all_functions)
+{
+
+    out_connector_t* c = create_runtime_out_file_connector (3, "host");
+
+    cr_assert_not_null (c, "Should always create a connector");
+    cr_assert (strcmp("host", ((ri_file_connector_t*)c->connection_params)->filename) == 0,
+            "Should have propagated the server name.Actual is:%s", ((ri_file_connector_t*)c->connection_params)->filename);
+    cr_assert (TYPE_FILE == c->type, "Expected to be a file, Actual was:%d", c->type);
+    cr_assert (3 == c->flow, "Expected to have propagated the flow:%d", c->flow);
+    cr_assert_not_null (c->open_connection, "'open_connection' should not be null");
+    cr_assert_not_null (c->send_data, "'send_data' should not be null");
+    cr_assert_not_null (c->receive_data, "'receive_data' should not be null");
+    cr_assert_not_null (c->close_connection, "'close_connection' should not be null");
+}
+
+Test(add_out_file_connector, propagate_call)
+{
+    route_t* route = (route_t*) malloc (sizeof(route_t));
+    route->out_connectors = (out_connector_t**) malloc (sizeof(out_connector_t*));
+    route->out_connectors[0] = NULL;
+
+    add_out_file_connector (route, 0, "aFile", 3);
+
+    cr_assert_not_null (route->out_connectors[0], "Should have created element");
+}
+
+Test(add_out_sock_connector, propagate_call)
+{
+    route_t* route = (route_t*) malloc (sizeof(route_t));
+    route->out_connectors = (out_connector_t**) malloc (sizeof(out_connector_t*));
+    route->out_connectors[0] = NULL;
+
+    add_out_sock_connector (route, 0, "aHost", 3, 8);
+
+    cr_assert_not_null (route->out_connectors[0], "Should have created element");
 }
