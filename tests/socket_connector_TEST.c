@@ -23,8 +23,10 @@ Test(socket, happy)
 
 Test(route, sock_conn)
 {
-    ri_sock_connector_t* res = (ri_sock_connector_t*) malloc (sizeof(ri_sock_connector_t));
-    create_runtime_sock_connector(res);
+    ri_sock_connector_t* res = NULL;
+
+    res = create_runtime_sock_connector(3);
     cr_assert(res != NULL, "'create_runtime_sock_connector' should not return NULL");
+    cr_assert(res->port == 3, "'port' chould have been copied over");
     cr_assert(res->mode == MODE_TCP, "'mode' field should be copied over");
 }

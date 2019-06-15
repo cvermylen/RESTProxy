@@ -33,8 +33,8 @@ set_property (TARGET route_TEST PROPERTY C_STANDARD 99)
 set_property (TARGET socket_connector_TEST PROPERTY C_STANDARD 99)
 set_property (TARGET route_instance_TEST PROPERTY C_STANDARD 99)
 
-add_test (mock_socket_connector_TEST bin/mock_socket_connector_TEST)
-add_test (route_TEST bin/connections_TEST)
+add_test (mock_socket_connector_TEST ${PROJECT_BINARY_DIR}/bin/mock_socket_connector_TEST)
+add_test (route_TEST ${PROJECT_BINARY_DIR}/bin/route_TEST)
 
-add_test (socket_connector_TEST bin/socket_connector_TEST_test)
-add_test (route_instance_TEST bin/route_instance_TEST_test)
+add_test (socket_connector_TEST ${PROJECT_BINARY_DIR}/bin/socket_connector_TEST)
+add_test (route_instance_TEST ${PROJECT_BINARY_DIR}/bin/route_instance_TEST)

@@ -6,11 +6,9 @@ project(Gateway)
 list (APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 option (ENABLE_TESTS "Build tests along with the library" ON)
-
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib)
-
 set(CMAKE_BUILD_TYPE Debug)
 
 add_subdirectory(src)
@@ -19,6 +17,8 @@ if (ENABLE_TESTS)
 	# Check for Criterion
 	find_package (Criterion REQUIRED)
 	find_program(MEMORYCHECK_COMMAND NAMES valgrind)
+	set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/tests)
+	set(CTEST_BINARY_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
 	set(MEMORYCHECK_COMMAND_OPTIONS "--xml=yes --xml-file=test.xml")
 	file(TO_CMAKE_PATH "$(CMAKE_SOURCE_DIR}/resources/valgrind_supp.xml" MEMORYCHECK_SUPPRESSION_FILE)
 
